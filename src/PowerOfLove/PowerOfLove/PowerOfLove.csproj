@@ -36,6 +36,12 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Jv.Games.Xna">
+      <HintPath>..\..\..\references\Jv.Games.Xna\Jv.Games.Xna.dll</HintPath>
+    </Reference>
+    <Reference Include="Jv.Games.Xna.Async">
+      <HintPath>..\..\..\references\Jv.Games.Xna\Jv.Games.Xna.Async.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -43,8 +49,18 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="XNATweener">
+      <HintPath>..\..\..\references\XNATweener\XNATweener.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Activities\CreditsActivity.cs" />
+    <Compile Include="Activities\GamePlayActivity.cs" />
+    <Compile Include="Activities\HowToPlayActivity.cs" />
+    <Compile Include="Activities\ResultsActivity.cs" />
+    <Compile Include="Activities\TitleActivity.cs" />
+    <Compile Include="Activities\TitleResult.cs" />
+    <Compile Include="MainGame.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
