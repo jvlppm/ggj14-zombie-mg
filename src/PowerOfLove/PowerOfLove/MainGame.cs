@@ -16,16 +16,14 @@ namespace PowerOfLove
 
         public MainGame()
         {
+            Window.Title = "Power of Love";
             Graphics = new GraphicsDeviceManager(this)
             {
                 PreferredBackBufferWidth = 640,
                 PreferredBackBufferHeight = 480
             };
+
             Content.RootDirectory = "Content";
-
-            Window.Title = "Power of Love";
-            IsMouseVisible = true;
-
             GameContent.Initialize(Content);
             SoundManager.SEFolder = "Sounds";
             SoundManager.BGMFolder = "BGM";
@@ -34,6 +32,12 @@ namespace PowerOfLove
         protected override void Initialize()
         {
             base.Initialize();
+#if ANDROID
+            Window.IsBorderless = true;
+            Graphics.IsFullScreen = true;
+#else
+            IsMouseVisible = true;
+#endif
             this.Play(GameMain);
         }
 
