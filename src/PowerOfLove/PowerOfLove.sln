@@ -5,18 +5,61 @@ VisualStudioVersion = 12.0.30110.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PowerOfLove", "PowerOfLove\PowerOfLove.csproj", "{CF7E787C-18B3-424C-B229-359F7E4D2A28}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "References", "References", "{080E35D6-AABC-451F-9399-4F8467A4F23F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoGameLib.Core", "..\..\references\monogame-aux-lib\src\MonoGameLib.Core\MonoGameLib.Core.csproj", "{F3B03CFA-5A42-4E94-A0D3-90EC15330B68}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoGameLib.GUI", "..\..\references\monogame-aux-lib\src\MonoGameLib.GUI\MonoGameLib.GUI.csproj", "{F2A64D02-17C0-4E50-91CB-DEAD4DABDBE9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoGameLib.Tiled", "..\..\references\monogame-aux-lib\src\MonoGameLib.Tiled\MonoGameLib.Tiled.csproj", "{F2C71160-3C00-40DD-AB52-151C9A914570}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug-Linux|Any CPU = Debug-Linux|Any CPU
 		Release|Any CPU = Release|Any CPU
+		Release-Linux|Any CPU = Release-Linux|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{CF7E787C-18B3-424C-B229-359F7E4D2A28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CF7E787C-18B3-424C-B229-359F7E4D2A28}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF7E787C-18B3-424C-B229-359F7E4D2A28}.Debug-Linux|Any CPU.ActiveCfg = Debug-Linux|Any CPU
+		{CF7E787C-18B3-424C-B229-359F7E4D2A28}.Debug-Linux|Any CPU.Build.0 = Debug-Linux|Any CPU
 		{CF7E787C-18B3-424C-B229-359F7E4D2A28}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CF7E787C-18B3-424C-B229-359F7E4D2A28}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF7E787C-18B3-424C-B229-359F7E4D2A28}.Release-Linux|Any CPU.ActiveCfg = Release-Linux|Any CPU
+		{CF7E787C-18B3-424C-B229-359F7E4D2A28}.Release-Linux|Any CPU.Build.0 = Release-Linux|Any CPU
+		{F3B03CFA-5A42-4E94-A0D3-90EC15330B68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3B03CFA-5A42-4E94-A0D3-90EC15330B68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3B03CFA-5A42-4E94-A0D3-90EC15330B68}.Debug-Linux|Any CPU.ActiveCfg = Debug-Linux|Any CPU
+		{F3B03CFA-5A42-4E94-A0D3-90EC15330B68}.Debug-Linux|Any CPU.Build.0 = Debug-Linux|Any CPU
+		{F3B03CFA-5A42-4E94-A0D3-90EC15330B68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3B03CFA-5A42-4E94-A0D3-90EC15330B68}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3B03CFA-5A42-4E94-A0D3-90EC15330B68}.Release-Linux|Any CPU.ActiveCfg = Release-Linux|Any CPU
+		{F3B03CFA-5A42-4E94-A0D3-90EC15330B68}.Release-Linux|Any CPU.Build.0 = Release-Linux|Any CPU
+		{F2A64D02-17C0-4E50-91CB-DEAD4DABDBE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2A64D02-17C0-4E50-91CB-DEAD4DABDBE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2A64D02-17C0-4E50-91CB-DEAD4DABDBE9}.Debug-Linux|Any CPU.ActiveCfg = Debug-Linux|Any CPU
+		{F2A64D02-17C0-4E50-91CB-DEAD4DABDBE9}.Debug-Linux|Any CPU.Build.0 = Debug-Linux|Any CPU
+		{F2A64D02-17C0-4E50-91CB-DEAD4DABDBE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2A64D02-17C0-4E50-91CB-DEAD4DABDBE9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2A64D02-17C0-4E50-91CB-DEAD4DABDBE9}.Release-Linux|Any CPU.ActiveCfg = Release-Linux|Any CPU
+		{F2A64D02-17C0-4E50-91CB-DEAD4DABDBE9}.Release-Linux|Any CPU.Build.0 = Release-Linux|Any CPU
+		{F2C71160-3C00-40DD-AB52-151C9A914570}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2C71160-3C00-40DD-AB52-151C9A914570}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2C71160-3C00-40DD-AB52-151C9A914570}.Debug-Linux|Any CPU.ActiveCfg = Debug-Linux|Any CPU
+		{F2C71160-3C00-40DD-AB52-151C9A914570}.Debug-Linux|Any CPU.Build.0 = Debug-Linux|Any CPU
+		{F2C71160-3C00-40DD-AB52-151C9A914570}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2C71160-3C00-40DD-AB52-151C9A914570}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2C71160-3C00-40DD-AB52-151C9A914570}.Release-Linux|Any CPU.ActiveCfg = Release-Linux|Any CPU
+		{F2C71160-3C00-40DD-AB52-151C9A914570}.Release-Linux|Any CPU.Build.0 = Release-Linux|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F3B03CFA-5A42-4E94-A0D3-90EC15330B68} = {080E35D6-AABC-451F-9399-4F8467A4F23F}
+		{F2A64D02-17C0-4E50-91CB-DEAD4DABDBE9} = {080E35D6-AABC-451F-9399-4F8467A4F23F}
+		{F2C71160-3C00-40DD-AB52-151C9A914570} = {080E35D6-AABC-451F-9399-4F8467A4F23F}
 	EndGlobalSection
 EndGlobal
