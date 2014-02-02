@@ -1,5 +1,6 @@
 ﻿using Jv.Games.Xna.Async;
 using Microsoft.Xna.Framework;
+using MonoGameLib.Core;
 using PowerOfLove.Activities;
 using System;
 using System.Collections.Generic;
@@ -17,9 +18,17 @@ namespace PowerOfLove
         {
             Graphics = new GraphicsDeviceManager(this)
             {
-                PreferredBackBufferWidth = 800,
-                PreferredBackBufferHeight = 600
+                PreferredBackBufferWidth = 640,
+                PreferredBackBufferHeight = 480
             };
+            Content.RootDirectory = "Content";
+
+            Window.Title = "Power of Love";
+            IsMouseVisible = true;
+
+            GameContent.Initialize(Content);
+            SoundManager.SEFolder = "Sounds";
+            SoundManager.BGMFolder = "BGM";
         }
 
         protected override void Initialize()
