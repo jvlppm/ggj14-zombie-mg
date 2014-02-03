@@ -1,5 +1,7 @@
 ﻿using Jv.Games.Xna.Async;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using MonoGameLib.Core.Sprites;
 using MonoGameLib.GUI.Base;
 using MonoGameLib.GUI.Components;
 using PowerOfLove.Components;
@@ -12,64 +14,101 @@ namespace PowerOfLove.Activities
 {
     class CreditsActivity : Activity
     {
+        #region Attributes
         List<Component> _uiComponents;
-        private float textBasePosY = 50;
-        private float textBasePosX = 0;
+        const float textBasePosY = 50;
+        float textPosY = textBasePosY;
+        #endregion
 
         public CreditsActivity(Game game)
             : base(game)
         {
             _uiComponents = new List<Component>();
             CreateCategory("Game Design", "Diogo Muller de Miranda\r\nRicardo Takeda");
-            CreateCategory("Developers ", "Diogo Muller de Miranda\r\nJoao Vitor Pietsiaki Moraes\r\nErik Onuki");
+            CreateCategory("Developers ", "Diogo Muller de Miranda\r\nJoao Vitor Pietsiaki Moraes\r\nEric Onuki");
             CreateCategory("Game Art", "Diogo Muller de Miranda\r\nRicardo Takeda");
             CreateCategory("Music and Sound Effects", "Ricardo Takeda");
 
-            var btnBack = new Button(game, "Return")
-            {
-                HorizontalOrigin = HorizontalAlign.Center,
-                Position = new Point(Game.GraphicsDevice.Viewport.Width / 2, Game.GraphicsDevice.Viewport.Height * 7 / 8)
-            };
-            btnBack.Position = new Point(btnBack.Position.X - btnBack.Size.X / 2, btnBack.Position.Y);
-            btnBack.Clicked += (s, e) => Exit();
-            _uiComponents.Add(btnBack);
+            CreateBackButton(game);
+            CreateZombies();
         }
 
         #region GUI
         void CreateCategory(string title, string text)
         {
-            if (textBasePosX == 0)
-                textBasePosX = Game.GraphicsDevice.Viewport.Width / 2 - 80;
+            var textPosX = Game.GraphicsDevice.Viewport.Width / 2 - 80;
 
             var cat1Title = new Label(title, "Fonts/DefaultFont")
             {
                 //FontSize = 24,
                 Color = Color.YellowGreen,
-                Position = new Point((int)textBasePosX, (int)textBasePosY)
+                Position = new Point((int)textPosX, (int)textPosY)
             };
 
             _uiComponents.Add(cat1Title);
 
-            textBasePosY += cat1Title.MeasureSize().Y;
+            textPosY += cat1Title.MeasureSize().Y;
 
-            if (textBasePosX == 0)
-                textBasePosX = cat1Title.Position.X;
+            if (textPosX == 0)
+                textPosX = cat1Title.Position.X;
 
             var cat1Text = new Label(text, "Fonts/DefaultFont")
             {
                 Color = Color.White,
-                Position = new Point((int)textBasePosX, (int)textBasePosY)
+                Position = new Point((int)textPosX, (int)textPosY)
             };
 
             _uiComponents.Add(cat1Text);
-            textBasePosY += cat1Text.MeasureSize().Y + 20;
+            textPosY += cat1Text.MeasureSize().Y + 20;
+        }
+
+        void CreateZombies()
+        {
+            var cZombie = new[] { "npc-zombie-01", "npc-zombie-02", "npc-zombie-03", "npc-zombie-04", "main-zombie" };
+            var cNormal = new[] { "npc-normal-01", "npc-normal-02", "npc-normal-03", "npc-normal-04", "main-normal" };
+
+            var classes = new[] { cZombie, cNormal };
+
+            int zombieX = 80;
+
+            foreach (var c in classes)
+            {
+                int zombieY = (int)textBasePosY;
+                int spaceY = 26;
+
+                foreach (var sprite in cNormal)
+                {
+                    var texture = Game.Content.Load<Texture2D>("Images/Sprites/" + sprite);
+                    var s = new Base.Sprite(texture, new Point(16, 16));
+                    s.AddAnimation("dance", new int[] { 0, 1, 2, 3, 4, 5 }, TimeSpan.FromMilliseconds(200));
+                    var comp = new SpriteComponent(s)
+                    {
+                        Position = new Point(zombieX, zombieY),
+                        Scale = new Vector2(4)
+                    };
+                    _uiComponents.Add(comp);
+                    zombieY += s.FrameSize.Y * (int)comp.Scale.Y + spaceY;
+                }
+                zombieX += 80;
+            }
+        }
+
+        void CreateBackButton(Game game)
+        {
+            var btnBack = new Button(game, "Return") { HorizontalOrigin = HorizontalAlign.Center };
+            btnBack.Position = new Point(
+                Game.GraphicsDevice.Viewport.Width / 2 - btnBack.Size.X / 2,
+                Game.GraphicsDevice.Viewport.Height * 7 / 8);
+            btnBack.Clicked += (s, e) => Exit();
+            _uiComponents.Add(btnBack);
         }
         #endregion
 
+        #region Game Loop
         protected override void Draw(Microsoft.Xna.Framework.GameTime gameTime)
         {
-            Game.GraphicsDevice.Clear(Color.Black);
-            SpriteBatch.Begin();
+            Game.GraphicsDevice.Clear(MainGame.DefaultBackgroundColor);
+            SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone);
 
             foreach (var cmp in _uiComponents)
                 cmp.Draw(gameTime, SpriteBatch);
@@ -82,5 +121,6 @@ namespace PowerOfLove.Activities
             foreach (var cmp in _uiComponents)
                 cmp.Update(gameTime);
         }
+        #endregion
     }
 }

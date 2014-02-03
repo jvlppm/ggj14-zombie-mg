@@ -28,19 +28,18 @@ namespace PowerOfLove.Activities
         }
 
         #region GUI
-        private Component CreateMainTitle(Microsoft.Xna.Framework.Game game)
+        Component CreateMainTitle(Microsoft.Xna.Framework.Game game)
         {
-            var title = new Label("POWER OF LOVE", "Fonts/BigFont")
+            return new Label("POWER OF LOVE", "Fonts/BigFont")
             {
                 HorizontalOrigin = HorizontalAlign.Center,
                 VerticalOrigin = VerticalAlign.Middle,
                 Color = Color.Red,
                 Position = new Point(game.GraphicsDevice.Viewport.Width / 2, game.GraphicsDevice.Viewport.Height / 8)
             };
-            return title;
         }
 
-        private Component CreateMenuOptions(Game game)
+        Component CreateMenuOptions(Game game)
         {
             var btnNewGame = new Button(game, "New Game");
             btnNewGame.Clicked += (s, e) => Exit(TitleResult.Play);
@@ -68,23 +67,22 @@ namespace PowerOfLove.Activities
             return vbox;
         }
 
-        private Component CreateFooter(Microsoft.Xna.Framework.Game game)
+        Component CreateFooter(Microsoft.Xna.Framework.Game game)
         {
-            var title = new Label("Global Game Jam 2014", "Fonts/DefaultFont")
+            return new Label("Global Game Jam 2014", "Fonts/DefaultFont")
             {
                 HorizontalOrigin = HorizontalAlign.Center,
                 VerticalOrigin = VerticalAlign.Middle,
                 Color = Color.White,
                 Position = new Point(game.GraphicsDevice.Viewport.Width / 2, game.GraphicsDevice.Viewport.Height * 7 / 8)
             };
-            return title;
         }
         #endregion
 
         protected override void Draw(Microsoft.Xna.Framework.GameTime gameTime)
         {
-            Game.GraphicsDevice.Clear(Color.Black);
-            SpriteBatch.Begin();
+            Game.GraphicsDevice.Clear(MainGame.DefaultBackgroundColor);
+            SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone);
 
             foreach (var cmp in _uiComponents)
                 cmp.Draw(gameTime, SpriteBatch);

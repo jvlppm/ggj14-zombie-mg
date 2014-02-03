@@ -14,6 +14,8 @@ namespace PowerOfLove
     {
         public GraphicsDeviceManager Graphics { get; private set; }
 
+        public static readonly Color DefaultBackgroundColor = new Color(32, 32, 32);
+
         public MainGame()
         {
             Window.Title = "Power of Love";

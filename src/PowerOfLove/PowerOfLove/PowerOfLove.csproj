@@ -60,7 +60,11 @@
     <Compile Include="Activities\ResultsActivity.cs" />
     <Compile Include="Activities\TitleActivity.cs" />
     <Compile Include="Activities\TitleResult.cs" />
+    <Compile Include="Base\Animation.cs" />
+    <Compile Include="Base\Frame.cs" />
+    <Compile Include="Base\Sprite.cs" />
     <Compile Include="Components\Button.cs" />
+    <Compile Include="Components\SpriteComponent.cs" />
     <Compile Include="MainGame.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -89,13 +93,43 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Images\ButtonNormal.png">
+    <Content Include="Content\Images\GUI\ButtonNormal.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Images\ButtonOver.png">
+    <Content Include="Content\Images\GUI\ButtonOver.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Images\ButtonPressed.png">
+    <Content Include="Content\Images\GUI\ButtonPressed.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\Sprites\main-normal.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\Sprites\main-zombie.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\Sprites\npc-normal-01.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\Sprites\npc-normal-02.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\Sprites\npc-normal-03.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\Sprites\npc-normal-04.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\Sprites\npc-zombie-01.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\Sprites\npc-zombie-02.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\Sprites\npc-zombie-03.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\Sprites\npc-zombie-04.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

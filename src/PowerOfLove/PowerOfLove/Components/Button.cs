@@ -20,9 +20,9 @@ namespace PowerOfLove.Components
             : base(text, "Fonts/DefaultFont")
         {
 
-            _normal = game.Content.Load<Texture2D>("Images/ButtonNormal.png");
-            _over = game.Content.Load<Texture2D>("Images/ButtonOver.png");
-            _pressed = game.Content.Load<Texture2D>("Images/ButtonPressed.png");
+            _normal = game.Content.Load<Texture2D>("Images/GUI/ButtonNormal.png");
+            _over = game.Content.Load<Texture2D>("Images/GUI/ButtonOver.png");
+            _pressed = game.Content.Load<Texture2D>("Images/GUI/ButtonPressed.png");
             Color = Microsoft.Xna.Framework.Color.White;
             Size = new Microsoft.Xna.Framework.Point(_normal.Width, _normal.Height);
             HorizontalOrigin = MonoGameLib.GUI.Base.HorizontalAlign.Center;
