@@ -74,9 +74,9 @@ namespace PowerOfLove.Activities
             foreach (var c in classes)
             {
                 int zombieY = (int)textBasePosY;
-                int spaceY = 26;
+                const int spaceY = 26;
 
-                foreach (var sprite in cNormal)
+                foreach (var sprite in c)
                 {
                     var texture = Game.Content.Load<Texture2D>("Images/Sprites/" + sprite);
                     var s = new Base.Sprite(texture, new Point(16, 16));
