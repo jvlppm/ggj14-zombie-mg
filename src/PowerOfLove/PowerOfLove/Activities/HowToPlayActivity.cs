@@ -10,12 +10,12 @@ namespace PowerOfLove.Activities
 {
     class HowToPlayActivity : Activity
     {
-        List<Component> _uiComponents;
+        GUI _gui;
 
         public HowToPlayActivity(Game game)
             : base(game)
         {
-            _uiComponents = new List<Component>
+            _gui = new GUI
             {
                 CreateObjective(game),
                 CreateKeyBindings(game),
@@ -55,21 +55,14 @@ namespace PowerOfLove.Activities
         }
         #endregion
 
-        protected override void Draw(Microsoft.Xna.Framework.GameTime gameTime)
+        protected override void Draw(GameTime gameTime)
         {
-            Game.GraphicsDevice.Clear(MainGame.DefaultBackgroundColor);
-            SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone);
-
-            foreach (var cmp in _uiComponents)
-                cmp.Draw(gameTime, SpriteBatch);
-
-            SpriteBatch.End();
+            _gui.Draw(gameTime, SpriteBatch);
         }
 
-        protected override void Update(Microsoft.Xna.Framework.GameTime gameTime)
+        protected override void Update(GameTime gameTime)
         {
-            foreach (var cmp in _uiComponents)
-                cmp.Update(gameTime);
+            _gui.Update(gameTime);
         }
     }
 }

@@ -15,7 +15,7 @@ namespace PowerOfLove.Activities
     class CreditsActivity : Activity
     {
         #region Attributes
-        List<Component> _uiComponents;
+        GUI _gui;
         const float textBasePosY = 50;
         float textPosY = textBasePosY;
         #endregion
@@ -23,7 +23,7 @@ namespace PowerOfLove.Activities
         public CreditsActivity(Game game)
             : base(game)
         {
-            _uiComponents = new List<Component>();
+            _gui = new GUI();
             CreateCategory("Game Design", "Diogo Muller de Miranda\r\nRicardo Takeda");
             CreateCategory("Developers ", "Diogo Muller de Miranda\r\nJoao Vitor Pietsiaki Moraes\r\nEric Onuki");
             CreateCategory("Game Art", "Diogo Muller de Miranda\r\nRicardo Takeda");
@@ -45,7 +45,7 @@ namespace PowerOfLove.Activities
                 Position = new Point((int)textPosX, (int)textPosY)
             };
 
-            _uiComponents.Add(cat1Title);
+            _gui.Add(cat1Title);
 
             textPosY += cat1Title.MeasureSize().Y;
 
@@ -58,7 +58,7 @@ namespace PowerOfLove.Activities
                 Position = new Point((int)textPosX, (int)textPosY)
             };
 
-            _uiComponents.Add(cat1Text);
+            _gui.Add(cat1Text);
             textPosY += cat1Text.MeasureSize().Y + 20;
         }
 
@@ -86,7 +86,7 @@ namespace PowerOfLove.Activities
                         Position = new Point(zombieX, zombieY),
                         Scale = new Vector2(4)
                     };
-                    _uiComponents.Add(comp);
+                    _gui.Add(comp);
                     zombieY += s.FrameSize.Y * (int)comp.Scale.Y + spaceY;
                 }
                 zombieX += 80;
@@ -100,26 +100,19 @@ namespace PowerOfLove.Activities
                 Game.GraphicsDevice.Viewport.Width / 2 - btnBack.Size.X / 2,
                 Game.GraphicsDevice.Viewport.Height * 7 / 8);
             btnBack.Clicked += (s, e) => Exit();
-            _uiComponents.Add(btnBack);
+            _gui.Add(btnBack);
         }
         #endregion
 
         #region Game Loop
         protected override void Draw(Microsoft.Xna.Framework.GameTime gameTime)
         {
-            Game.GraphicsDevice.Clear(MainGame.DefaultBackgroundColor);
-            SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone);
-
-            foreach (var cmp in _uiComponents)
-                cmp.Draw(gameTime, SpriteBatch);
-
-            SpriteBatch.End();
+            _gui.Draw(gameTime, SpriteBatch);
         }
 
         protected override void Update(Microsoft.Xna.Framework.GameTime gameTime)
         {
-            foreach (var cmp in _uiComponents)
-                cmp.Update(gameTime);
+            _gui.Update(gameTime);
         }
         #endregion
     }

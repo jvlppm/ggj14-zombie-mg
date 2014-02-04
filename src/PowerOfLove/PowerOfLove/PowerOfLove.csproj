@@ -78,6 +78,7 @@
     <Compile Include="Activities\TitleResult.cs" />
     <Compile Include="Base\Animation.cs" />
     <Compile Include="Base\Frame.cs" />
+    <Compile Include="Components\GUI.cs" />
     <Compile Include="Base\Sprite.cs" />
     <Compile Include="Components\Button.cs" />
     <Compile Include="Components\SpriteComponent.cs" />

@@ -9,17 +9,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace PowerOfLove.Activities
 {
     class TitleActivity : Activity<TitleResult>
     {
-        List<Component> _uiComponents;
+        GUI _gui;
 
         public TitleActivity(Game game)
             : base(game)
         {
-            _uiComponents = new List<Component>
+            _gui = new GUI
             {
                 CreateMainTitle(game),
                 CreateMenuOptions(game),
@@ -81,19 +82,12 @@ namespace PowerOfLove.Activities
 
         protected override void Draw(Microsoft.Xna.Framework.GameTime gameTime)
         {
-            Game.GraphicsDevice.Clear(MainGame.DefaultBackgroundColor);
-            SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone);
-
-            foreach (var cmp in _uiComponents)
-                cmp.Draw(gameTime, SpriteBatch);
-
-            SpriteBatch.End();
+            _gui.Draw(gameTime, SpriteBatch);
         }
 
         protected override void Update(Microsoft.Xna.Framework.GameTime gameTime)
         {
-            foreach (var cmp in _uiComponents)
-                cmp.Update(gameTime);
+            _gui.Update(gameTime);
         }
     }
 }
