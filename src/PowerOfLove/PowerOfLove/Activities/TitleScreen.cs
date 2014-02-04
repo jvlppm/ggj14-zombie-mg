@@ -1,23 +1,30 @@
 ﻿using Jv.Games.Xna.Async;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using MonoGameLib.GUI.Base;
 using MonoGameLib.GUI.Components;
 using MonoGameLib.GUI.Containers;
 using PowerOfLove.Components;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PowerOfLove.Activities
 {
-    class TitleActivity : Activity<TitleResult>
+    class TitleScreen : Activity<TitleScreen.Result>
     {
-        GUI _gui;
+        #region Nested
+        public enum Result
+        {
+            Credits,
+            HowToPlay,
+            Play,
+            Exit
+        }
+        #endregion
 
-        public TitleActivity(Game game)
+        #region Attributes
+        GUI _gui;
+        #endregion
+
+        #region Constructors
+        public TitleScreen(Game game)
             : base(game)
         {
             _gui = new GUI
@@ -27,6 +34,7 @@ namespace PowerOfLove.Activities
                 CreateFooter(game)
             };
         }
+        #endregion
 
         #region GUI
         Component CreateMainTitle(Microsoft.Xna.Framework.Game game)
@@ -43,16 +51,16 @@ namespace PowerOfLove.Activities
         Component CreateMenuOptions(Game game)
         {
             var btnNewGame = new Button(game, "New Game");
-            btnNewGame.Clicked += (s, e) => Exit(TitleResult.Play);
+            btnNewGame.Clicked += (s, e) => Exit(Result.Play);
 
             var btnHowToPlay = new Button(game, "Help");
-            btnHowToPlay.Clicked += (s, e) => Exit(TitleResult.HowToPlay);
+            btnHowToPlay.Clicked += (s, e) => Exit(Result.HowToPlay);
 
             var btnCredits = new Button(game, "Credits");
-            btnCredits.Clicked += (s, e) => Exit(TitleResult.Credits);
+            btnCredits.Clicked += (s, e) => Exit(Result.Credits);
 
             var btnExit = new Button(game, "Exit");
-            btnExit.Clicked += (s, e) => Exit(TitleResult.Exit);
+            btnExit.Clicked += (s, e) => Exit(Result.Exit);
 
             var vbox = new VBox
             {
@@ -80,6 +88,7 @@ namespace PowerOfLove.Activities
         }
         #endregion
 
+        #region Game Loop
         protected override void Draw(Microsoft.Xna.Framework.GameTime gameTime)
         {
             _gui.Draw(gameTime, SpriteBatch);
@@ -89,5 +98,6 @@ namespace PowerOfLove.Activities
         {
             _gui.Update(gameTime);
         }
+        #endregion
     }
 }

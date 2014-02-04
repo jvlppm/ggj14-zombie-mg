@@ -2,10 +2,6 @@
 using Microsoft.Xna.Framework;
 using MonoGameLib.Core;
 using PowerOfLove.Activities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace PowerOfLove
@@ -49,40 +45,40 @@ namespace PowerOfLove
             {
                 switch (await ShowTitle(host))
                 {
-                    case TitleResult.Credits:
+                    case TitleScreen.Result.Credits:
                         await ShowCredits(host);
                         break;
-                    case TitleResult.HowToPlay:
+                    case TitleScreen.Result.HowToPlay:
                         await ShowHowToPlay(host);
                         break;
-                    case TitleResult.Play:
+                    case TitleScreen.Result.Play:
                         await RunGamePlay(host);
                         break;
-                    case TitleResult.Exit:
+                    case TitleScreen.Result.Exit:
                         return;
                 }
             }
         }
 
-        Task<TitleResult> ShowTitle(ActivityHost host)
+        Task<TitleScreen.Result> ShowTitle(ActivityHost host)
         {
-            return host.Run<TitleActivity, TitleResult>();
+            return host.Run<TitleScreen, TitleScreen.Result>();
         }
 
         Task ShowCredits(ActivityHost host)
         {
-            return host.Run<CreditsActivity>();
+            return host.Run<CreditsScreen>();
         }
 
         Task ShowHowToPlay(ActivityHost host)
         {
-            return host.Run<HowToPlayActivity>();
+            return host.Run<HowToPlayScreen>();
         }
 
         async Task RunGamePlay(ActivityHost host)
         {
-            var result = await host.Run<GamePlayActivity, int>();
-            await host.Run<ResultsActivity>(result);
+            var result = await host.Run<GamePlayScreen, int>();
+            await host.Run<ResultsScreen>(result);
         }
     }
 }

@@ -1,12 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using MonoGameLib.GUI.Base;
 using MonoGameLib.GUI.Components;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace PowerOfLove.Components
 {

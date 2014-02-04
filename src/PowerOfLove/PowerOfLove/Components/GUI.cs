@@ -1,10 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGameLib.GUI.Base;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace PowerOfLove.Components
 {
@@ -40,7 +37,7 @@ namespace PowerOfLove.Components
         }
         #endregion
 
-        #region Public Methods
+        #region ICollection Methods
         public void Add(Component component)
         {
             _uiComponents.Add(component);

@@ -1,18 +1,19 @@
 ﻿using Jv.Games.Xna.Async;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using MonoGameLib.GUI.Base;
 using MonoGameLib.GUI.Components;
 using PowerOfLove.Components;
-using System.Collections.Generic;
 
 namespace PowerOfLove.Activities
 {
-    class HowToPlayActivity : Activity
+    class HowToPlayScreen : Activity
     {
+        #region Attributes
         GUI _gui;
+        #endregion
 
-        public HowToPlayActivity(Game game)
+        #region Constructors
+        public HowToPlayScreen(Game game)
             : base(game)
         {
             _gui = new GUI
@@ -22,6 +23,7 @@ namespace PowerOfLove.Activities
                 CreateBackButton(game)
             };
         }
+        #endregion
 
         #region GUI
         Component CreateObjective(Game game)
@@ -55,6 +57,7 @@ namespace PowerOfLove.Activities
         }
         #endregion
 
+        #region Game Loop
         protected override void Draw(GameTime gameTime)
         {
             _gui.Draw(gameTime, SpriteBatch);
@@ -64,5 +67,6 @@ namespace PowerOfLove.Activities
         {
             _gui.Update(gameTime);
         }
+        #endregion
     }
 }

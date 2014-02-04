@@ -70,12 +70,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Activities\CreditsActivity.cs" />
-    <Compile Include="Activities\GamePlayActivity.cs" />
-    <Compile Include="Activities\HowToPlayActivity.cs" />
-    <Compile Include="Activities\ResultsActivity.cs" />
-    <Compile Include="Activities\TitleActivity.cs" />
-    <Compile Include="Activities\TitleResult.cs" />
+    <Compile Include="Activities\CreditsScreen.cs" />
+    <Compile Include="Activities\GamePlayScreen.cs" />
+    <Compile Include="Activities\HowToPlayScreen.cs" />
+    <Compile Include="Activities\ResultsScreen.cs" />
+    <Compile Include="Activities\TitleScreen.cs" />
     <Compile Include="Base\Animation.cs" />
     <Compile Include="Base\Frame.cs" />
     <Compile Include="Components\GUI.cs" />

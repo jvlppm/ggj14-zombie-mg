@@ -7,9 +7,9 @@ using System.Text;
 
 namespace PowerOfLove.Activities
 {
-    class ResultsActivity : Activity
+    class GamePlayScreen : Activity<int>
     {
-        public ResultsActivity(Game game, int gamePlayResult)
+        public GamePlayScreen(Game game)
             : base(game)
         {
 

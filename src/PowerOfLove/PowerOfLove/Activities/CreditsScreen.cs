@@ -1,18 +1,14 @@
 ﻿using Jv.Games.Xna.Async;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MonoGameLib.Core.Sprites;
 using MonoGameLib.GUI.Base;
 using MonoGameLib.GUI.Components;
 using PowerOfLove.Components;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace PowerOfLove.Activities
 {
-    class CreditsActivity : Activity
+    class CreditsScreen : Activity
     {
         #region Attributes
         GUI _gui;
@@ -20,7 +16,8 @@ namespace PowerOfLove.Activities
         float textPosY = textBasePosY;
         #endregion
 
-        public CreditsActivity(Game game)
+        #region Constructors
+        public CreditsScreen(Game game)
             : base(game)
         {
             _gui = new GUI();
@@ -32,6 +29,7 @@ namespace PowerOfLove.Activities
             CreateBackButton(game);
             CreateZombies();
         }
+        #endregion
 
         #region GUI
         void CreateCategory(string title, string text)
