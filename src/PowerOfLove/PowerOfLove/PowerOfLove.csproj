@@ -77,10 +77,14 @@
     <Compile Include="Activities\TitleScreen.cs" />
     <Compile Include="Base\Animation.cs" />
     <Compile Include="Base\Frame.cs" />
+    <Compile Include="Components\EntityComponent.cs" />
     <Compile Include="Components\GUI.cs" />
     <Compile Include="Base\Sprite.cs" />
     <Compile Include="Components\Button.cs" />
     <Compile Include="Components\SpriteComponent.cs" />
+    <Compile Include="Entities\Behaviors\GamePlayEntity.cs" />
+    <Compile Include="Entities\Behaviors\NPC.cs" />
+    <Compile Include="Entities\Behaviors\ZombieBehavior.cs" />
     <Compile Include="MainGame.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
