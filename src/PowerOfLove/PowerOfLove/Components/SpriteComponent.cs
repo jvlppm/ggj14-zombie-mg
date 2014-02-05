@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
+using MonoGameLib.Core.Sprites;
 using MonoGameLib.GUI.Base;
-using PowerOfLove.Base;
 
 namespace PowerOfLove.Components
 {
@@ -20,6 +20,7 @@ namespace PowerOfLove.Components
             var position = new Vector2(Position.X, Position.Y);
             var origin = AlignExtensions.ToVector(HorizontalOrigin, VerticalOrigin);
             var size = new Vector2(Sprite.FrameSize.X, Sprite.FrameSize.Y) * Scale;
+            Sprite.Update(gameTime);
             Sprite.Draw(gameTime, spriteBatch, position - size * origin, scale: Scale);
         }
     }

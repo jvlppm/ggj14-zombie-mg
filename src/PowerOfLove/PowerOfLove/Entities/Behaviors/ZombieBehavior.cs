@@ -33,7 +33,7 @@ namespace PowerOfLove.Entities.Behaviors
 				{
 					desiredVelocity.Normalize();
                     desiredVelocity = desiredVelocity * (float)gameTime.ElapsedGameTime.TotalMilliseconds * 30;
-                    Entity.Sprite.ChangeAnimation("run");
+                    Entity.Sprite.CurrentAnimation = "run";
 					if (!Screen.IsEvil) {
 						((NPC)Entity).RandomZombieNpcMessage();
 					}
@@ -44,7 +44,7 @@ namespace PowerOfLove.Entities.Behaviors
 				else
 				{
 					desiredVelocity = Vector2.Zero;
-					Entity.Sprite.ChangeAnimation("stand");
+					Entity.Sprite.CurrentAnimation = "stand";
 				}
 				
 				Entity.Position = Entity.Position + desiredVelocity;
@@ -56,7 +56,7 @@ namespace PowerOfLove.Entities.Behaviors
 
 				desiredVelocitySeek.Normalize();
 				desiredVelocitySeek = desiredVelocitySeek * (float)gameTime.ElapsedGameTime.TotalMilliseconds * 45;
-				Entity.Sprite.ChangeAnimation("run");
+				Entity.Sprite.CurrentAnimation = "run";
 				
                 if(distanceSeek > _minDistance)
                     Entity.Position = Entity.Position + desiredVelocitySeek;

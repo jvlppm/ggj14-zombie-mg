@@ -75,11 +75,8 @@
     <Compile Include="Activities\HowToPlayScreen.cs" />
     <Compile Include="Activities\ResultsScreen.cs" />
     <Compile Include="Activities\TitleScreen.cs" />
-    <Compile Include="Base\Animation.cs" />
-    <Compile Include="Base\Frame.cs" />
     <Compile Include="Components\EntityComponent.cs" />
     <Compile Include="Components\GUI.cs" />
-    <Compile Include="Base\Sprite.cs" />
     <Compile Include="Components\Button.cs" />
     <Compile Include="Components\SpriteComponent.cs" />
     <Compile Include="Entities\Behaviors\GamePlayEntity.cs" />

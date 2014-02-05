@@ -1,6 +1,7 @@
 ﻿using Jv.Games.Xna.Async;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGameLib.Core.Sprites;
 using MonoGameLib.GUI.Base;
 using MonoGameLib.GUI.Components;
 using PowerOfLove.Components;
@@ -77,7 +78,7 @@ namespace PowerOfLove.Activities
                 foreach (var sprite in c)
                 {
                     var texture = Game.Content.Load<Texture2D>("Images/Sprites/" + sprite);
-                    var s = new Base.Sprite(texture, new Point(16, 16));
+                    var s = new Sprite(texture, new Point(16, 16));
                     s.AddAnimation("dance", new int[] { 0, 1, 2, 3, 4, 5 }, TimeSpan.FromMilliseconds(200));
                     var comp = new SpriteComponent(s)
                     {
