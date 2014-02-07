@@ -73,6 +73,8 @@
     <Compile Include="Activities\CreditsScreen.cs" />
     <Compile Include="Activities\GamePlayScreen.cs" />
     <Compile Include="Activities\HowToPlayScreen.cs" />
+    <Compile Include="CameraInfo.cs" />
+    <Compile Include="Entities\Player.cs" />
     <Compile Include="Activities\ResultsScreen.cs" />
     <Compile Include="Activities\TitleScreen.cs" />
     <Compile Include="Components\EntityComponent.cs" />
@@ -80,7 +82,7 @@
     <Compile Include="Components\Button.cs" />
     <Compile Include="Components\SpriteComponent.cs" />
     <Compile Include="Entities\Behaviors\GamePlayEntity.cs" />
-    <Compile Include="Entities\Behaviors\NPC.cs" />
+    <Compile Include="Entities\NPC.cs" />
     <Compile Include="Entities\Behaviors\ZombieBehavior.cs" />
     <Compile Include="MainGame.cs" />
     <Compile Include="Program.cs" />
@@ -92,6 +94,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Content\Fonts\DefaultFont.xnb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Maps\MainMap.tmx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
@@ -119,10 +124,10 @@
     <Content Include="Content\Images\GUI\ButtonPressed.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Images\Sprites\main-normal.png">
+    <Content Include="Content\Images\Sprites\player-normal.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Images\Sprites\main-zombie.png">
+    <Content Include="Content\Images\Sprites\player-zombie.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Images\Sprites\npc-normal-01.png">
@@ -147,6 +152,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Images\Sprites\npc-zombie-04.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Maps\tileset.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
