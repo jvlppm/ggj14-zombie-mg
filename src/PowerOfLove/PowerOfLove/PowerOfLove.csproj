@@ -74,6 +74,7 @@
     <Compile Include="Activities\GamePlayScreen.cs" />
     <Compile Include="Activities\HowToPlayScreen.cs" />
     <Compile Include="CameraInfo.cs" />
+    <Compile Include="Entities\Behaviors\ControllableBehavior.cs" />
     <Compile Include="Entities\Player.cs" />
     <Compile Include="Activities\ResultsScreen.cs" />
     <Compile Include="Activities\TitleScreen.cs" />

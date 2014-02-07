@@ -31,6 +31,7 @@ namespace PowerOfLove.Entities
             Sprite = LoadSprite(game, "normal");
             EvilSprite = LoadSprite(game, "zombie");
             Scale = new Vector2(2);
+            Behaviors.Add(new ControllableBehavior(this));
         }
 
         public void RandomZombieNpcMessage()

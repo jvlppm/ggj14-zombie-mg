@@ -38,7 +38,7 @@ namespace PowerOfLove.Activities
         }
         Component CreateKeyBindings(Game game)
         {
-            return new Label("Movement: Keyboard Arrows or WASD\r\n", "Fonts/DefaultFont")
+            return new Label("Movement: Touch / Mouse click\r\n", "Fonts/DefaultFont")
             {
                 Color = Color.White,
                 HorizontalOrigin = HorizontalAlign.Center,
