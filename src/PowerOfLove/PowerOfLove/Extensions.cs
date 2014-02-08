@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using MonoGameLib.Core.Entities;
 using MonoGameLib.Core.Sprites;
+using PowerOfLove.Entities;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PowerOfLove.Entities
+namespace PowerOfLove
 {
     static class Extensions
     {
@@ -56,6 +57,16 @@ namespace PowerOfLove.Entities
             var newPath = Path.Combine(oldPath, newName);
 
             return game.Content.Load<Texture2D>(newPath);
+        }
+
+        public static TimeSpan Multiply(this TimeSpan time, float by)
+        {
+            return TimeSpan.FromMilliseconds(time.TotalMilliseconds * by);
+        }
+
+        public static TimeSpan Divide(this TimeSpan time, float by)
+        {
+            return time.Multiply(1 / by);
         }
     }
 }

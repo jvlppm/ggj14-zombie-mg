@@ -78,7 +78,8 @@ namespace PowerOfLove
         async Task RunGamePlay(ActivityHost host)
         {
             var result = await host.Run<GamePlayScreen, int>();
-            await host.Run<ResultsScreen>(result);
+            if(result >= 0)
+                await host.Run<ResultsScreen>(result);
         }
     }
 }
