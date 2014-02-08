@@ -15,10 +15,11 @@ namespace PowerOfLove.Entities
     {
         public GamePlayScreen Screen { get; private set; }
 
-        public Sprite NormalSprite { get; protected set; }
-        public Sprite EvilSprite { get; protected set; }
+        public Texture2D NormalTexture { get; protected set; }
+        public Texture2D ZombieTexture { get; protected set; }
 
         public bool IsHugging { get; set; }
+        public Rectangle CollisionBox { get; protected set; }
 
         public void TurnIntoFriend()
         {

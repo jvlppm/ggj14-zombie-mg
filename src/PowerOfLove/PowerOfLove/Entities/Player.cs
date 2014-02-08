@@ -13,10 +13,10 @@ namespace PowerOfLove.Entities
 {
     class Player : GamePlayEntity
     {
-        const string spritePathFormat = "Images/Sprites/player-{0}";
+        const string SpritePathFormat = "Images/Sprites/player-{0}";
         static Sprite LoadSprite(Game game, string type)
         {
-            string spritePath = string.Format(spritePathFormat, type);
+            string spritePath = string.Format(SpritePathFormat, type);
             var sprite = new Sprite(game.Content.Load<Texture2D>(spritePath), new Point(16, 16));
             sprite.AddAnimation("stand", new[] { 6, 7, 8 }, TimeSpan.FromMilliseconds(300), true);
             sprite.AddAnimation("run", new[]{0, 1, 2, 1}, TimeSpan.FromMilliseconds(100), true);
@@ -29,29 +29,22 @@ namespace PowerOfLove.Entities
         public Player(Game game, GamePlayScreen screen)
             : base(screen)
         {
-            NormalSprite = LoadSprite(game, "normal");
-            EvilSprite = LoadSprite(game, "zombie");
+            Sprite = LoadSprite(game, "normal");
+            NormalTexture = Sprite.Texture;
+            ZombieTexture = NormalTexture.AsZombie(game);
 
             Scale = new Vector2(2);
             Behaviors.Add(new TouchControlBehavior(this));
+            CollisionBox = new Rectangle(8, 2, 8, 0);
         }
 
-        public void RandomZombieNpcMessage()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void RandomHumanNpcMessage()
-        {
-            throw new NotImplementedException();
-        }
-
+        #region Game Loop
         public override void Update(GameTime gameTime)
         {
-            if (Screen.TrueVision)
-                Sprite = EvilSprite;
+            if (Screen.IsTrueVision)
+                Sprite.Texture = ZombieTexture;
             else
-                Sprite = NormalSprite;
+                Sprite.Texture = NormalTexture;
 
             if (IsHugging)
             {
@@ -63,7 +56,7 @@ namespace PowerOfLove.Entities
             if (en != null)
             {
                 var p = en.Position - Position;
-                if (p.LengthSquared() < 160)
+                if (this.GetCollisionRectangle().Intersects(this.GetCollisionRectangle(p)))
                 {
                     Hug(en);
                 }
@@ -71,22 +64,30 @@ namespace PowerOfLove.Entities
 
             base.Update(gameTime);
         }
+        #endregion
 
         #region Public Methods
         public async void Hug(GamePlayEntity entity)
         {
             var oldPos = entity.Position;
             entity.Position = Position;
+
             entity.IsHugging = true;
             IsHugging = true;
+
             entity.Sprite.Effect = Sprite.Effect == SpriteEffects.FlipHorizontally ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
-            await TaskEx.WhenAll(
+            var hugs = TaskEx.WhenAll(
                 Sprite.PlayAnimation("hug"),
                 entity.Sprite.PlayAnimation("hug"));
+
+            await TaskEx.Delay(300);
             entity.TurnIntoFriend();
-            IsHugging = false;
-            entity.Position = new Vector2(oldPos.X, entity.Position.Y);
+            await hugs;
+
             entity.IsHugging = false;
+            IsHugging = false;
+
+            entity.Position = new Vector2(Position.X + ( Sprite.Effect == SpriteEffects.FlipHorizontally? -10 : 10), entity.Position.Y);
         }
         #endregion
     }

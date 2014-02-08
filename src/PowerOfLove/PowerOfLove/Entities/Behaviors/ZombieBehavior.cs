@@ -10,15 +10,12 @@ using PowerOfLove.Entities;
 
 namespace PowerOfLove.Entities.Behaviors
 {
-    class ZombieBehavior : Behavior
+    class ZombieBehavior : GameEntityBehavior
     {
         Entity _target;
         private float _minDistance = RandomNumberGenerator.Next() * 90 + 10;
 
-        new GamePlayEntity Entity { get { return (GamePlayEntity)base.Entity; } }
-        GamePlayScreen Screen { get{return Entity.Screen; }}
-
-        public ZombieBehavior(Entity entity)
+        public ZombieBehavior(GamePlayEntity entity)
             : base(entity)
         {
 
@@ -30,51 +27,55 @@ namespace PowerOfLove.Entities.Behaviors
                 return;
 
             _target = _target ?? Screen.NearestToEntity(Entity, "player");
-            if ( _target != null && Entity.Tag == "enemy" )
-			{			
-				var desiredVelocity = Entity.Position - _target.Position;
-				var distance = desiredVelocity.Length();
+            if(_target == null)
+                return;
 
-                desiredVelocity.Normalize();
-                Entity.Look(-desiredVelocity);
-				
-				if( distance < 100 )
-				{
-                    desiredVelocity = desiredVelocity * (float)gameTime.ElapsedGameTime.TotalSeconds * 30;
-                    Entity.Sprite.CurrentAnimation = "run";
-					if (!Screen.TrueVision) {
-						((NPC)Entity).RandomZombieNpcMessage();
-					}
-					else {
-						((NPC)Entity).RandomHumanNpcMessage();
-					}
-				}
-				else
-				{
-					desiredVelocity = Vector2.Zero;
-					Entity.Sprite.CurrentAnimation = "stand";
-				}
-
-                Entity.Move(desiredVelocity);
-			}
-			else if ( Entity.Tag == "friend" )
-			{
-				var desiredVelocitySeek = _target.Position - Entity.Position;
-				var distanceSeek = desiredVelocitySeek.Length();
-
-				desiredVelocitySeek.Normalize();
-				desiredVelocitySeek *= (float)gameTime.ElapsedGameTime.TotalSeconds * 45;
-
-                Entity.Look(desiredVelocitySeek);
-
-                if (distanceSeek > _minDistance)
-                {
-                    Entity.Move(desiredVelocitySeek);
-                    Entity.Sprite.CurrentAnimation = "run";
-                }
-                else
-                    Entity.Sprite.CurrentAnimation = "stand";
-			}
+            if (Entity.Tag == "enemy" )
+                RunAway(gameTime);
+			else// if ( Entity.Tag == "friend" )
+                StayClose(gameTime);
 		}
+
+        private void StayClose(Microsoft.Xna.Framework.GameTime gameTime)
+        {
+            var desiredVelocitySeek = _target.Position - Entity.Position;
+            var distanceSeek = desiredVelocitySeek.Length();
+
+            desiredVelocitySeek.Normalize();
+            desiredVelocitySeek *= (float)gameTime.ElapsedGameTime.TotalSeconds * 45;
+
+            Entity.Look(desiredVelocitySeek);
+
+            if (distanceSeek > _minDistance)
+            {
+                Entity.Move(desiredVelocitySeek);
+                Entity.Sprite.CurrentAnimation = "run";
+            }
+            else
+                Entity.Sprite.CurrentAnimation = "stand";
+        }
+
+        private void RunAway(Microsoft.Xna.Framework.GameTime gameTime)
+        {
+            var desiredVelocity = Entity.Position - _target.Position;
+            var distance = desiredVelocity.Length();
+
+            desiredVelocity.Normalize();
+            Entity.Look(-desiredVelocity);
+
+            if (distance < 100)
+            {
+                desiredVelocity = desiredVelocity * (float)gameTime.ElapsedGameTime.TotalSeconds * 30;
+                Entity.Sprite.CurrentAnimation = "run";
+                ((NPC)Entity).Scream();
+            }
+            else
+            {
+                desiredVelocity = Vector2.Zero;
+                Entity.Sprite.CurrentAnimation = "stand";
+            }
+
+            Entity.Move(desiredVelocity);
+        }
     }
 }

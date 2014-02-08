@@ -2,30 +2,40 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGameLib.Core;
+using MonoGameLib.GUI.Components;
 using MonoGameLib.Tiled;
+using PowerOfLove.Components;
 using PowerOfLove.Entities;
 using PowerOfLove.Entities.Behaviors;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace PowerOfLove.Activities
 {
     class GamePlayScreen : Activity<int>
     {
         Map _map;
+        Label _gameTimerLabel;
+
+        public ContextTimer Timer { get; private set; }
 
         public IEnumerable<GamePlayEntity> Entities { get; private set; }
         public GamePlayEntity Player { get; private set; }
-        public bool TrueVision { get; private set; }
+        public bool IsTrueVision { get; private set; }
         public CameraInfo Camera { get; private set; }
 
         public GamePlayScreen(Game game)
             : base(game)
         {
+            _gameTimerLabel = new Label("", "Fonts/BigFont") { Color = Color.Red, Position = new Point(16,0) };
+
             _map = MapLoader.LoadMap("Content/Maps/MainMap.tmx");
             Entities = _map.Objects.Select(CreateEntity).ToList();
+            Timer = new ContextTimer(TimeSpan.FromMinutes(1));
         }
 
         GamePlayEntity CreateEntity(GameObject arg)
@@ -48,9 +58,23 @@ namespace PowerOfLove.Activities
             return newEntity;
         }
 
+        #region Activity Life Cycle
+        protected async override Task<int> RunActivity()
+        {
+            var finishTimer = UpdateContext.Run(Timer);
+            await UpdateContext.Delay(TimeSpan.FromSeconds(30));
+            ShowTrueVision();
+            await finishTimer;
+            return Entities.Count(e => e.Tag == "friend");
+        }
+        #endregion
+
         #region Game Loop
         protected override void Update(Microsoft.Xna.Framework.GameTime gameTime)
         {
+            if (Microsoft.Xna.Framework.Input.Mouse.GetState().RightButton == Microsoft.Xna.Framework.Input.ButtonState.Pressed)
+                ShowTrueVision();
+
             Camera = new CameraInfo(Player.Position, 2, Game.GraphicsDevice.Viewport);
 
             foreach (var ent in Entities)
@@ -61,6 +85,7 @@ namespace PowerOfLove.Activities
         {
             SpriteBatch.GraphicsDevice.Clear(MainGame.DefaultBackgroundColor);
             Begin(Camera, SamplerState.PointClamp);
+
             _map.Draw(gameTime, SpriteBatch, Vector2.Zero);
 
             foreach (var ent in Entities.OrderBy(e => e.Position.Y))
@@ -69,6 +94,11 @@ namespace PowerOfLove.Activities
                 ent.Draw(gameTime, SpriteBatch);
             }
 
+            SpriteBatch.End();
+
+            SpriteBatch.Begin();
+            _gameTimerLabel.Text = Timer.RemainingTime.TotalSeconds.ToString("00");
+            _gameTimerLabel.Draw(gameTime, SpriteBatch);
             SpriteBatch.End();
         }
 
@@ -83,8 +113,8 @@ namespace PowerOfLove.Activities
             var transformation = Matrix.CreateScale(new Vector3(camera.ZoomFactor, camera.ZoomFactor, 1)) *
                                  Matrix.CreateTranslation(new Vector3(translation, 0));
 
-            SpriteBatch.Begin(SpriteSortMode.Deferred,
-                        BlendState.AlphaBlend,
+            SpriteBatch.Begin(SpriteSortMode.FrontToBack,
+                        BlendState.NonPremultiplied,
                         sampler,
                         depthStencil,
                         rasterize,
@@ -113,6 +143,13 @@ namespace PowerOfLove.Activities
                 }
             }
             return false;
+        }
+
+        public void ShowTrueVision()
+        {
+            foreach (var tileset in _map.Tilesets)
+                tileset.Texture = tileset.Texture.AsTrueVision(Game);
+            IsTrueVision = true;
         }
         #endregion
     }

@@ -1,32 +1,24 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGameLib.Core.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace PowerOfLove.Entities.Behaviors
 {
-    class TouchControlBehavior : Behavior
+    class TouchControlBehavior : GameEntityBehavior
     {
-        new GamePlayEntity Entity { get { return (GamePlayEntity) base.Entity; } }
-
         public TouchControlBehavior(GamePlayEntity parent)
             : base(parent)
         {
 
         }
 
-        public override void Update(Microsoft.Xna.Framework.GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             if (Entity.IsHugging)
                 return;
 
             var mState = Mouse.GetState();
-            var camera = Entity.Screen.Camera;
-            var clickPosition = camera.ScreenToMapPosition(mState.Position);
+            var clickPosition = Screen.Camera.ScreenToMapPosition(mState.Position);
             var direction = clickPosition - Entity.Position;
             direction.Normalize();
             Entity.Look(direction);

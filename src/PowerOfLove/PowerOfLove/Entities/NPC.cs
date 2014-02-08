@@ -13,10 +13,10 @@ namespace PowerOfLove.Entities
 {
     class NPC : GamePlayEntity
     {
-        const string spritePathFormat = "Images/Sprites/npc-{0}-{1}";
+        const string SpritePathFormat = "Images/Sprites/npc-{0}-{1}";
         static Sprite LoadSprite(Game game, string type, int id)
         {
-            string spritePath = string.Format(spritePathFormat, type, id.ToString("D2"));
+            string spritePath = string.Format(SpritePathFormat, type, id.ToString("D2"));
             var sprite = new Sprite(game.Content.Load<Texture2D>(spritePath), new Point(16, 16));
             sprite.AddAnimation("stand", new[] { 6, 7, 8 }, TimeSpan.FromMilliseconds(300), true);
             sprite.AddAnimation("run", new[] { 0, 1, 2, 1 }, TimeSpan.FromMilliseconds(100), true);
@@ -26,15 +26,37 @@ namespace PowerOfLove.Entities
             return sprite;
         }
 
-
         public NPC(Game game, GamePlayScreen screen, int npcSpriteId)
             : base(screen)
         {
-            NormalSprite = LoadSprite(game, "normal", npcSpriteId);
-            EvilSprite = LoadSprite(game, "zombie", npcSpriteId);
+            Sprite = LoadSprite(game, "normal", npcSpriteId);
+            NormalTexture = Sprite.Texture;
+            ZombieTexture = NormalTexture.AsZombie(game);
 
             Scale = new Vector2(2);
             Behaviors.Add(new ZombieBehavior(this));
+            CollisionBox = new Rectangle(8, 2, 8, 0);
+        }
+
+        #region Game Loop
+        public override void Update(GameTime gameTime)
+        {
+            if (Screen.IsTrueVision != (Tag == "friend"))
+                Sprite.Texture = NormalTexture;
+            else
+                Sprite.Texture = ZombieTexture;
+
+            base.Update(gameTime);
+        }
+        #endregion
+
+        #region Public Methods
+        public void Scream()
+        {
+            if (!Screen.IsTrueVision)
+                RandomZombieNpcMessage();
+            else
+                RandomHumanNpcMessage();
         }
 
         public void RandomZombieNpcMessage()
@@ -46,15 +68,6 @@ namespace PowerOfLove.Entities
         {
             //throw new NotImplementedException();
         }
-
-        public override void Update(GameTime gameTime)
-        {
-            if (!Screen.TrueVision == (Tag == "friend"))
-                Sprite = NormalSprite;
-            else
-                Sprite = EvilSprite;
-
-            base.Update(gameTime);
-        }
+        #endregion
     }
 }

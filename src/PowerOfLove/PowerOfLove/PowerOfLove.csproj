@@ -75,6 +75,7 @@
     <Compile Include="Activities\HowToPlayScreen.cs" />
     <Compile Include="CameraInfo.cs" />
     <Compile Include="Entities\Behaviors\ControllableBehavior.cs" />
+    <Compile Include="Entities\Behaviors\GameEntityBehavior.cs" />
     <Compile Include="Entities\Extensions.cs" />
     <Compile Include="Entities\Player.cs" />
     <Compile Include="Activities\ResultsScreen.cs" />
@@ -157,6 +158,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Maps\tileset.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Maps\tileset-truevision.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
