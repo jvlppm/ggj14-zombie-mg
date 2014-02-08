@@ -18,6 +18,14 @@ namespace PowerOfLove.Entities
         public Texture2D NormalTexture { get; protected set; }
         public Texture2D ZombieTexture { get; protected set; }
 
+        public Vector2 CenterPosition
+        {
+            get
+            {
+                return Position + new Vector2(Size.X, Size.Y) * Scale / 2;
+            }
+        }
+
         public bool IsHugging { get; set; }
         public Rectangle CollisionBox { get; protected set; }
 

@@ -19,7 +19,7 @@ namespace PowerOfLove.Entities.Behaviors
 
             var mState = Mouse.GetState();
             var clickPosition = Screen.Camera.ScreenToMapPosition(mState.Position);
-            var direction = clickPosition - Entity.Position;
+            var direction = clickPosition - Entity.CenterPosition;
             direction.Normalize();
             Entity.Look(direction);
 

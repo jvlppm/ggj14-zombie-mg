@@ -72,10 +72,7 @@ namespace PowerOfLove.Activities
         #region Game Loop
         protected override void Update(Microsoft.Xna.Framework.GameTime gameTime)
         {
-            if (Microsoft.Xna.Framework.Input.Mouse.GetState().RightButton == Microsoft.Xna.Framework.Input.ButtonState.Pressed)
-                ShowTrueVision();
-
-            Camera = new CameraInfo(Player.Position, 2, Game.GraphicsDevice.Viewport);
+            Camera = new CameraInfo(Player.CenterPosition, 2, Game.GraphicsDevice.Viewport);
 
             foreach (var ent in Entities)
                 ent.Update(gameTime);
