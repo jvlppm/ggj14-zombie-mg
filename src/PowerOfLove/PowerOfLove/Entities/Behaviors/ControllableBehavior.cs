@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGameLib.Core.Entities;
 using System;
@@ -20,6 +21,9 @@ namespace PowerOfLove.Entities.Behaviors
 
         public override void Update(Microsoft.Xna.Framework.GameTime gameTime)
         {
+            if (Entity.IsHugging)
+                return;
+
             var mState = Mouse.GetState();
             if(mState.LeftButton == ButtonState.Pressed)
             {
@@ -28,8 +32,18 @@ namespace PowerOfLove.Entities.Behaviors
                 var direction = clickPosition - Entity.Position;
                 direction.Normalize();
 
-                Entity.Position += direction;
+                if (Entity.Move(direction))
+                    Entity.Sprite.CurrentAnimation = "run";
+                else
+                    Entity.Sprite.CurrentAnimation = "stand";
+
+                if (Entity.Position.X > clickPosition.X)
+                    Entity.Sprite.Effect = SpriteEffects.FlipHorizontally;
+                else
+                    Entity.Sprite.Effect = SpriteEffects.None;
             }
+            else
+                Entity.Sprite.CurrentAnimation = "stand";
         }
     }
 }

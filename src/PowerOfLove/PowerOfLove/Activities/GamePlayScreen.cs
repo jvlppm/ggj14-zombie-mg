@@ -74,6 +74,20 @@ namespace PowerOfLove.Activities
                            .FirstOrDefault();
         }
 
+        public bool Move(GamePlayEntity entity, Vector2 direction)
+        {
+            var possibleDirections = new[]{ direction, new Vector2(direction.X, 0), new Vector2(0, direction.Y)};
+            foreach(var dir in possibleDirections)
+            {
+                if(!_map.Collides(entity.GetCollisionRectangle(dir)))
+                {
+                    entity.Position += dir;
+                    return true;
+                }
+            }
+            return false;
+        }
+
         void Begin(CameraInfo camera, SamplerState sampler = null, DepthStencilState depthStencil = null, RasterizerState rasterize = null, Effect effect = null)
         {
             var viewPort = Game.GraphicsDevice.Viewport;

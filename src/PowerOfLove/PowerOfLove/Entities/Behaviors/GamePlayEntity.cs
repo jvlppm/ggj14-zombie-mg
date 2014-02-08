@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace PowerOfLove.Entities.Behaviors
 {
@@ -13,6 +14,8 @@ namespace PowerOfLove.Entities.Behaviors
         public GamePlayScreen Screen { get; private set; }
 
         public Sprite EvilSprite { get; protected set; }
+
+        public bool IsHugging { get; protected set; }
 
         public void TurnEvil()
         {
@@ -34,6 +37,18 @@ namespace PowerOfLove.Entities.Behaviors
         public override void Draw(Microsoft.Xna.Framework.GameTime gameTime, Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch, Microsoft.Xna.Framework.Color? colorOverride = null, Microsoft.Xna.Framework.Vector2? scaleOverride = null)
         {
             base.Draw(gameTime, spriteBatch, colorOverride, scaleOverride);
+        }
+
+        public async void Hug()
+        {
+            IsHugging = true;
+            await Sprite.PlayAnimation("hug");
+            IsHugging = false;
+        }
+
+        public bool Move(Microsoft.Xna.Framework.Vector2 direction)
+        {
+            return Screen.Move(this, direction);
         }
     }
 }

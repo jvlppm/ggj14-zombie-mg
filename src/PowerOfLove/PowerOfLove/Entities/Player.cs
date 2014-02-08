@@ -17,9 +17,9 @@ namespace PowerOfLove.Entities
         {
             string spritePath = string.Format(spritePathFormat, type);
             var sprite = new Sprite(game.Content.Load<Texture2D>(spritePath), new Point(16, 16));
-            sprite.AddAnimation("stand", new[]{6, 7, 8}, TimeSpan.FromSeconds(0.5), true);
-            sprite.AddAnimation("run", new[]{0, 1, 2, 1}, TimeSpan.FromSeconds(0.5), true);
-            sprite.AddAnimation("hug", new[]{12, 13, 14}, TimeSpan.FromSeconds(0.3), false);
+            sprite.AddAnimation("stand", new[] { 6, 7, 8 }, TimeSpan.FromMilliseconds(300), true);
+            sprite.AddAnimation("run", new[]{0, 1, 2, 1}, TimeSpan.FromMilliseconds(100), true);
+            sprite.AddAnimation("hug", new[] { 9, 10, 11 }, TimeSpan.FromMilliseconds(200), false);
             sprite.CurrentAnimation = "stand";
 
             return sprite;
