@@ -33,7 +33,7 @@ namespace PowerOfLove.Entities
             EvilSprite = LoadSprite(game, "zombie");
 
             Scale = new Vector2(2);
-            Behaviors.Add(new ControllableBehavior(this));
+            Behaviors.Add(new TouchControlBehavior(this));
         }
 
         public void RandomZombieNpcMessage()
@@ -48,7 +48,7 @@ namespace PowerOfLove.Entities
 
         public override void Update(GameTime gameTime)
         {
-            if (Screen.IsEvil)
+            if (Screen.TrueVision)
                 Sprite = EvilSprite;
             else
                 Sprite = NormalSprite;

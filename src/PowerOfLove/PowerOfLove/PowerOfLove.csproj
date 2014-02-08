@@ -83,7 +83,7 @@
     <Compile Include="Components\GUI.cs" />
     <Compile Include="Components\Button.cs" />
     <Compile Include="Components\SpriteComponent.cs" />
-    <Compile Include="Entities\Behaviors\GamePlayEntity.cs" />
+    <Compile Include="Entities\GamePlayEntity.cs" />
     <Compile Include="Entities\NPC.cs" />
     <Compile Include="Entities\Behaviors\ZombieBehavior.cs" />
     <Compile Include="MainGame.cs" />

@@ -18,7 +18,7 @@ namespace PowerOfLove.Activities
 
         public IEnumerable<GamePlayEntity> Entities { get; private set; }
         public GamePlayEntity Player { get; private set; }
-        public bool IsEvil { get; private set; }
+        public bool TrueVision { get; private set; }
         public CameraInfo Camera { get; private set; }
 
         public GamePlayScreen(Game game)
@@ -48,18 +48,7 @@ namespace PowerOfLove.Activities
             return newEntity;
         }
 
-        protected override void Draw(Microsoft.Xna.Framework.GameTime gameTime)
-        {
-            SpriteBatch.GraphicsDevice.Clear(MainGame.DefaultBackgroundColor);
-            Begin(Camera, SamplerState.PointClamp);
-            _map.Draw(gameTime, SpriteBatch, Vector2.Zero);
-
-            foreach (var ent in Entities.OrderBy(e => e.Position.Y))
-                ent.Draw(gameTime, SpriteBatch);
-
-            SpriteBatch.End();
-        }
-
+        #region Game Loop
         protected override void Update(Microsoft.Xna.Framework.GameTime gameTime)
         {
             Camera = new CameraInfo(Player.Position, 2, Game.GraphicsDevice.Viewport);
@@ -68,6 +57,43 @@ namespace PowerOfLove.Activities
                 ent.Update(gameTime);
         }
 
+        protected override void Draw(Microsoft.Xna.Framework.GameTime gameTime)
+        {
+            SpriteBatch.GraphicsDevice.Clear(MainGame.DefaultBackgroundColor);
+            Begin(Camera, SamplerState.PointClamp);
+            _map.Draw(gameTime, SpriteBatch, Vector2.Zero);
+
+            foreach (var ent in Entities.OrderBy(e => e.Position.Y))
+            {
+                ent.LayerDepth = 0.5f + (ent.Position.Y / _map.PixelSize.Y / 100);
+                ent.Draw(gameTime, SpriteBatch);
+            }
+
+            SpriteBatch.End();
+        }
+
+        void Begin(CameraInfo camera, SamplerState sampler = null, DepthStencilState depthStencil = null, RasterizerState rasterize = null, Effect effect = null)
+        {
+            var viewPort = Game.GraphicsDevice.Viewport;
+            Vector2 translation = new Vector2(
+                (float)Math.Round(-camera.Position.X * camera.ZoomFactor + viewPort.Width * 0.5f),
+                (float)Math.Round(-camera.Position.Y * camera.ZoomFactor + viewPort.Height * 0.5f));
+
+
+            var transformation = Matrix.CreateScale(new Vector3(camera.ZoomFactor, camera.ZoomFactor, 1)) *
+                                 Matrix.CreateTranslation(new Vector3(translation, 0));
+
+            SpriteBatch.Begin(SpriteSortMode.Deferred,
+                        BlendState.AlphaBlend,
+                        sampler,
+                        depthStencil,
+                        rasterize,
+                        effect,
+                        transformation);
+        }
+        #endregion
+
+        #region Public Methods
         public GamePlayEntity NearestToEntity(GamePlayEntity baseEntity, string tag)
         {
             return Entities.Where(s => s != baseEntity && s.Tag == tag)
@@ -88,25 +114,6 @@ namespace PowerOfLove.Activities
             }
             return false;
         }
-
-        void Begin(CameraInfo camera, SamplerState sampler = null, DepthStencilState depthStencil = null, RasterizerState rasterize = null, Effect effect = null)
-        {
-            var viewPort = Game.GraphicsDevice.Viewport;
-            Vector2 translation = new Vector2(
-                (float)Math.Round(-camera.Position.X * camera.ZoomFactor + viewPort.Width * 0.5f),
-                (float)Math.Round(-camera.Position.Y * camera.ZoomFactor + viewPort.Height * 0.5f));
-
-
-            var transformation = Matrix.CreateScale(new Vector3(camera.ZoomFactor, camera.ZoomFactor, 1)) *
-                                 Matrix.CreateTranslation(new Vector3(translation, 0));
-
-            SpriteBatch.Begin(SpriteSortMode.FrontToBack,
-                        BlendState.AlphaBlend,
-                        sampler,
-                        depthStencil,
-                        rasterize,
-                        effect,
-                        transformation);
-        }
+        #endregion
     }
 }

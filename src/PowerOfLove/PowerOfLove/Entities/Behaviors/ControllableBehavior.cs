@@ -9,11 +9,11 @@ using System.Text;
 
 namespace PowerOfLove.Entities.Behaviors
 {
-    class ControllableBehavior : Behavior
+    class TouchControlBehavior : Behavior
     {
         new GamePlayEntity Entity { get { return (GamePlayEntity) base.Entity; } }
 
-        public ControllableBehavior(GamePlayEntity parent)
+        public TouchControlBehavior(GamePlayEntity parent)
             : base(parent)
         {
 

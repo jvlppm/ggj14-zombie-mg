@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PowerOfLove.Entities.Behaviors
+namespace PowerOfLove.Entities
 {
     class GamePlayEntity : Entity
     {

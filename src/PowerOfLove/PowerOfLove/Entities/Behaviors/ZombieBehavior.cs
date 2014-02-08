@@ -14,7 +14,9 @@ namespace PowerOfLove.Entities.Behaviors
     {
         Entity _target;
         private float _minDistance = RandomNumberGenerator.Next() * 90 + 10;
-        GamePlayScreen Screen { get{return ((GamePlayEntity)Entity).Screen; }}
+
+        new GamePlayEntity Entity { get { return (GamePlayEntity)base.Entity; } }
+        GamePlayScreen Screen { get{return Entity.Screen; }}
 
         public ZombieBehavior(Entity entity)
             : base(entity)
@@ -24,23 +26,23 @@ namespace PowerOfLove.Entities.Behaviors
 
         public override void Update(Microsoft.Xna.Framework.GameTime gameTime)
         {
-            if (((GamePlayEntity)Entity).IsHugging)
+            if (Entity.IsHugging)
                 return;
 
-            _target = _target ?? Screen.NearestToEntity((GamePlayEntity)Entity, "player");
+            _target = _target ?? Screen.NearestToEntity(Entity, "player");
             if ( _target != null && Entity.Tag == "enemy" )
 			{			
 				var desiredVelocity = Entity.Position - _target.Position;
 				var distance = desiredVelocity.Length();
 
                 desiredVelocity.Normalize();
-                ((GamePlayEntity)Entity).Look(-desiredVelocity);
+                Entity.Look(-desiredVelocity);
 				
 				if( distance < 100 )
 				{
                     desiredVelocity = desiredVelocity * (float)gameTime.ElapsedGameTime.TotalSeconds * 30;
                     Entity.Sprite.CurrentAnimation = "run";
-					if (!Screen.IsEvil) {
+					if (!Screen.TrueVision) {
 						((NPC)Entity).RandomZombieNpcMessage();
 					}
 					else {
@@ -53,21 +55,25 @@ namespace PowerOfLove.Entities.Behaviors
 					Entity.Sprite.CurrentAnimation = "stand";
 				}
 
-                ((GamePlayEntity)Entity).Move(desiredVelocity);
+                Entity.Move(desiredVelocity);
 			}
-			else if ( Entity.Tag == "npc" )
+			else if ( Entity.Tag == "friend" )
 			{
 				var desiredVelocitySeek = _target.Position - Entity.Position;
 				var distanceSeek = desiredVelocitySeek.Length();
 
 				desiredVelocitySeek.Normalize();
 				desiredVelocitySeek *= (float)gameTime.ElapsedGameTime.TotalSeconds * 45;
-				Entity.Sprite.CurrentAnimation = "run";
 
-                ((GamePlayEntity)Entity).Look(desiredVelocitySeek);
-				
-                if(distanceSeek > _minDistance)
-                    ((GamePlayEntity)Entity).Move(desiredVelocitySeek);
+                Entity.Look(desiredVelocitySeek);
+
+                if (distanceSeek > _minDistance)
+                {
+                    Entity.Move(desiredVelocitySeek);
+                    Entity.Sprite.CurrentAnimation = "run";
+                }
+                else
+                    Entity.Sprite.CurrentAnimation = "stand";
 			}
 		}
     }

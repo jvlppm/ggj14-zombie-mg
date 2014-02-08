@@ -49,7 +49,7 @@ namespace PowerOfLove.Entities
 
         public override void Update(GameTime gameTime)
         {
-            if (!Screen.IsEvil == (Tag == "friend"))
+            if (!Screen.TrueVision == (Tag == "friend"))
                 Sprite = NormalSprite;
             else
                 Sprite = EvilSprite;
