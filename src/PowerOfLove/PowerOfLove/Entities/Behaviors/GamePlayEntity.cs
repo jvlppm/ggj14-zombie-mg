@@ -1,4 +1,6 @@
-﻿using MonoGameLib.Core.Entities;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using MonoGameLib.Core.Entities;
 using MonoGameLib.Core.Sprites;
 using PowerOfLove.Activities;
 using System;
@@ -13,13 +15,14 @@ namespace PowerOfLove.Entities.Behaviors
     {
         public GamePlayScreen Screen { get; private set; }
 
+        public Sprite NormalSprite { get; protected set; }
         public Sprite EvilSprite { get; protected set; }
 
-        public bool IsHugging { get; protected set; }
+        public bool IsHugging { get; set; }
 
-        public void TurnEvil()
+        public void TurnIntoFriend()
         {
-            Sprite = EvilSprite;
+            Tag = "friend";
         }
 
         public GamePlayEntity(GamePlayScreen screen)
@@ -39,16 +42,22 @@ namespace PowerOfLove.Entities.Behaviors
             base.Draw(gameTime, spriteBatch, colorOverride, scaleOverride);
         }
 
-        public async void Hug()
-        {
-            IsHugging = true;
-            await Sprite.PlayAnimation("hug");
-            IsHugging = false;
-        }
-
         public bool Move(Microsoft.Xna.Framework.Vector2 direction)
         {
-            return Screen.Move(this, direction);
+            if(Screen.Move(this, direction))
+            {
+                Look(direction);
+                return true;
+            }
+            return false;
+        }
+
+        public void Look(Vector2 direction)
+        {
+            if (direction.X < 0)
+                Sprite.Effect = SpriteEffects.FlipHorizontally;
+            else
+                Sprite.Effect = SpriteEffects.None;
         }
     }
 }

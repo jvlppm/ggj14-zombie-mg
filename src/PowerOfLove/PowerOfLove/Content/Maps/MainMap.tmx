@@ -419,7 +419,40 @@
 </data>
  </layer>
  <objectgroup name="Characters" width="120" height="67">
-  <object name="player" x="776" y="649" width="16" height="16">
+  <object name="player" type="Player" x="776" y="649" width="16" height="16">
+   <ellipse/>
+  </object>
+  <object name="enemy" type="NPC" x="1001" y="519" width="16" height="16">
+   <ellipse/>
+  </object>
+  <object name="enemy" type="NPC" x="882" y="654" width="16" height="16">
+   <ellipse/>
+  </object>
+  <object name="enemy" type="NPC" x="824" y="537" width="16" height="16">
+   <ellipse/>
+  </object>
+  <object name="enemy" type="NPC" x="680" y="605" width="16" height="16">
+   <ellipse/>
+  </object>
+  <object name="enemy" type="NPC" x="638" y="738" width="16" height="16">
+   <ellipse/>
+  </object>
+  <object name="enemy" type="NPC" x="1022" y="753" width="16" height="16">
+   <ellipse/>
+  </object>
+  <object name="enemy" type="NPC" x="826" y="763" width="16" height="16">
+   <ellipse/>
+  </object>
+  <object name="enemy" type="NPC" x="979" y="630" width="16" height="16">
+   <ellipse/>
+  </object>
+  <object name="enemy" type="NPC" x="885" y="438" width="16" height="16">
+   <ellipse/>
+  </object>
+  <object name="enemy" type="NPC" x="668" y="439" width="16" height="16">
+   <ellipse/>
+  </object>
+  <object name="enemy" type="NPC" x="546" y="503" width="16" height="16">
    <ellipse/>
   </object>
  </objectgroup>

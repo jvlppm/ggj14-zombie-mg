@@ -25,22 +25,18 @@ namespace PowerOfLove.Entities.Behaviors
                 return;
 
             var mState = Mouse.GetState();
+            var camera = Entity.Screen.Camera;
+            var clickPosition = camera.ScreenToMapPosition(mState.Position);
+            var direction = clickPosition - Entity.Position;
+            direction.Normalize();
+            Entity.Look(direction);
+
             if(mState.LeftButton == ButtonState.Pressed)
             {
-                var camera = Entity.Screen.Camera;
-                var clickPosition = camera.ScreenToMapPosition(mState.Position);
-                var direction = clickPosition - Entity.Position;
-                direction.Normalize();
-
                 if (Entity.Move(direction))
                     Entity.Sprite.CurrentAnimation = "run";
                 else
                     Entity.Sprite.CurrentAnimation = "stand";
-
-                if (Entity.Position.X > clickPosition.X)
-                    Entity.Sprite.Effect = SpriteEffects.FlipHorizontally;
-                else
-                    Entity.Sprite.Effect = SpriteEffects.None;
             }
             else
                 Entity.Sprite.CurrentAnimation = "stand";

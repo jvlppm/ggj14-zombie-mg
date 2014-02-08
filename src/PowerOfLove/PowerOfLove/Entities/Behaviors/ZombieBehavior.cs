@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using PowerOfLove.Entities;
 
 namespace PowerOfLove.Entities.Behaviors
 {
@@ -23,16 +24,21 @@ namespace PowerOfLove.Entities.Behaviors
 
         public override void Update(Microsoft.Xna.Framework.GameTime gameTime)
         {
+            if (((GamePlayEntity)Entity).IsHugging)
+                return;
+
             _target = _target ?? Screen.NearestToEntity((GamePlayEntity)Entity, "player");
             if ( _target != null && Entity.Tag == "enemy" )
 			{			
 				var desiredVelocity = Entity.Position - _target.Position;
 				var distance = desiredVelocity.Length();
+
+                desiredVelocity.Normalize();
+                ((GamePlayEntity)Entity).Look(-desiredVelocity);
 				
 				if( distance < 100 )
 				{
-					desiredVelocity.Normalize();
-                    desiredVelocity = desiredVelocity * (float)gameTime.ElapsedGameTime.TotalMilliseconds * 30;
+                    desiredVelocity = desiredVelocity * (float)gameTime.ElapsedGameTime.TotalSeconds * 30;
                     Entity.Sprite.CurrentAnimation = "run";
 					if (!Screen.IsEvil) {
 						((NPC)Entity).RandomZombieNpcMessage();
@@ -46,8 +52,8 @@ namespace PowerOfLove.Entities.Behaviors
 					desiredVelocity = Vector2.Zero;
 					Entity.Sprite.CurrentAnimation = "stand";
 				}
-				
-				Entity.Position = Entity.Position + desiredVelocity;
+
+                ((GamePlayEntity)Entity).Move(desiredVelocity);
 			}
 			else if ( Entity.Tag == "npc" )
 			{
@@ -55,11 +61,13 @@ namespace PowerOfLove.Entities.Behaviors
 				var distanceSeek = desiredVelocitySeek.Length();
 
 				desiredVelocitySeek.Normalize();
-				desiredVelocitySeek = desiredVelocitySeek * (float)gameTime.ElapsedGameTime.TotalMilliseconds * 45;
+				desiredVelocitySeek *= (float)gameTime.ElapsedGameTime.TotalSeconds * 45;
 				Entity.Sprite.CurrentAnimation = "run";
+
+                ((GamePlayEntity)Entity).Look(desiredVelocitySeek);
 				
                 if(distanceSeek > _minDistance)
-                    Entity.Position = Entity.Position + desiredVelocitySeek;
+                    ((GamePlayEntity)Entity).Move(desiredVelocitySeek);
 			}
 		}
     }

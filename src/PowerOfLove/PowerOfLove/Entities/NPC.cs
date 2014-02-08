@@ -30,18 +30,31 @@ namespace PowerOfLove.Entities
         public NPC(Game game, GamePlayScreen screen, int npcSpriteId)
             : base(screen)
         {
-            Sprite = LoadSprite(game, "normal", npcSpriteId);
+            NormalSprite = LoadSprite(game, "normal", npcSpriteId);
             EvilSprite = LoadSprite(game, "zombie", npcSpriteId);
+
+            Scale = new Vector2(2);
+            Behaviors.Add(new ZombieBehavior(this));
         }
 
         public void RandomZombieNpcMessage()
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         public void RandomHumanNpcMessage()
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            if (!Screen.IsEvil == (Tag == "friend"))
+                Sprite = NormalSprite;
+            else
+                Sprite = EvilSprite;
+
+            base.Update(gameTime);
         }
     }
 }

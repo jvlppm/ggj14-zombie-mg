@@ -17,7 +17,7 @@ namespace PowerOfLove.Activities
         Map _map;
 
         public IEnumerable<GamePlayEntity> Entities { get; private set; }
-        GamePlayEntity _player;
+        public GamePlayEntity Player { get; private set; }
         public bool IsEvil { get; private set; }
         public CameraInfo Camera { get; private set; }
 
@@ -34,8 +34,8 @@ namespace PowerOfLove.Activities
             switch (arg.Name)
             {
                 case "player":
-                    if (_player != null) throw new InvalidOperationException();
-                    newEntity = _player = new Player(Game, this);
+                    if (Player != null) throw new InvalidOperationException();
+                    newEntity = Player = new Player(Game, this);
                     break;
                 default:
                     newEntity = new NPC(Game, this, RandomNumberGenerator.Next(1, 4));
@@ -43,7 +43,7 @@ namespace PowerOfLove.Activities
             }
 
             newEntity.Position = arg.Position;
-            newEntity.Tag = arg.Category;
+            newEntity.Tag = arg.Name;
             return newEntity;
         }
 
@@ -53,7 +53,7 @@ namespace PowerOfLove.Activities
             Begin(Camera, SamplerState.PointClamp);
             _map.Draw(gameTime, SpriteBatch, Vector2.Zero);
 
-            foreach (var ent in Entities)
+            foreach (var ent in Entities.OrderBy(e => e.Position.Y))
                 ent.Draw(gameTime, SpriteBatch);
 
             SpriteBatch.End();
@@ -61,7 +61,7 @@ namespace PowerOfLove.Activities
 
         protected override void Update(Microsoft.Xna.Framework.GameTime gameTime)
         {
-            Camera = new CameraInfo(_player.Position, 2, Game.GraphicsDevice.Viewport);
+            Camera = new CameraInfo(Player.Position, 2, Game.GraphicsDevice.Viewport);
 
             foreach (var ent in Entities)
                 ent.Update(gameTime);

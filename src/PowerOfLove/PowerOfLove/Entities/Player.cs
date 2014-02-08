@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace PowerOfLove.Entities
 {
@@ -28,8 +29,9 @@ namespace PowerOfLove.Entities
         public Player(Game game, GamePlayScreen screen)
             : base(screen)
         {
-            Sprite = LoadSprite(game, "normal");
+            NormalSprite = LoadSprite(game, "normal");
             EvilSprite = LoadSprite(game, "zombie");
+
             Scale = new Vector2(2);
             Behaviors.Add(new ControllableBehavior(this));
         }
@@ -43,5 +45,49 @@ namespace PowerOfLove.Entities
         {
             throw new NotImplementedException();
         }
+
+        public override void Update(GameTime gameTime)
+        {
+            if (Screen.IsEvil)
+                Sprite = EvilSprite;
+            else
+                Sprite = NormalSprite;
+
+            if (IsHugging)
+            {
+                base.Update(gameTime);
+                return;
+            }
+
+            var en = Screen.NearestToEntity(this, "enemy");
+            if (en != null)
+            {
+                var p = en.Position - Position;
+                if (p.LengthSquared() < 160)
+                {
+                    Hug(en);
+                }
+            }
+
+            base.Update(gameTime);
+        }
+
+        #region Public Methods
+        public async void Hug(GamePlayEntity entity)
+        {
+            var oldPos = entity.Position;
+            entity.Position = Position;
+            entity.IsHugging = true;
+            IsHugging = true;
+            entity.Sprite.Effect = Sprite.Effect == SpriteEffects.FlipHorizontally ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+            await TaskEx.WhenAll(
+                Sprite.PlayAnimation("hug"),
+                entity.Sprite.PlayAnimation("hug"));
+            entity.TurnIntoFriend();
+            IsHugging = false;
+            entity.Position = new Vector2(oldPos.X, entity.Position.Y);
+            entity.IsHugging = false;
+        }
+        #endregion
     }
 }
