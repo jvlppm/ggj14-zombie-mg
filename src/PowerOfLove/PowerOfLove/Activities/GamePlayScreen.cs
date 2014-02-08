@@ -42,6 +42,7 @@ namespace PowerOfLove.Activities
                     break;
             }
 
+            newEntity.LayerDepth = 0.5f;
             newEntity.Position = arg.Position;
             newEntity.Tag = arg.Name;
             return newEntity;
@@ -99,7 +100,7 @@ namespace PowerOfLove.Activities
             var transformation = Matrix.CreateScale(new Vector3(camera.ZoomFactor, camera.ZoomFactor, 1)) *
                                  Matrix.CreateTranslation(new Vector3(translation, 0));
 
-            SpriteBatch.Begin(SpriteSortMode.Deferred,
+            SpriteBatch.Begin(SpriteSortMode.FrontToBack,
                         BlendState.AlphaBlend,
                         sampler,
                         depthStencil,
