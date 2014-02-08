@@ -63,8 +63,8 @@ namespace PowerOfLove.Activities
 
         void CreateZombies()
         {
-            var cZombie = new[] { "npc-zombie-01", "npc-zombie-02", "npc-zombie-03", "npc-zombie-04", "main-zombie" };
-            var cNormal = new[] { "npc-normal-01", "npc-normal-02", "npc-normal-03", "npc-normal-04", "main-normal" };
+            var cZombie = new[] { "npc-zombie-01", "npc-zombie-02", "npc-zombie-03", "npc-zombie-04", "player-zombie" };
+            var cNormal = new[] { "npc-normal-01", "npc-normal-02", "npc-normal-03", "npc-normal-04", "player-normal" };
 
             var classes = new[] { cZombie, cNormal };
 
