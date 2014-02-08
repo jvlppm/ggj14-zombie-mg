@@ -68,5 +68,25 @@ namespace PowerOfLove
         {
             return time.Multiply(1 / by);
         }
+
+        public static void Begin(this SpriteBatch spriteBatch, CameraInfo camera, SamplerState sampler = null, DepthStencilState depthStencil = null, RasterizerState rasterize = null, Effect effect = null)
+        {
+            var viewPort = spriteBatch.GraphicsDevice.Viewport;
+            Vector2 translation = new Vector2(
+                (float)Math.Round(-camera.Position.X * camera.ZoomFactor + viewPort.Width * 0.5f),
+                (float)Math.Round(-camera.Position.Y * camera.ZoomFactor + viewPort.Height * 0.5f));
+
+
+            var transformation = Matrix.CreateScale(new Vector3(camera.ZoomFactor, camera.ZoomFactor, 1)) *
+                                 Matrix.CreateTranslation(new Vector3(translation, 0));
+
+            spriteBatch.Begin(SpriteSortMode.FrontToBack,
+                        BlendState.NonPremultiplied,
+                        sampler,
+                        depthStencil,
+                        rasterize,
+                        effect,
+                        transformation);
+        }
     }
 }
