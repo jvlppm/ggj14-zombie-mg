@@ -130,6 +130,12 @@
     <Content Include="Content\Images\GUI\ButtonPressed.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Images\Sprites\blood.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Images\Sprites\heart.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Images\Sprites\player-normal.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGameLib.Core.Entities;
+using MonoGameLib.Core.Particles;
 using MonoGameLib.Core.Sprites;
 using PowerOfLove.Activities;
 using System;

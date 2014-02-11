@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using MonoGameLib.Core.Extensions;
 using PowerOfLove.Activities;
+using MonoGameLib.Core.Sprites;
 
 namespace MonoGameLib.Core.Particles
 {
@@ -13,11 +14,18 @@ namespace MonoGameLib.Core.Particles
     {
         #region Attributes
         private GamePlayScreen _level;
-        private Texture2D _particleTexture;
+        private Sprite _particleSprite;
         private List<Particle> _particles;
         private float _sinceLastEmision;
         private Random _rng;
         private bool _decaying;
+
+        /// <summary>
+        /// The depth of a layer.
+        /// By default, 0 represents the front layer and 1 represents a back layer.
+        /// Use SpriteSortMode if you want sprites to be sorted during drawing.
+        /// </summary>
+        public float LayerDepth;
         #endregion
 
         #region Properties
@@ -26,7 +34,7 @@ namespace MonoGameLib.Core.Particles
         public Vector2 Direction { get; set; }
         public float ParticleSpeed { get; set; }
         public float OpeningAngle { get; set; }
-        public List<ParticleState> ParticleStates { get; protected set; }
+        public IEnumerable<ParticleState> ParticleStates { get; protected set; }
         public bool Enabled { get; set; }
         public float DecayTime { get; set; }
         public float Intensity { get; set; }
@@ -38,12 +46,13 @@ namespace MonoGameLib.Core.Particles
         #endregion Delegates
 
         #region Constructor
-        public ParticleEmiter(GamePlayScreen level, Texture2D texture, List<ParticleState> particleStates)
+        public ParticleEmiter(Game game, GamePlayScreen level, Sprite sprite, IEnumerable<ParticleState> particleStates)
         {
+            LayerDepth = 1;
             _level = level;
             Intensity = 1f;
 
-            _particleTexture = texture;
+            _particleSprite = sprite;
             _rng = new Random();
             ParticleStates = particleStates;
             Enabled = true;
@@ -80,8 +89,9 @@ namespace MonoGameLib.Core.Particles
                 {
                     float angle = (float)(_rng.NextDouble() * (2 * OpeningAngle)) - OpeningAngle;
                     _sinceLastEmision -= toEmit;
-                    var particle = new Particle(_level, _particleTexture, Position, ParticleStates)
+                    var particle = new Particle(_level, _particleSprite, Position, ParticleStates)
                     {
+                        LayerDepth = LayerDepth,
                         Opacity = Intensity,
                         Speed = ParticleSpeed,
                         Direction = Direction.Rotate(angle)

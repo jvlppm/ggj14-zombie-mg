@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGameLib.Core.Particles;
 using MonoGameLib.Core.Sprites;
 using PowerOfLove.Activities;
 using PowerOfLove.Entities.Behaviors;
@@ -13,6 +14,10 @@ namespace PowerOfLove.Entities
 {
     class Player : GamePlayEntity
     {
+        static Sprite _loveParticleSprite, biteParticleSprite;
+
+        ParticleEmiter _loveParticleEmiter, _biteParticleEmiter;
+
         const string SpritePathFormat = "Images/Sprites/player-{0}";
         static Sprite LoadSprite(Game game, string type)
         {
@@ -36,6 +41,28 @@ namespace PowerOfLove.Entities
             Scale = new Vector2(2);
             Behaviors.Add(new TouchControlBehavior(this));
             CollisionBox = new Rectangle(8, 2, 8, 0);
+
+
+            if (_loveParticleSprite == null)
+            {
+                var loveTexture = game.Content.Load<Texture2D>("Images/Sprites/heart");
+                _loveParticleSprite = new Sprite(loveTexture, 1, 1);
+                _loveParticleSprite.AddAnimation("default", new[] { 0 }, TimeSpan.FromSeconds(1), true);
+                _loveParticleSprite.Origin = new Vector2(loveTexture.Width / 2, loveTexture.Height / 2);
+            }
+
+            _loveParticleEmiter = new ParticleEmiter(game, screen, _loveParticleSprite,
+                new[] {
+                    new ParticleState { Color = Color.Red, Duration = 500, Scale = 1 },
+                    new ParticleState { Color = new Color(Color.White, 0.2f), Scale = 1.5f },
+                })
+            {
+                LayerDepth = 0.0f,
+                MillisecondsToEmit = 150,
+                Direction= new Vector2(0, -1),
+                OpeningAngle = 30,
+                ParticleSpeed = 1
+            };
         }
 
         #region Game Loop
@@ -48,6 +75,8 @@ namespace PowerOfLove.Entities
 
             if (IsHugging)
             {
+                _loveParticleEmiter.Position = CenterPosition;
+                _loveParticleEmiter.Update(gameTime);
                 base.Update(gameTime);
                 return;
             }

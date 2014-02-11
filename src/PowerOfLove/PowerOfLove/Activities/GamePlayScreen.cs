@@ -101,7 +101,7 @@ namespace PowerOfLove.Activities
 
             _map.Draw(gameTime, SpriteBatch, Vector2.Zero);
 
-            foreach (var ent in Entities.OrderBy(e => e.Position.Y))
+            foreach (var ent in Entities)
             {
                 ent.LayerDepth = 0.5f + (ent.Position.Y / _map.PixelSize.Y / 100);
                 ent.Draw(gameTime, SpriteBatch);
