@@ -18,13 +18,14 @@ namespace PowerOfLove.Activities
         #region Attributes
         Map _map;
         Label _gameTimerLabel, _visionLabel;
+        List<GamePlayEntity> _newEntities, _oldEntities;
         #endregion
 
         #region Properties
         public ContextTimer Timer { get; private set; }
         public int Score { get; set; }
 
-        public IEnumerable<GamePlayEntity> Entities { get; private set; }
+        public List<GamePlayEntity> Entities { get; private set; }
         public GamePlayEntity Player { get; private set; }
         public bool IsTrueVision { get; private set; }
         public CameraInfo Camera { get; private set; }
@@ -44,6 +45,8 @@ namespace PowerOfLove.Activities
 
             _map = MapLoader.LoadMap("Content/Maps/MainMap.tmx");
             Entities = _map.Objects.Select(CreateEntity).ToList();
+            _newEntities = new List<GamePlayEntity>();
+            _oldEntities = new List<GamePlayEntity>();
             Timer = new ContextTimer(TimeSpan.FromMinutes(1));
         }
         #endregion
@@ -76,6 +79,13 @@ namespace PowerOfLove.Activities
 
             foreach (var ent in Entities)
                 ent.Update(gameTime);
+
+            foreach (var rem in _oldEntities)
+                Entities.Remove(rem);
+
+            Entities.AddRange(_newEntities);
+            _oldEntities.Clear();
+            _newEntities.Clear();
         }
 
         protected override void Draw(Microsoft.Xna.Framework.GameTime gameTime)
@@ -111,6 +121,14 @@ namespace PowerOfLove.Activities
         #endregion
 
         #region Public Methods
+        public void AddEntity(GamePlayEntity entity)
+        {
+            _newEntities.Add(entity);
+        }
+        public void RemoveEntity(GamePlayEntity entity)
+        {
+            _oldEntities.Add(entity);
+        }
         public GamePlayEntity NearestToEntity(GamePlayEntity baseEntity, string tag)
         {
             return Entities.Where(s => s != baseEntity && s.Tag == tag)

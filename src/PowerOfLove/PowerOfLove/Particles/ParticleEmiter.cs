@@ -1,0 +1,106 @@
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using MonoGameLib.Core.Extensions;
+using PowerOfLove.Activities;
+
+namespace MonoGameLib.Core.Particles
+{
+    class ParticleEmiter
+    {
+        #region Attributes
+        private GamePlayScreen _level;
+        private Texture2D _particleTexture;
+        private List<Particle> _particles;
+        private float _sinceLastEmision;
+        private Random _rng;
+        private bool _decaying;
+        #endregion
+
+        #region Properties
+        public float MillisecondsToEmit { get; set; }
+        public Vector2 Position { get; set; }
+        public Vector2 Direction { get; set; }
+        public float ParticleSpeed { get; set; }
+        public float OpeningAngle { get; set; }
+        public List<ParticleState> ParticleStates { get; protected set; }
+        public bool Enabled { get; set; }
+        public float DecayTime { get; set; }
+        public float Intensity { get; set; }
+        public Vector2 Momentum { get; set; }
+        #endregion Properties
+
+        #region Delegates
+        public event EventHandler OnDecay;
+        #endregion Delegates
+
+        #region Constructor
+        public ParticleEmiter(GamePlayScreen level, Texture2D texture, List<ParticleState> particleStates)
+        {
+            _level = level;
+            Intensity = 1f;
+
+            _particleTexture = texture;
+            _rng = new Random();
+            ParticleStates = particleStates;
+            Enabled = true;
+            _decaying = false;
+
+            _particles = new List<Particle>();
+        }
+        #endregion
+
+        #region Methods
+        /// <summary>
+        /// Updates particle emiter.
+        /// </summary>
+        /// <param name="gameTime">Current game time.</param>
+        public void Update(GameTime gameTime)
+        {
+            if (DecayTime > 0f)
+            {
+                DecayTime -= gameTime.ElapsedGameTime.Milliseconds;
+
+                if (DecayTime <= 0f)
+                {
+                    Enabled = false;
+                    _decaying = true;
+                }
+            }
+
+            if (Enabled)
+            {
+                _sinceLastEmision += gameTime.ElapsedGameTime.Milliseconds;
+                var toEmit = MillisecondsToEmit / Intensity;
+
+                while (_sinceLastEmision >= toEmit)
+                {
+                    float angle = (float)(_rng.NextDouble() * (2 * OpeningAngle)) - OpeningAngle;
+                    _sinceLastEmision -= toEmit;
+                    var particle = new Particle(_level, _particleTexture, Position, ParticleStates)
+                    {
+                        Opacity = Intensity,
+                        Speed = ParticleSpeed,
+                        Direction = Direction.Rotate(angle)
+                    };
+                    _particles.Add(particle);
+                    _level.AddEntity(particle);
+                    particle.OnDecay += Particle_OnDecay;
+                }
+            }
+        }
+
+        void Particle_OnDecay(object sender, EventArgs e)
+        {
+            _particles.Remove((Particle)sender);
+            if (_decaying && _particles.Count == 0 && OnDecay != null)
+            {
+                OnDecay(this, EventArgs.Empty);
+            }
+        }
+        #endregion Methods
+    }
+}

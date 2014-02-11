@@ -88,6 +88,9 @@
     <Compile Include="Entities\NPC.cs" />
     <Compile Include="Entities\Behaviors\ZombieBehavior.cs" />
     <Compile Include="MainGame.cs" />
+    <Compile Include="Particles\Particle.cs" />
+    <Compile Include="Particles\ParticleEmiter.cs" />
+    <Compile Include="Particles\ParticleState.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
