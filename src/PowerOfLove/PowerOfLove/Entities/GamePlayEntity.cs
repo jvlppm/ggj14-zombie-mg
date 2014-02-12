@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace PowerOfLove.Entities
 {
-    class GamePlayEntity : Entity
+    class GamePlayEntity : PhysicsEntity
     {
         public GamePlayScreen Screen { get; private set; }
 
@@ -40,6 +40,7 @@ namespace PowerOfLove.Entities
             if (screen == null)
                 throw new ArgumentNullException("screen");
             Screen = screen;
+            Friction = Vector2.One;
         }
 
         public override void Update(Microsoft.Xna.Framework.GameTime gameTime)

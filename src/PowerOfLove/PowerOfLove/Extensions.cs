@@ -69,6 +69,14 @@ namespace PowerOfLove
             return time.Multiply(1 / by);
         }
 
+        public static Vector2 LimitSize(this Vector2 vector, float maxSize)
+        {
+            var length = vector.Length();
+            if (length > maxSize)
+                return vector * (maxSize / length);
+            return vector;
+        }
+
         public static void Begin(this SpriteBatch spriteBatch, CameraInfo camera, SamplerState sampler = null, DepthStencilState depthStencil = null, RasterizerState rasterize = null, Effect effect = null)
         {
             var viewPort = spriteBatch.GraphicsDevice.Viewport;

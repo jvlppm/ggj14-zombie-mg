@@ -33,6 +33,7 @@ namespace MonoGameLib.Core.Particles
         public Vector2 Position { get; set; }
         public Vector2 Direction { get; set; }
         public float ParticleSpeed { get; set; }
+        public Vector2 ParticleGravity { get; set; }
         public float OpeningAngle { get; set; }
         public IEnumerable<ParticleState> ParticleStates { get; protected set; }
         public bool Enabled { get; set; }
@@ -98,9 +99,9 @@ namespace MonoGameLib.Core.Particles
                     {
                         LayerDepth = LayerDepth,
                         Opacity = Intensity,
-                        Speed = ParticleSpeed,
-                        Direction = Direction.Rotate(angle)
+                        Gravity = ParticleGravity
                     };
+                    particle.ApplyAcceleration(Direction.Rotate(angle) * ParticleSpeed, instantaneous: true);
                     _particles.Add(particle);
                     _level.AddEntity(particle);
                     particle.OnDecay += Particle_OnDecay;

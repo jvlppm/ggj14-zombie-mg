@@ -48,23 +48,22 @@ namespace PowerOfLove.Entities
                     new ParticleState { Color = new Color(Color.White, 0f), Scale = 2f },
                 })
             {
-                LayerDepth = 0.0f,
                 MillisecondsToEmit = 150,
                 Direction= new Vector2(0, -1),
                 OpeningAngle = 90,
-                ParticleSpeed = 1
+                ParticleSpeed = 40
             };
 
             _biteParticleEmiter = new ParticleEmiter(game, screen, "Images/Sprites/blood",
                 new[] {
-                    new ParticleState { Color = Color.Red, Duration = 500, Scale = 1 },
+                    new ParticleState { Color = Color.Red, Duration = 700, Scale = 1 },
                     new ParticleState { Color = Color.Transparent, Scale = 0.5f },
                 })
             {
-                LayerDepth = 0.0f,
-                MillisecondsToEmit = 50,
-                OpeningAngle = 10,
-                ParticleSpeed = 1
+                MillisecondsToEmit = 30,
+                OpeningAngle = 35,
+                ParticleSpeed = 50,
+                ParticleGravity = new Vector2(0, 98f)
             };
         }
 
@@ -78,9 +77,10 @@ namespace PowerOfLove.Entities
 
             if (IsHugging)
             {
-                EmitHearts(gameTime);
-
-                EmitBlood(gameTime);
+                if (Screen.IsTrueVision)
+                    EmitBlood(gameTime);
+                else
+                    EmitHearts(gameTime);
 
                 base.Update(gameTime);
                 return;
@@ -134,13 +134,13 @@ namespace PowerOfLove.Entities
             if (Sprite.Effect == SpriteEffects.FlipHorizontally)
                 bloodDirection = -1;
             _biteParticleEmiter.Direction = Vector2Extension.AngleToVector2(MathHelper.ToRadians(45 * bloodDirection));
-            _biteParticleEmiter.Position = CenterPosition + new Vector2(bloodDirection * 8, -4);
+            _biteParticleEmiter.Position = CenterPosition + new Vector2(bloodDirection * 9, -4);
             _biteParticleEmiter.Update(gameTime);
         }
 
         void EmitHearts(GameTime gameTime)
         {
-            _loveParticleEmiter.Position = CenterPosition;
+            _loveParticleEmiter.Position = CenterPosition + new Vector2(0, -8);
             _loveParticleEmiter.Update(gameTime);
         }
         #endregion

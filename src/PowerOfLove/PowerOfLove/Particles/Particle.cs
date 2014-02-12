@@ -21,9 +21,7 @@ namespace MonoGameLib.Core.Particles
 
         #region Properties
         public float Opacity { get; set; }
-
-        public Vector2 Direction { get; set; }
-        public float Speed { get; set; }
+        public Vector2 Gravity { get; set; }
         #endregion Properties
 
         #region Constructor
@@ -37,13 +35,15 @@ namespace MonoGameLib.Core.Particles
             Color = Color.White;
 
             Sprite = sprite;
+            Friction = Vector2.Zero;
         }
         #endregion Constructor
 
         #region Particle Methods
         public override void Update(GameTime gameTime)
         {
-            Position += (Direction * Speed);
+            ApplyAcceleration(Gravity);
+            base.Update(gameTime);
         }
         #endregion Particle Methos
 
