@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGameLib.Core.Extensions;
 using MonoGameLib.Core.Particles;
 using MonoGameLib.Core.Sprites;
 using PowerOfLove.Activities;
@@ -53,6 +54,18 @@ namespace PowerOfLove.Entities
                 OpeningAngle = 90,
                 ParticleSpeed = 1
             };
+
+            _biteParticleEmiter = new ParticleEmiter(game, screen, "Images/Sprites/blood",
+                new[] {
+                    new ParticleState { Color = Color.Red, Duration = 500, Scale = 1 },
+                    new ParticleState { Color = Color.Transparent, Scale = 0.5f },
+                })
+            {
+                LayerDepth = 0.0f,
+                MillisecondsToEmit = 50,
+                OpeningAngle = 10,
+                ParticleSpeed = 1
+            };
         }
 
         #region Game Loop
@@ -65,28 +78,33 @@ namespace PowerOfLove.Entities
 
             if (IsHugging)
             {
-                _loveParticleEmiter.Position = CenterPosition;
-                _loveParticleEmiter.Update(gameTime);
+                EmitHearts(gameTime);
+
+                EmitBlood(gameTime);
+
                 base.Update(gameTime);
                 return;
             }
 
-            var en = Screen.NearestToEntity(this, "enemy");
+            HugOnTouch("enemy");
+
+            base.Update(gameTime);
+        }
+
+        private void HugOnTouch(string category)
+        {
+            var en = Screen.NearestToEntity(this, category);
             if (en != null)
             {
                 var p = en.Position - Position;
                 if (this.GetCollisionRectangle().Intersects(this.GetCollisionRectangle(p)))
-                {
                     Hug(en);
-                }
             }
-
-            base.Update(gameTime);
         }
         #endregion
 
-        #region Public Methods
-        public async void Hug(GamePlayEntity entity)
+        #region Private Methods
+        async void Hug(GamePlayEntity entity)
         {
             var oldPos = entity.Position;
             entity.Position = Position;
@@ -107,7 +125,23 @@ namespace PowerOfLove.Entities
             entity.IsHugging = false;
             IsHugging = false;
 
-            entity.Position = new Vector2(Position.X + ( Sprite.Effect == SpriteEffects.FlipHorizontally? -10 : 10), entity.Position.Y);
+            entity.Position = new Vector2(Position.X + (Sprite.Effect == SpriteEffects.FlipHorizontally ? -10 : 10), entity.Position.Y);
+        }
+
+        void EmitBlood(GameTime gameTime)
+        {
+            int bloodDirection = 1;
+            if (Sprite.Effect == SpriteEffects.FlipHorizontally)
+                bloodDirection = -1;
+            _biteParticleEmiter.Direction = Vector2Extension.AngleToVector2(MathHelper.ToRadians(45 * bloodDirection));
+            _biteParticleEmiter.Position = CenterPosition + new Vector2(bloodDirection * 8, -4);
+            _biteParticleEmiter.Update(gameTime);
+        }
+
+        void EmitHearts(GameTime gameTime)
+        {
+            _loveParticleEmiter.Position = CenterPosition;
+            _loveParticleEmiter.Update(gameTime);
         }
         #endregion
     }
