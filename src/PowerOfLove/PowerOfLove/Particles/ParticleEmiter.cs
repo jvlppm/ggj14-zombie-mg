@@ -45,7 +45,12 @@ namespace MonoGameLib.Core.Particles
         public event EventHandler OnDecay;
         #endregion Delegates
 
-        #region Constructor
+        #region Constructors
+        public ParticleEmiter(Game game, GamePlayScreen level, string spritePath, IEnumerable<ParticleState> particleStates)
+            : this(game, level, LoadSprite(game, spritePath), particleStates)
+        {
+        }
+
         public ParticleEmiter(Game game, GamePlayScreen level, Sprite sprite, IEnumerable<ParticleState> particleStates)
         {
             LayerDepth = 1;
@@ -87,7 +92,7 @@ namespace MonoGameLib.Core.Particles
 
                 while (_sinceLastEmision >= toEmit)
                 {
-                    float angle = (float)(_rng.NextDouble() * (2 * OpeningAngle)) - OpeningAngle;
+                    float angle = (float)_rng.NextDouble() * OpeningAngle - OpeningAngle / 2;
                     _sinceLastEmision -= toEmit;
                     var particle = new Particle(_level, _particleSprite, Position, ParticleStates)
                     {
@@ -110,6 +115,17 @@ namespace MonoGameLib.Core.Particles
             {
                 OnDecay(this, EventArgs.Empty);
             }
+        }
+
+        static Sprite LoadSprite(Game game, string path)
+        {
+            var texture = game.Content.Load<Texture2D>(path);
+            var sprite = new Sprite(texture, 1, 1)
+            {
+                Origin = new Vector2(texture.Width / 2, texture.Height / 2)
+            };
+            sprite.AddAnimation("default", new[] { 0 }, TimeSpan.FromSeconds(1), true);
+            return sprite;
         }
         #endregion Methods
     }
