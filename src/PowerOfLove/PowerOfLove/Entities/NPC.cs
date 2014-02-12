@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGameLib.Core.Sprites;
+using MonoGameLib.GUI.Base;
 using MonoGameLib.Tiled;
 using PowerOfLove.Activities;
 using PowerOfLove.Entities.Behaviors;
@@ -8,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace PowerOfLove.Entities
 {
@@ -26,9 +28,14 @@ namespace PowerOfLove.Entities
             return sprite;
         }
 
+        string _currentHumanMessage, _currentZombieMessage;
+        SpriteFont _screamFont;
+
         public NPC(Game game, GamePlayScreen screen, int npcSpriteId)
             : base(screen)
         {
+            _screamFont = game.Content.Load<SpriteFont>("Fonts/DefaultFont");
+
             Sprite = LoadSprite(game, "normal", npcSpriteId);
             NormalTexture = Sprite.Texture;
             ZombieTexture = NormalTexture.AsZombie(game);
@@ -41,32 +48,68 @@ namespace PowerOfLove.Entities
         #region Game Loop
         public override void Update(GameTime gameTime)
         {
-            if (Screen.IsTrueVision != (Tag == "friend"))
-                Sprite.Texture = NormalTexture;
-            else
+            if (IsZombie)
                 Sprite.Texture = ZombieTexture;
+            else
+                Sprite.Texture = NormalTexture;
 
             base.Update(gameTime);
+        }
+
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch, Color? colorOverride = null, Vector2? scaleOverride = null)
+        {
+            DrawCurrentMessage(spriteBatch);
+            base.Draw(gameTime, spriteBatch, colorOverride, scaleOverride);
+        }
+
+        private void DrawCurrentMessage(SpriteBatch spriteBatch)
+        {
+            if (_currentHumanMessage != null && _currentZombieMessage != null)
+            {
+                var message = IsZombie ? _currentZombieMessage : _currentHumanMessage;
+                var color = !IsZombie ? Color.Yellow : Color.FromNonPremultiplied(0xff, 0x55, 0x55, 0xff);
+                var textSize = _screamFont.MeasureString(message);
+                var origin = AlignExtensions.ToVector(HorizontalAlign.Center, VerticalAlign.Bottom);
+                spriteBatch.DrawString(_screamFont, message, new Vector2(CenterPosition.X, Position.Y), color, 0, textSize * origin, 0.5f, SpriteEffects.None, 1f);
+            }
         }
         #endregion
 
         #region Public Methods
-        public void Scream()
+        public override void TurnIntoFriend()
         {
-            if (!Screen.IsTrueVision)
-                RandomZombieNpcMessage();
-            else
-                RandomHumanNpcMessage();
+            base.TurnIntoFriend();
+            _currentZombieMessage = null;
+            _currentHumanMessage = null;
+            Greet();
         }
 
-        public void RandomZombieNpcMessage()
+        public async void Scream()
         {
-            //throw new NotImplementedException();
+            if (_currentZombieMessage != null && _currentHumanMessage != null)
+                return;
+
+            _currentZombieMessage = new[] { "GAHH!", "BLHRRHHRH!", "BRAINS", "BR41NNSS", "#GGJCWB" }.Random();
+            _currentHumanMessage = new[] { "HEEEELLLLPPP A ZOMBIEEEE", "OH NO A PROGRAMER BROKE FREE!", "APOCALYPSE IS COMING!", "Don't get any closer!", "NOOOOOOOOOOOO!!!!!!" }.Random();
+
+            var message = _currentZombieMessage;
+            await TaskEx.Delay(2000);
+            if (message == _currentZombieMessage)
+                _currentZombieMessage = _currentHumanMessage = null;
         }
 
-        public void RandomHumanNpcMessage()
+        public async void Greet()
         {
-            //throw new NotImplementedException();
+            if (_currentZombieMessage != null && _currentHumanMessage != null)
+                return;
+
+            _currentZombieMessage = new[] { "AGHHH", "HE GOT ME!", "BURRRRR", "BRAAAAINNNNNNSSS", "..............." }.Random();
+            _currentHumanMessage = new[] { "Thank you!", "I love you Mr!", "I almost died due to fatigue! Can't program so much!", "Help the others please!", "I'll follow you!" }.Random();
+
+            var message = _currentZombieMessage;
+            await TaskEx.Delay(2000);
+            if (message == _currentZombieMessage)
+                _currentZombieMessage = _currentHumanMessage = null;
         }
         #endregion
     }

@@ -44,6 +44,8 @@ namespace PowerOfLove.Activities
             };
 
             _map = MapLoader.LoadMap("Content/Maps/MainMap.tmx");
+            _map.Layers.First(l => l.Name == "MainLayer").Depth = 0.0f;
+            _map.Layers.First(l => l.Name == "Scenery").Depth = 0.5f;
             Entities = _map.Objects.Select(CreateEntity).ToList();
             _newEntities = new List<GamePlayEntity>();
             _oldEntities = new List<GamePlayEntity>();
@@ -103,7 +105,7 @@ namespace PowerOfLove.Activities
 
             foreach (var ent in Entities)
             {
-                ent.LayerDepth = 0.5f + (ent.Position.Y / _map.PixelSize.Y / 100);
+                ent.LayerDepth = 0.25f + (ent.Position.Y / _map.PixelSize.Y / 200);
                 ent.Draw(gameTime, SpriteBatch);
             }
 

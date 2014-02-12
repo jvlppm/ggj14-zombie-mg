@@ -70,7 +70,7 @@ namespace PowerOfLove.Entities
         #region Game Loop
         public override void Update(GameTime gameTime)
         {
-            if (Screen.IsTrueVision)
+            if (IsZombie)
                 Sprite.Texture = ZombieTexture;
             else
                 Sprite.Texture = NormalTexture;

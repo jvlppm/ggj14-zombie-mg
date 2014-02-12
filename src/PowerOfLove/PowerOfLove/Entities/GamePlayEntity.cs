@@ -30,7 +30,12 @@ namespace PowerOfLove.Entities
         public bool IsHugging { get; set; }
         public Rectangle CollisionBox { get; protected set; }
 
-        public void TurnIntoFriend()
+        public bool IsZombie
+        {
+            get { return Screen.IsTrueVision == (Tag == "friend" || Tag == "player"); }
+        }
+
+        public virtual void TurnIntoFriend()
         {
             Tag = "friend";
         }
@@ -55,7 +60,7 @@ namespace PowerOfLove.Entities
 
         public bool Move(Microsoft.Xna.Framework.Vector2 direction)
         {
-            if(Screen.Move(this, direction))
+            if (Screen.Move(this, direction))
             {
                 Look(direction);
                 return true;

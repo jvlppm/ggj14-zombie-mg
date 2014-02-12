@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGameLib.Core;
 using MonoGameLib.Core.Entities;
 using MonoGameLib.Core.Sprites;
 using PowerOfLove.Entities;
@@ -95,6 +96,13 @@ namespace PowerOfLove
                         rasterize,
                         effect,
                         transformation);
+        }
+
+        public static T Random<T>(this IEnumerable<T> items)
+        {
+            var size = items.Count();
+            var index = RandomNumberGenerator.Next(0, size - 1);
+            return items.Skip(index).First();
         }
     }
 }
