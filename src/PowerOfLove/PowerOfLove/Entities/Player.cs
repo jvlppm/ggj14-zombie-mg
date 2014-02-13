@@ -111,6 +111,7 @@ namespace PowerOfLove.Entities
 
             entity.IsHugging = true;
             IsHugging = true;
+            entity.BeginTransformation();
 
             entity.Sprite.Effect = Sprite.Effect == SpriteEffects.FlipHorizontally ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
             var hugs = TaskEx.WhenAll(

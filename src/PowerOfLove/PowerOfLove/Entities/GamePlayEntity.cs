@@ -35,6 +35,11 @@ namespace PowerOfLove.Entities
             get { return Screen.IsTrueVision == (Tag == "friend" || Tag == "player"); }
         }
 
+        public virtual void BeginTransformation()
+        {
+
+        }
+
         public virtual void TurnIntoFriend()
         {
             Tag = "friend";

@@ -1,5 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGameLib.Core;
 using MonoGameLib.Core.Sprites;
 using MonoGameLib.GUI.Base;
 using MonoGameLib.Tiled;
@@ -30,6 +32,7 @@ namespace PowerOfLove.Entities
 
         string _currentHumanMessage, _currentZombieMessage;
         SpriteFont _screamFont;
+        SoundEffect _zombieScreamSound, _humanScreamSound;
 
         public NPC(Game game, GamePlayScreen screen, int npcSpriteId)
             : base(screen)
@@ -43,6 +46,9 @@ namespace PowerOfLove.Entities
             Scale = new Vector2(2);
             Behaviors.Add(new ZombieBehavior(this));
             CollisionBox = new Rectangle(8, 2, 8, 0);
+
+            _zombieScreamSound = game.Content.Load<SoundEffect>("Audio/Effects/zombie01.wav");
+            _humanScreamSound = game.Content.Load<SoundEffect>(string.Format("Audio/Effects/no{0}.wav", npcSpriteId % 2));
         }
 
         #region Game Loop
@@ -76,6 +82,14 @@ namespace PowerOfLove.Entities
         #endregion
 
         #region Public Methods
+        public override void BeginTransformation()
+        {
+            if (IsZombie)
+                _zombieScreamSound.Play();
+            else
+                _humanScreamSound.Play();
+        }
+
         public override void TurnIntoFriend()
         {
             base.TurnIntoFriend();
