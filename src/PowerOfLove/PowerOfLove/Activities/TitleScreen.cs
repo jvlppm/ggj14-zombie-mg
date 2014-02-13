@@ -1,5 +1,8 @@
 ﻿using Jv.Games.Xna.Async;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Media;
+using MonoGameLib.Core;
 using MonoGameLib.GUI.Base;
 using MonoGameLib.GUI.Components;
 using MonoGameLib.GUI.Containers;
@@ -21,6 +24,7 @@ namespace PowerOfLove.Activities
 
         #region Attributes
         GUI _gui;
+        SoundEffectInstance _bgmInstance;
         #endregion
 
         #region Constructors
@@ -33,6 +37,15 @@ namespace PowerOfLove.Activities
                 CreateMenuOptions(game),
                 CreateFooter(game)
             };
+
+            SoundEffect music;
+            if (RandomNumberGenerator.Next(0, 9) != 9)
+                music = Game.Content.Load<SoundEffect>("Audio/Music/title.wav");
+            else
+                music = Game.Content.Load<SoundEffect>("Audio/Music/title_reversed.wav");
+
+            _bgmInstance = music.CreateInstance();
+            _bgmInstance.IsLooped = true;
         }
         #endregion
 
@@ -85,6 +98,20 @@ namespace PowerOfLove.Activities
                 Color = Color.White,
                 Position = new Point(game.GraphicsDevice.Viewport.Width / 2, game.GraphicsDevice.Viewport.Height * 7 / 8)
             };
+        }
+        #endregion
+
+        #region Activity Life-Cycle
+        protected override void Activating()
+        {
+            _bgmInstance.Play();
+            base.Activating();
+        }
+
+        protected override void Deactivating()
+        {
+            _bgmInstance.Pause();
+            base.Deactivating();
         }
         #endregion
 

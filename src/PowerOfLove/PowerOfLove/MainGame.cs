@@ -23,8 +23,8 @@ namespace PowerOfLove
 
             Content.RootDirectory = "Content";
             GameContent.Initialize(Content);
-            SoundManager.SEFolder = "Sounds";
-            SoundManager.BGMFolder = "BGM";
+            SoundManager.SEFolder = "Audio/SoundEffects";
+            SoundManager.BGMFolder = "Audio/Music";
         }
 
         protected override void Initialize()

@@ -1,5 +1,6 @@
 ﻿using Jv.Games.Xna.Async;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGameLib.Core;
@@ -19,6 +20,7 @@ namespace PowerOfLove.Activities
         Map _map;
         Label _gameTimerLabel, _visionLabel;
         List<GamePlayEntity> _newEntities, _oldEntities;
+        SoundEffectInstance _bgmInstance;
         #endregion
 
         #region Properties
@@ -50,6 +52,10 @@ namespace PowerOfLove.Activities
             _newEntities = new List<GamePlayEntity>();
             _oldEntities = new List<GamePlayEntity>();
             Timer = new ContextTimer(TimeSpan.FromMinutes(1));
+
+            SoundEffect music = Game.Content.Load<SoundEffect>("Audio/Music/gameplay.wav");
+            _bgmInstance = music.CreateInstance();
+            _bgmInstance.IsLooped = true;
         }
         #endregion
 
@@ -68,6 +74,18 @@ namespace PowerOfLove.Activities
             ShowTrueVision();
             await finishTimer;
             return Score;
+        }
+
+        protected override void Activating()
+        {
+            _bgmInstance.Play();
+            base.Activating();
+        }
+
+        protected override void Deactivating()
+        {
+            _bgmInstance.Pause();
+            base.Deactivating();
         }
         #endregion
 
@@ -179,6 +197,13 @@ namespace PowerOfLove.Activities
                 tileset.Texture = tileset.Texture.AsTrueVision(Game);
             _visionLabel.Text = "Their vision";
             _visionLabel.Color = Color.Red;
+
+            _bgmInstance.Stop();
+            SoundEffect music = Game.Content.Load<SoundEffect>("Audio/Music/gameplay-truevision.wav");
+            _bgmInstance = music.CreateInstance();
+            _bgmInstance.IsLooped = true;
+            _bgmInstance.Play();
+
             IsTrueVision = true;
         }
         #endregion

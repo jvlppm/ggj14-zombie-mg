@@ -1,5 +1,6 @@
 ﻿using Jv.Games.Xna.Async;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using MonoGameLib.GUI.Base;
 using MonoGameLib.GUI.Components;
 using PowerOfLove.Components;
@@ -12,8 +13,12 @@ namespace PowerOfLove.Activities
 {
     class ResultsScreen : Activity
     {
+        #region Attributes
         GUI _gui;
+        SoundEffectInstance _bgmInstance;
+        #endregion
 
+        #region Constructors
         public ResultsScreen(Game game, int gamePlayResult)
             : base(game)
         {
@@ -22,8 +27,13 @@ namespace PowerOfLove.Activities
                 CreateMessage(gamePlayResult),
                 CreateBackButton(game)
             };
+            SoundEffect music = Game.Content.Load<SoundEffect>("Audio/Music/credits.wav");
+            _bgmInstance = music.CreateInstance();
+            _bgmInstance.IsLooped = true;
         }
+        #endregion
 
+        #region GUI
         Component CreateMessage(int gameResult)
         {
             return new Label("Sorry if we, from Curitiba, look antisocial some times.\n" +
@@ -47,7 +57,23 @@ namespace PowerOfLove.Activities
             btnBack.Clicked += (s, e) => Exit();
             return btnBack;
         }
+        #endregion
 
+        #region Activity Life-Cycle
+        protected override void Activating()
+        {
+            _bgmInstance.Play();
+            base.Activating();
+        }
+
+        protected override void Deactivating()
+        {
+            _bgmInstance.Pause();
+            base.Deactivating();
+        }
+        #endregion
+
+        #region Game Loop
         protected override void Draw(Microsoft.Xna.Framework.GameTime gameTime)
         {
             _gui.Draw(gameTime, SpriteBatch);
@@ -57,5 +83,6 @@ namespace PowerOfLove.Activities
         {
             _gui.Update(gameTime);
         }
+        #endregion
     }
 }

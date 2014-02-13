@@ -1,5 +1,6 @@
 ﻿using Jv.Games.Xna.Async;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using MonoGameLib.GUI.Base;
 using MonoGameLib.GUI.Components;
 using PowerOfLove.Components;
@@ -10,6 +11,7 @@ namespace PowerOfLove.Activities
     {
         #region Attributes
         GUI _gui;
+        SoundEffectInstance _bgmInstance;
         #endregion
 
         #region Constructors
@@ -22,6 +24,9 @@ namespace PowerOfLove.Activities
                 CreateKeyBindings(game),
                 CreateBackButton(game)
             };
+            SoundEffect music = Game.Content.Load<SoundEffect>("Audio/Music/help.wav");
+            _bgmInstance = music.CreateInstance();
+            _bgmInstance.IsLooped = true;
         }
         #endregion
 
@@ -54,6 +59,20 @@ namespace PowerOfLove.Activities
                 Game.GraphicsDevice.Viewport.Height * 7 / 8);
             btnBack.Clicked += (s, e) => Exit();
             return btnBack;
+        }
+        #endregion
+
+        #region Activity Life-Cycle
+        protected override void Activating()
+        {
+            _bgmInstance.Play();
+            base.Activating();
+        }
+
+        protected override void Deactivating()
+        {
+            _bgmInstance.Pause();
+            base.Deactivating();
         }
         #endregion
 
