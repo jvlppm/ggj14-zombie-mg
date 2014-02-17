@@ -1,5 +1,7 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Linq;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Input.Touch;
 using MonoGameLib.Core.Entities;
 
 namespace PowerOfLove.Entities.Behaviors
@@ -17,13 +19,21 @@ namespace PowerOfLove.Entities.Behaviors
             if (Entity.IsHugging)
                 return;
 
-            var mState = Mouse.GetState();
-            var clickPosition = Screen.Camera.ScreenToMapPosition(mState.Position);
+            var touchState = TouchPanel.GetState().Cast<TouchLocation?>().FirstOrDefault();
+            var mouseState = Mouse.GetState();
+
+            var pointerInfo = new
+            {
+                Pressed = touchState != null || mouseState.LeftButton == ButtonState.Pressed,
+                Location = touchState != null ? touchState.Value.Position : new Vector2(mouseState.X, mouseState.Y)
+            };
+
+            var clickPosition = Screen.Camera.ScreenToMapPosition(pointerInfo.Location);
             var direction = clickPosition - Entity.CenterPosition;
             direction.Normalize();
             Entity.Look(direction);
 
-            if(mState.LeftButton == ButtonState.Pressed)
+            if (pointerInfo.Pressed)
             {
                 if (Entity.Move(direction))
                     Entity.Sprite.CurrentAnimation = "run";

@@ -65,9 +65,9 @@ namespace MonoGameLib.Core.Particles
                 else
                 {
                     var nextState = en.Current;
-                    await TaskEx.WhenAll(
-                        context.Animate(TimeSpan.FromMilliseconds(state.Duration), state.Scale, nextState.Scale, v => Scale = new Vector2(v)),
-                        context.Animate(TimeSpan.FromMilliseconds(state.Duration), state.Color, nextState.Color, v => Color = v));
+                    await TaskEx.WhenAll<TimeSpan>(
+                        (Task<TimeSpan>)context.Animate(TimeSpan.FromMilliseconds(state.Duration), state.Scale, nextState.Scale, v => Scale = new Vector2(v)),
+                        (Task<TimeSpan>)context.Animate(TimeSpan.FromMilliseconds(state.Duration), state.Color, nextState.Color, v => Color = v));
                 }
             }
             Screen.RemoveEntity(this);

@@ -7,11 +7,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PowerOfLove", "PowerOfLove\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "References", "References", "{080E35D6-AABC-451F-9399-4F8467A4F23F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoGameLib.Core", "..\..\references\monogame-aux-lib\src\MonoGameLib.Core\MonoGameLib.Core.csproj", "{F3B03CFA-5A42-4E94-A0D3-90EC15330B68}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoGameLib.Core", "..\references\monogame-aux-lib\src\MonoGameLib.Core\MonoGameLib.Core.csproj", "{F3B03CFA-5A42-4E94-A0D3-90EC15330B68}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoGameLib.GUI", "..\..\references\monogame-aux-lib\src\MonoGameLib.GUI\MonoGameLib.GUI.csproj", "{F2A64D02-17C0-4E50-91CB-DEAD4DABDBE9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoGameLib.GUI", "..\references\monogame-aux-lib\src\MonoGameLib.GUI\MonoGameLib.GUI.csproj", "{F2A64D02-17C0-4E50-91CB-DEAD4DABDBE9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoGameLib.Tiled", "..\..\references\monogame-aux-lib\src\MonoGameLib.Tiled\MonoGameLib.Tiled.csproj", "{F2C71160-3C00-40DD-AB52-151C9A914570}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoGameLib.Tiled", "..\references\monogame-aux-lib\src\MonoGameLib.Tiled\MonoGameLib.Tiled.csproj", "{F2C71160-3C00-40DD-AB52-151C9A914570}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

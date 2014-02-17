@@ -62,10 +62,9 @@ namespace PowerOfLove.Entities
             base.Update(gameTime);
         }
 
-        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch, Color? colorOverride = null, Vector2? scaleOverride = null)
+        public override void DrawOverMap(GameTime gameTime, SpriteBatch spriteBatch)
         {
             DrawCurrentMessage(spriteBatch);
-            base.Draw(gameTime, spriteBatch, colorOverride, scaleOverride);
         }
 
         private void DrawCurrentMessage(SpriteBatch spriteBatch)
@@ -107,7 +106,7 @@ namespace PowerOfLove.Entities
             _currentHumanMessage = new[] { "HEEEELLLLPPP A ZOMBIEEEE", "OH NO A PROGRAMER BROKE FREE!", "APOCALYPSE IS COMING!", "Don't get any closer!", "NOOOOOOOOOOOO!!!!!!" }.Random();
 
             var message = _currentZombieMessage;
-            await TaskEx.Delay(2000);
+            await TaskEx.Delay(TimeSpan.FromSeconds(2));
             if (message == _currentZombieMessage)
                 _currentZombieMessage = _currentHumanMessage = null;
         }
@@ -121,7 +120,7 @@ namespace PowerOfLove.Entities
             _currentHumanMessage = new[] { "Thank you!", "I love you Mr!", "I almost died due to fatigue! Can't program so much!", "Help the others please!", "I'll follow you!" }.Random();
 
             var message = _currentZombieMessage;
-            await TaskEx.Delay(2000);
+            await TaskEx.Delay(TimeSpan.FromSeconds(2));
             if (message == _currentZombieMessage)
                 _currentZombieMessage = _currentHumanMessage = null;
         }

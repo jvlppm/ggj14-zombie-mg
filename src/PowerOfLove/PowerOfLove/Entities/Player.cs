@@ -118,7 +118,7 @@ namespace PowerOfLove.Entities
                 Sprite.PlayAnimation("hug"),
                 entity.Sprite.PlayAnimation("hug"));
 
-            await TaskEx.Delay(300);
+            await TaskEx.Delay(TimeSpan.FromSeconds(0.3));
             entity.TurnIntoFriend();
             Screen.Score++;
             await hugs;

@@ -1,12 +1,13 @@
 ﻿using Jv.Games.Xna.Async;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Media;
 using MonoGameLib.Core;
 using PowerOfLove.Activities;
 using System.Threading.Tasks;
 
 namespace PowerOfLove
 {
-    class MainGame : Game
+    public class MainGame : Game
     {
         public GraphicsDeviceManager Graphics { get; private set; }
 
@@ -14,26 +15,30 @@ namespace PowerOfLove
 
         public MainGame()
         {
-            Window.Title = "Power of Love";
+            //Window.Title = "Power of Love";
             Graphics = new GraphicsDeviceManager(this)
             {
-                PreferredBackBufferWidth = 800,
-                PreferredBackBufferHeight = 600
+                IsFullScreen = true,
+                //PreferredBackBufferWidth = 800,
+                //PreferredBackBufferHeight = 600,
+                SupportedOrientations = DisplayOrientation.LandscapeLeft | DisplayOrientation.LandscapeRight
             };
 
+#if ANDROID
             Content.RootDirectory = "Content";
+#else
+            Content.RootDirectory = "Assets/Content";
+#endif
             GameContent.Initialize(Content);
             SoundManager.SEFolder = "Audio/SoundEffects";
             SoundManager.BGMFolder = "Audio/Music";
+            MediaPlayer.IsRepeating = true;
         }
 
         protected override void Initialize()
         {
             base.Initialize();
-#if ANDROID
-            Window.IsBorderless = true;
-            Graphics.IsFullScreen = true;
-#else
+#if !ANDROID
             IsMouseVisible = true;
 #endif
             this.Play(GameMain);
@@ -60,17 +65,17 @@ namespace PowerOfLove
             }
         }
 
-        Task<TitleScreen.Result> ShowTitle(ActivityHost host)
+        ContextTaskAwaitable<TitleScreen.Result> ShowTitle(ActivityHost host)
         {
             return host.Run<TitleScreen, TitleScreen.Result>();
         }
 
-        Task ShowCredits(ActivityHost host)
+        ContextTaskAwaitable ShowCredits(ActivityHost host)
         {
             return host.Run<CreditsScreen>();
         }
 
-        Task ShowHowToPlay(ActivityHost host)
+        ContextTaskAwaitable ShowHowToPlay(ActivityHost host)
         {
             return host.Run<HowToPlayScreen>();
         }

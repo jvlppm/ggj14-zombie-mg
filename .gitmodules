@@ -1,3 +1,3 @@
-[submodule "references/monogame-aux-lib"]
-	path = references/monogame-aux-lib
+[submodule "src/references/monogame-aux-lib"]
+	path = src/references/monogame-aux-lib
 	url = http://github.com/DiogoMuller/monogame-aux-lib

@@ -2,6 +2,8 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 using MonoGameLib.Core.Sprites;
 using MonoGameLib.GUI.Base;
 using MonoGameLib.GUI.Components;
@@ -16,14 +18,14 @@ namespace PowerOfLove.Activities
         GUI _gui;
         const float textBasePosY = 50;
         float textPosY = textBasePosY;
-        SoundEffectInstance _bgmInstance;
+        Song _music;
         #endregion
 
         #region Constructors
         public CreditsScreen(Game game)
             : base(game)
         {
-            _gui = new GUI();
+            _gui = new GUI(new Vector2(GraphicsDevice.Viewport.Height / 500f));
             CreateCategory("Game Design", "Diogo Muller de Miranda\r\nRicardo Takeda");
             CreateCategory("Developers ", "Diogo Muller de Miranda\r\nJoao Vitor Pietsiaki Moraes\r\nEric Onuki");
             CreateCategory("Game Art", "Diogo Muller de Miranda\r\nRicardo Takeda");
@@ -32,9 +34,7 @@ namespace PowerOfLove.Activities
             CreateBackButton(game);
             CreateZombies();
 
-            SoundEffect music = Game.Content.Load<SoundEffect>("Audio/Music/credits.wav");
-            _bgmInstance = music.CreateInstance();
-            _bgmInstance.IsLooped = true;
+            _music = Game.Content.Load<Song>("Audio/Music/credits.wav");
         }
         #endregion
 
@@ -112,13 +112,13 @@ namespace PowerOfLove.Activities
         #region Activity Life-Cycle
         protected override void Activating()
         {
-            _bgmInstance.Play();
+            MediaPlayer.Play(_music);
             base.Activating();
         }
 
         protected override void Deactivating()
         {
-            _bgmInstance.Pause();
+            MediaPlayer.Stop();
             base.Deactivating();
         }
         #endregion
@@ -126,11 +126,14 @@ namespace PowerOfLove.Activities
         #region Game Loop
         protected override void Draw(Microsoft.Xna.Framework.GameTime gameTime)
         {
+            SpriteBatch.GraphicsDevice.Clear(MainGame.DefaultBackgroundColor);
             _gui.Draw(gameTime, SpriteBatch);
         }
 
         protected override void Update(Microsoft.Xna.Framework.GameTime gameTime)
         {
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
+                Exit();
             _gui.Update(gameTime);
         }
         #endregion

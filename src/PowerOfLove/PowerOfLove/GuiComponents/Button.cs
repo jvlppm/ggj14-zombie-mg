@@ -1,8 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Input.Touch;
 using MonoGameLib.GUI.Components;
 using System;
+using System.Linq;
 
 namespace PowerOfLove.Components
 {
@@ -15,10 +17,9 @@ namespace PowerOfLove.Components
         public Button(Game game, string text)
             : base(text, "Fonts/DefaultFont")
         {
-
-            _normal = game.Content.Load<Texture2D>("Images/GUI/ButtonNormal.png");
-            _over = game.Content.Load<Texture2D>("Images/GUI/ButtonOver.png");
-            _pressed = game.Content.Load<Texture2D>("Images/GUI/ButtonPressed.png");
+            _normal =  game.Content.Load<Texture2D>("Images/GUI/ButtonNormal");
+            _over = game.Content.Load<Texture2D>("Images/GUI/ButtonOver");
+            _pressed = game.Content.Load<Texture2D>("Images/GUI/ButtonPressed");
             Color = Microsoft.Xna.Framework.Color.White;
             Size = new Microsoft.Xna.Framework.Point(_normal.Width, _normal.Height);
             HorizontalOrigin = MonoGameLib.GUI.Base.HorizontalAlign.Center;
@@ -29,14 +30,22 @@ namespace PowerOfLove.Components
         {
             var position = new Rectangle(Position.X, Position.Y, Size.X, Size.Y);
 
+            var touchState = TouchPanel.GetState().Cast<TouchLocation?>().FirstOrDefault();
             var mouseState = Mouse.GetState();
-            if (!position.Contains(new Point(mouseState.X, mouseState.Y)))
-                spriteBatch.Draw(_normal, position, Microsoft.Xna.Framework.Color.White);
-            else if (mouseState.LeftButton == ButtonState.Released)
-                spriteBatch.Draw(_over, position, Microsoft.Xna.Framework.Color.White);
+
+            var pointerInfo = new
+            {
+                Pressed = touchState != null || mouseState.LeftButton == ButtonState.Pressed,
+                Location = touchState != null? touchState.Value.Position : new Vector2(mouseState.X, mouseState.Y)
+            };
+
+            if (!position.Contains(pointerInfo.Location))
+                spriteBatch.Draw(_normal, position, null, Microsoft.Xna.Framework.Color.White, 0, Scale, SpriteEffects.None, 0);
+            else if (!pointerInfo.Pressed)
+                spriteBatch.Draw(_over, position, null, Microsoft.Xna.Framework.Color.White, 0, Scale, SpriteEffects.None, 0);
             else
             {
-                spriteBatch.Draw(_pressed, position, Microsoft.Xna.Framework.Color.White);
+                spriteBatch.Draw(_pressed, position, null, Microsoft.Xna.Framework.Color.White, 0, Scale, SpriteEffects.None, 0);
                 if (Clicked != null)
                     Clicked(this, EventArgs.Empty);
             }

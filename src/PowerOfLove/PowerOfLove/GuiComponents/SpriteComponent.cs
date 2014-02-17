@@ -7,12 +7,10 @@ namespace PowerOfLove.Components
     class SpriteComponent : Component
     {
         public Sprite Sprite { get; private set; }
-        public Vector2 Scale { get; set; }
 
         public SpriteComponent(Sprite sprite)
         {
             Sprite = sprite;
-            Scale = Vector2.One;
         }
 
         public override void Draw(Microsoft.Xna.Framework.GameTime gameTime, Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch)

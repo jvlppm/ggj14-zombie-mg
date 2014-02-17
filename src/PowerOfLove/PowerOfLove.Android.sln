@@ -1,0 +1,68 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30110.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PowerOfLove.Android", "PowerOfLove\PowerOfLove.Android.csproj", "{70B5D68F-8D58-4599-878D-4A5ECAC649B3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "References", "References", "{080E35D6-AABC-451F-9399-4F8467A4F23F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoGameLib.Core.Android", "..\references\monogame-aux-lib\src\MonoGameLib.Core\MonoGameLib.Core.Android.csproj", "{AC07BA6C-B5F1-4336-9D5B-3D9F371C29A9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoGameLib.GUI.Android", "..\references\monogame-aux-lib\src\MonoGameLib.GUI\MonoGameLib.GUI.Android.csproj", "{1A8D4364-B446-4943-AAC7-3A745046E8C1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoGameLib.Tiled.Android", "..\references\monogame-aux-lib\src\MonoGameLib.Tiled\MonoGameLib.Tiled.Android.csproj", "{A42757DC-D647-4547-93B7-F400755E5658}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug-Linux|Any CPU = Debug-Linux|Any CPU
+		Release|Any CPU = Release|Any CPU
+		Release-Linux|Any CPU = Release-Linux|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{70B5D68F-8D58-4599-878D-4A5ECAC649B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70B5D68F-8D58-4599-878D-4A5ECAC649B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70B5D68F-8D58-4599-878D-4A5ECAC649B3}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{70B5D68F-8D58-4599-878D-4A5ECAC649B3}.Debug-Linux|Any CPU.ActiveCfg = Debug|Any CPU
+		{70B5D68F-8D58-4599-878D-4A5ECAC649B3}.Debug-Linux|Any CPU.Build.0 = Debug|Any CPU
+		{70B5D68F-8D58-4599-878D-4A5ECAC649B3}.Debug-Linux|Any CPU.Deploy.0 = Debug|Any CPU
+		{70B5D68F-8D58-4599-878D-4A5ECAC649B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70B5D68F-8D58-4599-878D-4A5ECAC649B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70B5D68F-8D58-4599-878D-4A5ECAC649B3}.Release-Linux|Any CPU.ActiveCfg = Release|Any CPU
+		{70B5D68F-8D58-4599-878D-4A5ECAC649B3}.Release-Linux|Any CPU.Build.0 = Release|Any CPU
+		{70B5D68F-8D58-4599-878D-4A5ECAC649B3}.Release-Linux|Any CPU.Deploy.0 = Release|Any CPU
+		{AC07BA6C-B5F1-4336-9D5B-3D9F371C29A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC07BA6C-B5F1-4336-9D5B-3D9F371C29A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC07BA6C-B5F1-4336-9D5B-3D9F371C29A9}.Debug-Linux|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC07BA6C-B5F1-4336-9D5B-3D9F371C29A9}.Debug-Linux|Any CPU.Build.0 = Debug|Any CPU
+		{AC07BA6C-B5F1-4336-9D5B-3D9F371C29A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC07BA6C-B5F1-4336-9D5B-3D9F371C29A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC07BA6C-B5F1-4336-9D5B-3D9F371C29A9}.Release-Linux|Any CPU.ActiveCfg = Release|Any CPU
+		{AC07BA6C-B5F1-4336-9D5B-3D9F371C29A9}.Release-Linux|Any CPU.Build.0 = Release|Any CPU
+		{1A8D4364-B446-4943-AAC7-3A745046E8C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A8D4364-B446-4943-AAC7-3A745046E8C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A8D4364-B446-4943-AAC7-3A745046E8C1}.Debug-Linux|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A8D4364-B446-4943-AAC7-3A745046E8C1}.Debug-Linux|Any CPU.Build.0 = Debug|Any CPU
+		{1A8D4364-B446-4943-AAC7-3A745046E8C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A8D4364-B446-4943-AAC7-3A745046E8C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A8D4364-B446-4943-AAC7-3A745046E8C1}.Release-Linux|Any CPU.ActiveCfg = Release|Any CPU
+		{1A8D4364-B446-4943-AAC7-3A745046E8C1}.Release-Linux|Any CPU.Build.0 = Release|Any CPU
+		{A42757DC-D647-4547-93B7-F400755E5658}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A42757DC-D647-4547-93B7-F400755E5658}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A42757DC-D647-4547-93B7-F400755E5658}.Debug-Linux|Any CPU.ActiveCfg = Debug|Any CPU
+		{A42757DC-D647-4547-93B7-F400755E5658}.Debug-Linux|Any CPU.Build.0 = Debug|Any CPU
+		{A42757DC-D647-4547-93B7-F400755E5658}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A42757DC-D647-4547-93B7-F400755E5658}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A42757DC-D647-4547-93B7-F400755E5658}.Release-Linux|Any CPU.ActiveCfg = Release|Any CPU
+		{A42757DC-D647-4547-93B7-F400755E5658}.Release-Linux|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{AC07BA6C-B5F1-4336-9D5B-3D9F371C29A9} = {080E35D6-AABC-451F-9399-4F8467A4F23F}
+		{1A8D4364-B446-4943-AAC7-3A745046E8C1} = {080E35D6-AABC-451F-9399-4F8467A4F23F}
+		{A42757DC-D647-4547-93B7-F400755E5658} = {080E35D6-AABC-451F-9399-4F8467A4F23F}
+	EndGlobalSection
+EndGlobal

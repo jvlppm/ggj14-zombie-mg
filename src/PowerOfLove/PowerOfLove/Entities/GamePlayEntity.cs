@@ -80,5 +80,10 @@ namespace PowerOfLove.Entities
             else
                 Sprite.Effect = SpriteEffects.None;
         }
+
+        public virtual void DrawOverMap(GameTime gameTime, SpriteBatch spriteBatch)
+        {
+
+        }
     }
 }

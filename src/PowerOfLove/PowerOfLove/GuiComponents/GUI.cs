@@ -9,11 +9,13 @@ namespace PowerOfLove.Components
     {
         #region Attributes
         List<Component> _uiComponents;
+        public readonly Vector2 Scale;
         #endregion
 
         #region Constructors
-        public GUI()
+        public GUI(Vector2? scale = null)
         {
+            Scale = scale ?? Vector2.One;
             _uiComponents = new List<Component>();
         }
         #endregion
@@ -21,7 +23,6 @@ namespace PowerOfLove.Components
         #region Game Loop
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            spriteBatch.GraphicsDevice.Clear(MainGame.DefaultBackgroundColor);
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone);
 
             foreach (var cmp in _uiComponents)
@@ -38,9 +39,10 @@ namespace PowerOfLove.Components
         #endregion
 
         #region ICollection Methods
-        public void Add(Component component)
+        public void Add(Component item)
         {
-            _uiComponents.Add(component);
+            FixScale(item);
+            _uiComponents.Add(item);
         }
 
         public void Clear()
@@ -70,6 +72,7 @@ namespace PowerOfLove.Components
 
         public bool Remove(Component item)
         {
+            item.Scale /= Scale;
             return _uiComponents.Remove(item);
         }
 
@@ -82,6 +85,16 @@ namespace PowerOfLove.Components
         {
             return _uiComponents.GetEnumerator();
         }
+        #endregion
+
+        #region Private Methods
+        void FixScale(Component item)
+        {
+            item.Scale *= Scale;
+            if (item is Container)
+                ((Container)item).Children.ForEach(FixScale);
+        }
+
         #endregion
     }
 }

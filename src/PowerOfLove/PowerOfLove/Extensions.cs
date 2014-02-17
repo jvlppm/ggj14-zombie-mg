@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoGameLib.Core;
 using MonoGameLib.Core.Entities;
 using MonoGameLib.Core.Sprites;
+using MonoGameLib.Tiled;
 using PowerOfLove.Entities;
 using System;
 using System.Collections.Generic;
@@ -76,26 +77,6 @@ namespace PowerOfLove
             if (length > maxSize)
                 return vector * (maxSize / length);
             return vector;
-        }
-
-        public static void Begin(this SpriteBatch spriteBatch, CameraInfo camera, SamplerState sampler = null, DepthStencilState depthStencil = null, RasterizerState rasterize = null, Effect effect = null)
-        {
-            var viewPort = spriteBatch.GraphicsDevice.Viewport;
-            Vector2 translation = new Vector2(
-                (float)Math.Round(-camera.Position.X * camera.ZoomFactor + viewPort.Width * 0.5f),
-                (float)Math.Round(-camera.Position.Y * camera.ZoomFactor + viewPort.Height * 0.5f));
-
-
-            var transformation = Matrix.CreateScale(new Vector3(camera.ZoomFactor, camera.ZoomFactor, 1)) *
-                                 Matrix.CreateTranslation(new Vector3(translation, 0));
-
-            spriteBatch.Begin(SpriteSortMode.FrontToBack,
-                        BlendState.NonPremultiplied,
-                        sampler,
-                        depthStencil,
-                        rasterize,
-                        effect,
-                        transformation);
         }
 
         public static T Random<T>(this IEnumerable<T> items)

@@ -1,6 +1,7 @@
 ﻿using Jv.Games.Xna.Async;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using MonoGameLib.Core;
 using MonoGameLib.GUI.Base;
@@ -24,28 +25,24 @@ namespace PowerOfLove.Activities
 
         #region Attributes
         GUI _gui;
-        SoundEffectInstance _bgmInstance;
+        Song _music;
         #endregion
 
         #region Constructors
         public TitleScreen(Game game)
             : base(game)
         {
-            _gui = new GUI
+            _gui = new GUI(new Vector2(GraphicsDevice.Viewport.Height / 500f))
             {
                 CreateMainTitle(game),
-                CreateMenuOptions(game),
                 CreateFooter(game)
             };
+            _gui.Add(CreateMenuOptions(game));
 
-            SoundEffect music;
             if (RandomNumberGenerator.Next(0, 9) != 9)
-                music = Game.Content.Load<SoundEffect>("Audio/Music/title.wav");
+                _music = Game.Content.Load<Song>("Audio/Music/title.wav");
             else
-                music = Game.Content.Load<SoundEffect>("Audio/Music/title_reversed.wav");
-
-            _bgmInstance = music.CreateInstance();
-            _bgmInstance.IsLooped = true;
+                _music = Game.Content.Load<Song>("Audio/Music/title_reversed.wav");
         }
         #endregion
 
@@ -77,7 +74,7 @@ namespace PowerOfLove.Activities
 
             var vbox = new VBox
             {
-                ItemSpacing = 4,
+                ItemSpacing = (int)(16 * _gui.Scale.Y),
                 Position = new Point(game.GraphicsDevice.Viewport.Width / 2, game.GraphicsDevice.Viewport.Height / 2),
                 VerticalOrigin = VerticalAlign.Middle,
                 HorizontalOrigin = HorizontalAlign.Center
@@ -104,13 +101,13 @@ namespace PowerOfLove.Activities
         #region Activity Life-Cycle
         protected override void Activating()
         {
-            _bgmInstance.Play();
+            MediaPlayer.Play(_music);
             base.Activating();
         }
 
         protected override void Deactivating()
         {
-            _bgmInstance.Pause();
+            MediaPlayer.Stop();
             base.Deactivating();
         }
         #endregion
@@ -118,11 +115,15 @@ namespace PowerOfLove.Activities
         #region Game Loop
         protected override void Draw(Microsoft.Xna.Framework.GameTime gameTime)
         {
+            SpriteBatch.GraphicsDevice.Clear(MainGame.DefaultBackgroundColor);
             _gui.Draw(gameTime, SpriteBatch);
         }
 
         protected override void Update(Microsoft.Xna.Framework.GameTime gameTime)
         {
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
+                Exit(Result.Exit);
+
             _gui.Update(gameTime);
         }
         #endregion

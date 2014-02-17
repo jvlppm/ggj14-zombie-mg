@@ -3,9 +3,12 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 using MonoGameLib.Core;
+using MonoGameLib.Core.Extensions;
 using MonoGameLib.GUI.Components;
 using MonoGameLib.Tiled;
+using PowerOfLove.Components;
 using PowerOfLove.Entities;
 using System;
 using System.Collections.Generic;
@@ -19,8 +22,9 @@ namespace PowerOfLove.Activities
         #region Attributes
         Map _map;
         Label _gameTimerLabel, _visionLabel;
+        GUI _gui;
         List<GamePlayEntity> _newEntities, _oldEntities;
-        SoundEffectInstance _bgmInstance;
+        Song _music;
         #endregion
 
         #region Properties
@@ -30,7 +34,7 @@ namespace PowerOfLove.Activities
         public List<GamePlayEntity> Entities { get; private set; }
         public GamePlayEntity Player { get; private set; }
         public bool IsTrueVision { get; private set; }
-        public CameraInfo Camera { get; private set; }
+        public CameraInfo Camera;
         #endregion
 
         #region Constructors
@@ -44,8 +48,17 @@ namespace PowerOfLove.Activities
                 Position = new Point(Game.GraphicsDevice.Viewport.Width - 16, 8),
                 HorizontalOrigin = MonoGameLib.GUI.Base.HorizontalAlign.Right,
             };
+            _gui = new GUI(new Vector2(GraphicsDevice.Viewport.Height / 500f))
+            {
+                _gameTimerLabel,
+                _visionLabel
+            };
 
-            _map = MapLoader.LoadMap("Content/Maps/MainMap.tmx");
+#if ANDROID
+            _map = MapLoader.LoadMap(game, "Content/Maps/MainMap.tmx");
+#else
+            _map = MapLoader.LoadMap(game, "Assets/Content/Maps/MainMap.tmx");
+#endif
             _map.Layers.First(l => l.Name == "MainLayer").Depth = 0.0f;
             _map.Layers.First(l => l.Name == "Scenery").Depth = 0.5f;
             Entities = _map.Objects.Select(CreateEntity).ToList();
@@ -53,9 +66,9 @@ namespace PowerOfLove.Activities
             _oldEntities = new List<GamePlayEntity>();
             Timer = new ContextTimer(TimeSpan.FromMinutes(1));
 
-            SoundEffect music = Game.Content.Load<SoundEffect>("Audio/Music/gameplay.wav");
-            _bgmInstance = music.CreateInstance();
-            _bgmInstance.IsLooped = true;
+            _music = Game.Content.Load<Song>("Audio/Music/gameplay.wav");
+
+            Camera = new CameraInfo(Vector2.Zero, Game.GraphicsDevice.Viewport.Height / 480.0f * 2, Game.GraphicsDevice.Viewport);
         }
         #endregion
 
@@ -64,7 +77,8 @@ namespace PowerOfLove.Activities
         {
             var countdown = CountDown();
             var exitManually = base.RunActivity();
-            return await await TaskEx.WhenAny(countdown, exitManually);
+            var firstToComplete = await TaskEx.WhenAny(countdown, exitManually);
+            return await firstToComplete.On(TaskEx.CurrentContext);
         }
 
         async Task<int> CountDown()
@@ -78,13 +92,13 @@ namespace PowerOfLove.Activities
 
         protected override void Activating()
         {
-            _bgmInstance.Play();
+            MediaPlayer.Play(_music);
             base.Activating();
         }
 
         protected override void Deactivating()
         {
-            _bgmInstance.Pause();
+            MediaPlayer.Stop();
             base.Deactivating();
         }
         #endregion
@@ -92,12 +106,14 @@ namespace PowerOfLove.Activities
         #region Game Loop
         protected override void Update(Microsoft.Xna.Framework.GameTime gameTime)
         {
-            if (Keyboard.GetState().IsKeyDown(Keys.Escape))
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 Exit(-1);
 
-            Camera = new CameraInfo(Player.CenterPosition, 2, Game.GraphicsDevice.Viewport);
+            Camera.Position = Player.CenterPosition;
+            var cameraRegion = Camera.GetArea();
+            var screenEntities = Entities.Where(e => cameraRegion.Intersects(e.GetCollisionRectangle()));
 
-            foreach (var ent in Entities)
+            foreach (var ent in screenEntities)
                 ent.Update(gameTime);
 
             foreach (var rem in _oldEntities)
@@ -119,24 +135,27 @@ namespace PowerOfLove.Activities
         {
             SpriteBatch.Begin(Camera, SamplerState.PointClamp);
 
-            _map.Draw(gameTime, SpriteBatch, Vector2.Zero);
+            _map.Layers[0].Draw(SpriteBatch, Camera);
 
-            foreach (var ent in Entities)
-            {
-                ent.LayerDepth = 0.25f + (ent.Position.Y / _map.PixelSize.Y / 200);
+            var cameraRegion = Camera.GetArea();
+
+            var screenEntities = Entities.Where(e => cameraRegion.Intersects(e.GetCollisionRectangle()));
+
+            foreach (var ent in screenEntities.OrderBy(e => e.Position.Y))
                 ent.Draw(gameTime, SpriteBatch);
-            }
+
+            _map.Layers[1].Draw(SpriteBatch, Camera);
+
+            foreach (var ent in screenEntities.OrderBy(e => e.Position.Y))
+                ent.DrawOverMap(gameTime, SpriteBatch);
 
             SpriteBatch.End();
         }
 
         void DrawGui(Microsoft.Xna.Framework.GameTime gameTime)
         {
-            SpriteBatch.Begin();
             _gameTimerLabel.Text = string.Format("Score: {0} Time: {1:00}", Score, Timer.RemainingTime.TotalSeconds);
-            _gameTimerLabel.Draw(gameTime, SpriteBatch);
-            _visionLabel.Draw(gameTime, SpriteBatch);
-            SpriteBatch.End();
+            _gui.Draw(gameTime, SpriteBatch);
         }
         #endregion
 
@@ -198,11 +217,8 @@ namespace PowerOfLove.Activities
             _visionLabel.Text = "Their vision";
             _visionLabel.Color = Color.Red;
 
-            _bgmInstance.Stop();
-            SoundEffect music = Game.Content.Load<SoundEffect>("Audio/Music/gameplay-truevision.wav");
-            _bgmInstance = music.CreateInstance();
-            _bgmInstance.IsLooped = true;
-            _bgmInstance.Play();
+            _music = Game.Content.Load<Song>("Audio/Music/gameplay-truevision.wav");
+            MediaPlayer.Play(_music);
 
             IsTrueVision = true;
         }
