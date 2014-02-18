@@ -2,6 +2,7 @@ using Android.App;
 using Android.Content.PM;
 using Android.OS;
 using PowerOfLove;
+using System.Net;
 
 namespace GameTest.Android
 {
@@ -19,6 +20,9 @@ namespace GameTest.Android
 
         protected override void OnCreate(Bundle bundle)
         {
+            // Accept ssl certificates
+            ServicePointManager.ServerCertificateValidationCallback += (p1, p2, p3, p4) => true;
+
             base.OnCreate(bundle);
             AssetsManager = Assets;
             MainGame.Activity = this;

@@ -15,10 +15,14 @@
     <AndroidApplication>true</AndroidApplication>
     <AndroidResgenFile>Resources\Resource.Designer.cs</AndroidResgenFile>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
-    <AndroidSupportedAbis>armeabi-v7a%3bx86</AndroidSupportedAbis>
+    <AndroidSupportedAbis>armeabi,armeabi-v7a,x86</AndroidSupportedAbis>
     <MandroidI18n />
-    <TargetFrameworkVersion>v2.3</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
+    <AndroidUseLatestPlatformSdk />
+    <AndroidStoreUncompressedFileExtensions />
+    <JavaMaximumHeapSize />
+    <JavaOptions />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -52,11 +56,21 @@
     </Reference>
     <Reference Include="Mono.Android" />
     <Reference Include="mscorlib" />
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\Components\json.net-4.5.11\lib\android\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="OpenTK" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Xml" />
+    <Reference Include="Xamarin.Auth.Android">
+      <HintPath>..\Components\xamarin.social-1.1.1\lib\android\Xamarin.Auth.Android.dll</HintPath>
+    </Reference>
+    <Reference Include="Xamarin.Social.Android">
+      <HintPath>..\Components\xamarin.social-1.1.1\lib\android\Xamarin.Social.Android.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Activities\CreditsScreen.cs" />
@@ -77,6 +91,7 @@
     <Compile Include="GuiComponents\EntityComponent.cs" />
     <Compile Include="GuiComponents\GUI.cs" />
     <Compile Include="GuiComponents\SpriteComponent.cs" />
+    <Compile Include="Helpers\PHPSerializer.cs" />
     <Compile Include="MainGame.cs" />
     <Compile Include="Particles\Particle.cs" />
     <Compile Include="Particles\ParticleEmiter.cs" />
@@ -192,7 +207,9 @@
     <AndroidAsset Include="Assets\Content\Maps\tileset.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </AndroidAsset>
-    <Content Include="Properties\AndroidManifest.xml" />
+    <Content Include="Properties\AndroidManifest.xml">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\references\monogame-aux-lib\src\MonoGameLib.Core\MonoGameLib.Core.Android.csproj">
@@ -207,6 +224,16 @@
       <Project>{a42757dc-d647-4547-93b7-f400755e5658}</Project>
       <Name>MonoGameLib.Tiled</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <XamarinComponentReference Include="json.net">
+      <Visible>False</Visible>
+      <Version>4.5.11</Version>
+    </XamarinComponentReference>
+    <XamarinComponentReference Include="xamarin.social">
+      <Visible>False</Visible>
+      <Version>1.1.1</Version>
+    </XamarinComponentReference>
   </ItemGroup>
   <Import Project="..\..\references\MonoGame\3.2\MonoGame.Android.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />

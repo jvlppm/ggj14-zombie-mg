@@ -11,6 +11,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xamarin.Auth;
+using Xamarin.Social.Services;
 
 namespace PowerOfLove
 {
@@ -85,5 +87,32 @@ namespace PowerOfLove
             var index = RandomNumberGenerator.Next(0, size - 1);
             return items.Skip(index).First();
         }
+
+#if ANDROID
+		public static Task<Xamarin.Auth.Account> LoginAsync(this Android.App.Activity activity, Xamarin.Auth.OAuth2Authenticator authenticator)
+		{
+			// If authorization succeeds or is canceled, .Completed will be fired.
+			var tcs = new TaskCompletionSource<Xamarin.Auth.Account>();
+			authenticator.Completed += (s, eL) =>
+			{
+				if (eL.IsAuthenticated)
+					tcs.TrySetResult(eL.Account);
+				else
+					tcs.TrySetCanceled();
+			};
+			authenticator.Error += (s, eL) => tcs.TrySetException(eL.Exception);
+			activity.StartActivity(authenticator.GetUI(activity.BaseContext));
+
+			return tcs.Task;
+		}
+
+        public async static Task<Newtonsoft.Json.Linq.JObject> Ajax(this FacebookService facebook, Account account, string url, string method = "GET")
+        {
+            var request = facebook.CreateRequest(method, new Uri("https://graph.facebook.com/" + url), account);
+            var resp = await request.GetResponseAsync();
+            var respJson = resp.GetResponseText();
+            return Newtonsoft.Json.Linq.JObject.Parse(respJson);
+        }
+#endif
     }
 }

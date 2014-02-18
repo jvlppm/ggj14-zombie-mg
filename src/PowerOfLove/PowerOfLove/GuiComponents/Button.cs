@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
+using MonoGameLib.GUI.Base;
 using MonoGameLib.GUI.Components;
 using System;
 using System.Linq;
@@ -28,7 +29,16 @@ namespace PowerOfLove.Components
 
         public override void Draw(Microsoft.Xna.Framework.GameTime gameTime, Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch)
         {
+            if (!IsVisible)
+                return;
+
+            var originalPosition = Position;
+
+            var origin = AlignExtensions.ToVector(HorizontalOrigin, VerticalOrigin);
+            Position = new Point((int)(Position.X - (Size.X * origin.X)), (int)(Position.Y - (Size.Y * origin.Y)));
+
             var position = new Rectangle(Position.X, Position.Y, Size.X, Size.Y);
+            
 
             var touchState = TouchPanel.GetState().Cast<TouchLocation?>().FirstOrDefault();
             var mouseState = Mouse.GetState();
@@ -51,6 +61,7 @@ namespace PowerOfLove.Components
             }
 
             base.Draw(gameTime, spriteBatch);
+            Position = originalPosition;
         }
     }
 }

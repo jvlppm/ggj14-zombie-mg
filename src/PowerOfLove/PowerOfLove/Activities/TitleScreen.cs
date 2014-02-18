@@ -8,6 +8,18 @@ using MonoGameLib.GUI.Base;
 using MonoGameLib.GUI.Components;
 using MonoGameLib.GUI.Containers;
 using PowerOfLove.Components;
+#if ANDROID
+using Xamarin.Social.Services;
+using Xamarin.Auth;
+using System;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using MonoGameLib.Core.Sprites;
+using Conversive.PHPSerializationLibrary;
+using System.Collections;
+using System.Text.RegularExpressions;
+#endif
 
 namespace PowerOfLove.Activities
 {
@@ -26,6 +38,21 @@ namespace PowerOfLove.Activities
         #region Attributes
         GUI _gui;
         Song _music;
+        private Label _lblWelcome;
+        private Label _lblHighscore;
+        private Label _lblTotalZombies;
+        private Container _facebookStatus;
+        private Button _facebookLogin;
+
+#if ANDROID
+        readonly FacebookService Facebook = new FacebookService
+        {
+            ClientId = "405744166227759",
+            ClientSecret = "d7a9c8d5cfdaf8e7916991e9754b90a9",
+            Scope = "email, publish_actions",
+            RedirectUrl = new System.Uri("http://apps.facebook.com/dev-poweroflove/")
+        };
+#endif
         #endregion
 
         #region Constructors
@@ -38,6 +65,11 @@ namespace PowerOfLove.Activities
                 CreateFooter(game)
             };
             _gui.Add(CreateMenuOptions(game));
+#if ANDROID
+            CreateFacebookLogin(game);
+            CreateFacebookStatus(game);
+            RefreshFacebookStatus(game);
+#endif
 
             if (RandomNumberGenerator.Next(0, 9) != 9)
                 _music = Game.Content.Load<Song>("Audio/Music/title.wav");
@@ -75,7 +107,11 @@ namespace PowerOfLove.Activities
             var vbox = new VBox
             {
                 ItemSpacing = (int)(16 * _gui.Scale.Y),
-                Position = new Point(game.GraphicsDevice.Viewport.Width / 2, game.GraphicsDevice.Viewport.Height / 2),
+#if ANDROID
+                Position = new Point(Viewport.Width / 4, Viewport.Height / 2),
+#else
+                Position = new Point(Viewport.Width / 2, Viewport.Height / 2),
+#endif
                 VerticalOrigin = VerticalAlign.Middle,
                 HorizontalOrigin = HorizontalAlign.Center
             };
@@ -85,6 +121,59 @@ namespace PowerOfLove.Activities
             vbox.AddChildren(btnExit);
             return vbox;
         }
+
+#if ANDROID
+        void CreateFacebookLogin(Game game)
+        {
+            _facebookLogin = new Button(game, "Facebook")
+            {
+                Position = new Point(Viewport.Width * 3 / 4, Viewport.Height / 2),
+                VerticalOrigin = VerticalAlign.Middle,
+                HorizontalOrigin = HorizontalAlign.Center
+            };
+            _facebookLogin.Clicked += facebookLogin_Clicked;
+            _gui.Add(_facebookLogin);
+        }
+
+        void CreateFacebookStatus(Game game)
+        {
+            _facebookStatus = new Container();
+
+            var basePosition = new Point((int)(Viewport.Width * 1.5f / 4), Viewport.Height / 2);
+
+            var textureData = new Microsoft.Xna.Framework.Graphics.Texture2D(GraphicsDevice, 20, 20);
+
+            var guiScale = new Point((int)_gui.Scale.X, (int)_gui.Scale.Y);
+            
+            _lblWelcome = new Label(string.Format("Welcome, {0}", "<username>"), "Fonts/DefaultFont")
+            {
+                HorizontalOrigin = HorizontalAlign.Left,
+                VerticalOrigin = VerticalAlign.Middle,
+                Color = Color.White,
+                Position = basePosition + new Point(48, -48) * guiScale
+            };
+            _lblHighscore = new Label(string.Format("Your highest score is: {0} zombies.", 0), "Fonts/DefaultFont")
+            {
+                HorizontalOrigin = HorizontalAlign.Left,
+                VerticalOrigin = VerticalAlign.Middle,
+                Color = Color.White,
+                Position = basePosition + new Point(48, 0) * guiScale
+            };
+            _lblTotalZombies = new Label(string.Format("On total, you saved {0} zombies.", 0), "Fonts/DefaultFont")
+            {
+                HorizontalOrigin = HorizontalAlign.Left,
+                VerticalOrigin = VerticalAlign.Middle,
+                Color = Color.White,
+                Position = basePosition + new Point(48, 48) * guiScale
+            };
+
+            _facebookStatus.AddChildren(_lblWelcome);
+            _facebookStatus.AddChildren(_lblHighscore);
+            _facebookStatus.AddChildren(_lblTotalZombies);
+
+            _gui.Add(_facebookStatus);
+        }
+#endif
 
         Component CreateFooter(Microsoft.Xna.Framework.Game game)
         {
@@ -126,6 +215,94 @@ namespace PowerOfLove.Activities
 
             _gui.Update(gameTime);
         }
+        #endregion
+
+        #region Facebook
+#if ANDROID
+        async void RefreshFacebookStatus(Game game)
+        {
+            try
+            {
+                _facebookLogin.IsVisible = false;
+                _facebookStatus.IsVisible = false;
+
+                var userAccount = (await Facebook.GetAccountsAsync(Game.Activity)).FirstOrDefault();
+
+                _facebookLogin.IsVisible = userAccount == null;
+
+                if (userAccount == null)
+                    return;
+
+                var userInfo = await Facebook.Ajax(userAccount, "me");
+
+                var userId = (string)userInfo["id"];
+                var userName = (string)userInfo["name"];
+
+                _lblWelcome.Text = string.Format("Welcome, {0}", userName);
+                _lblHighscore.Text = "Loading";
+                _lblTotalZombies.Text = string.Empty;
+                _facebookStatus.IsVisible = true;
+
+                var htClient = new HttpClient();
+                var serializedUserData = await htClient.GetStringAsync(new Uri("https://www.diogomuller.com.br/files/games/zombie-social/database/database_access.php?call=getUser&id=" + Uri.EscapeDataString(userId)));
+                serializedUserData = Regex.Replace(serializedUserData, "<script.*?>.*?</script>", "", RegexOptions.IgnoreCase);
+                PHPSerializer serializer = new PHPSerializer();
+                var userData = (Hashtable)serializer.Deserialize(serializedUserData);
+
+                _lblTotalZombies.Text = string.Format("Your highest score is: {0} zombies.", userData["highscore"]);
+                _lblHighscore.Text = string.Format("On total, you saved {0} zombies.", userData["totalzombies"]);
+            }
+            catch (Exception ex)
+            {
+                _facebookLogin.IsVisible = true;
+                _facebookStatus.IsVisible = false;
+            }
+        }
+
+        async void facebookLogin_Clicked(object sender, System.EventArgs e)
+        {
+            _facebookLogin.IsVisible = false;
+
+            var userAccount = (await Facebook.GetAccountsAsync(Game.Activity)).FirstOrDefault();
+
+            if (userAccount == null)
+            {
+                var auth = new OAuth2Authenticator(
+                               clientId: "405744166227759",
+                               scope: "email, publish_actions",
+                               authorizeUrl: new Uri("https://m.facebook.com/dialog/oauth/"),
+                               redirectUrl: new Uri("http://www.facebook.com/connect/login_success.html"));
+
+                userAccount = await Game.Activity.LoginAsync(auth);
+                Facebook.SaveAccount(Game.Activity.BaseContext, userAccount);
+            }
+
+            RefreshFacebookStatus(Game);
+
+            /*try
+            {
+                var htClient = new HttpClient(new HttpClientHandler());
+                var res = await htClient.GetStringAsync(new Uri("https://www.diogomuller.com.br/files/games/zombie-social/database/database_access.php?call=loadRankings&count=1&type=totalzombies&id=" + Uri.EscapeDataString(userId)));
+                Console.WriteLine(res);
+
+                //var res = await htClient.GetStringAsync(new Uri("https://www.diogomuller.com.br/files/games/zombie-social/database/database_access.php?call=getUser&id=" + Uri.EscapeDataString(userId)));
+                //https://www.diogomuller.com.br/files/games/zombie-social/database/database_access.php?call=loadRankings&count=1&type=
+                //totalzombies highscore
+                //id=
+                Console.WriteLine(res);
+            }
+            catch(WebException ex)
+            {
+                var resp2 = ((HttpWebResponse)ex.Response);
+                var respStream = resp2.GetResponseStream();
+                if(respStream != null)
+                {
+                    var respText = new System.IO.StreamReader(resp2.GetResponseStream()).ReadToEnd();
+                    Console.WriteLine(respText);
+                }
+            }*/
+        }
+#endif
         #endregion
     }
 }
