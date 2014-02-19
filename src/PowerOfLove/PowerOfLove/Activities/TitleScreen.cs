@@ -12,6 +12,7 @@ using PowerOfLove.Components;
 using Xamarin.Social.Services;
 using Xamarin.Auth;
 using System;
+using System.Threading.Tasks;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -19,6 +20,7 @@ using MonoGameLib.Core.Sprites;
 using Conversive.PHPSerializationLibrary;
 using System.Collections;
 using System.Text.RegularExpressions;
+using PowerOfLove.Helpers;
 #endif
 
 namespace PowerOfLove.Activities
@@ -43,23 +45,6 @@ namespace PowerOfLove.Activities
         private Label _lblTotalZombies;
         private Container _facebookStatus;
         private Button _facebookLogin;
-
-#if ANDROID
-        readonly FacebookService Facebook = new FacebookService
-        {
-#if !DEBUG
-            // Debug Keys
-            ClientId = "405744166227759",
-            ClientSecret = "d7a9c8d5cfdaf8e7916991e9754b90a9",
-            RedirectUrl = new System.Uri("http://apps.facebook.com/dev-poweroflove/"),
-#else
-            ClientId = "242699782569520",
-            ClientSecret = "c599315593f42e88d32481af36337ae1",
-            RedirectUrl = new System.Uri("http://apps.facebook.com/ggjpoweroflove/"),
-#endif
-            Scope = "email, publish_actions"
-        };
-#endif
         #endregion
 
         #region Constructors
@@ -226,6 +211,13 @@ namespace PowerOfLove.Activities
 
         #region Facebook
 #if ANDROID
+        async void facebookLogin_Clicked(object sender, System.EventArgs e)
+        {
+            _facebookLogin.IsVisible = false;
+            await Facebook.Instance.LogInAsync(Game.Activity).On(UpdateContext);
+            RefreshFacebookStatus(Game);
+        }
+
         async void RefreshFacebookStatus(Game game)
         {
             try
@@ -233,88 +225,34 @@ namespace PowerOfLove.Activities
                 _facebookLogin.IsVisible = false;
                 _facebookStatus.IsVisible = false;
 
-                var userAccount = (await Facebook.GetAccountsAsync(Game.Activity)).FirstOrDefault();
+                bool isLoggedIn = await Facebook.Instance.IsLoggedInAsync(Game.Activity).On(UpdateContext);
 
-                _facebookLogin.IsVisible = userAccount == null;
+                _facebookLogin.IsVisible = !isLoggedIn;
+                _facebookStatus.IsVisible = isLoggedIn;
 
-                if (userAccount == null)
+                if (!isLoggedIn)
                     return;
 
-                var userInfo = await Facebook.Ajax(userAccount, "me");
+                _lblWelcome.Text = "Loading Facebook data";
+                _lblHighscore.Text = _lblTotalZombies.Text = string.Empty;
 
-                var userId = (string)userInfo["id"];
-                var userName = (string)userInfo["name"];
+                await Facebook.Instance.RefreshUserStatus(Game.Activity).On(UpdateContext);
 
-                _lblWelcome.Text = string.Format("Welcome, {0}", userName);
+                _lblWelcome.Text = string.Format("Welcome, {0}", Facebook.Instance.UserName);
                 _lblHighscore.Text = "Loading";
                 _lblTotalZombies.Text = string.Empty;
                 _facebookStatus.IsVisible = true;
 
-                var htClient = new HttpClient();
-                /*var serializedUserData = await htClient.GetStringAsync(new Uri("https://www.diogomuller.com.br/files/games/zombie-social/database/database_access.php?call=getUser&id=" + Uri.EscapeDataString(userId)));
-                serializedUserData = Regex.Replace(serializedUserData, "<script.*?>.*?</script>", "", RegexOptions.IgnoreCase);
-                PHPSerializer serializer = new PHPSerializer();
-                var userData = (Hashtable)serializer.Deserialize(serializedUserData);
+                var userStatus = await PowerOfLoveServer.GetUserInfoAsync(Facebook.Instance.UserId).On(UpdateContext);
 
-                _lblTotalZombies.Text = string.Format("Your highest score is: {0} zombies.", userData["highscore"]);
-                _lblHighscore.Text = string.Format("On total, you saved {0} zombies.", userData["totalzombies"]);*/
-
-                var uri = "https://www.diogomuller.com.br/files/games/zombie-social/database/database_access.php?call=loadRankings&count=1&type=totalzombies&id=" + Uri.EscapeDataString(userId) + "&access_token=" + Uri.EscapeDataString(userAccount.Properties["access_token"]);
-                var res = await htClient.GetStringAsync(uri);
-                res = Regex.Replace(res, "<script.*?>.*?</script>", "", RegexOptions.IgnoreCase);
-                PHPSerializer serializer = new PHPSerializer();
-                var userData = serializer.Deserialize(res);
-
+                _lblHighscore.Text = string.Format("Your highest score is: {0} zombies.", userStatus.HighScore);
+                _lblTotalZombies.Text = string.Format("On total, you saved {0} zombies.", userStatus.TotalZombies);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 _facebookLogin.IsVisible = true;
                 _facebookStatus.IsVisible = false;
             }
-        }
-
-        async void facebookLogin_Clicked(object sender, System.EventArgs e)
-        {
-            _facebookLogin.IsVisible = false;
-
-            var userAccount = (await Facebook.GetAccountsAsync(Game.Activity)).FirstOrDefault();
-
-            if (userAccount == null)
-            {
-                var auth = new OAuth2Authenticator(
-                               clientId: Facebook.ClientId,
-                               scope: Facebook.Scope,
-                               authorizeUrl: new Uri("https://m.facebook.com/dialog/oauth/"),
-                               redirectUrl: new Uri("http://www.facebook.com/connect/login_success.html"));
-
-                userAccount = await Game.Activity.LoginAsync(auth);
-                Facebook.SaveAccount(Game.Activity.BaseContext, userAccount);
-            }
-
-            RefreshFacebookStatus(Game);
-
-            /*try
-            {
-                var htClient = new HttpClient(new HttpClientHandler());
-                var res = await htClient.GetStringAsync(new Uri("https://www.diogomuller.com.br/files/games/zombie-social/database/database_access.php?call=loadRankings&count=1&type=totalzombies&id=" + Uri.EscapeDataString(userId)));
-                Console.WriteLine(res);
-
-                //var res = await htClient.GetStringAsync(new Uri("https://www.diogomuller.com.br/files/games/zombie-social/database/database_access.php?call=getUser&id=" + Uri.EscapeDataString(userId)));
-                //https://www.diogomuller.com.br/files/games/zombie-social/database/database_access.php?call=loadRankings&count=1&type=
-                //totalzombies highscore
-                //id=
-                Console.WriteLine(res);
-            }
-            catch(WebException ex)
-            {
-                var resp2 = ((HttpWebResponse)ex.Response);
-                var respStream = resp2.GetResponseStream();
-                if(respStream != null)
-                {
-                    var respText = new System.IO.StreamReader(resp2.GetResponseStream()).ReadToEnd();
-                    Console.WriteLine(respText);
-                }
-            }*/
         }
 #endif
         #endregion

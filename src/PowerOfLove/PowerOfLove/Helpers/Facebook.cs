@@ -44,7 +44,6 @@ namespace PowerOfLove.Helpers
         };
 
         Account _account;
-        string _userName;
 
         public string UserName { get; private set; }
         public string FirstName { get; private set; }
@@ -52,10 +51,7 @@ namespace PowerOfLove.Helpers
         public string UserId { get; private set; }
         public string AccessToken { get; private set; }
 
-        private Facebook()
-        {
-            
-        }
+        private Facebook() { }
 
         public async Task<bool> IsLoggedInAsync(Activity context)
         {
@@ -65,10 +61,10 @@ namespace PowerOfLove.Helpers
             return _account != null;
         }
 
-        public async Task RefreshUserStatus(Activity context)
+        public async Task<bool> RefreshUserStatus(Activity context)
         {
             if (!await IsLoggedInAsync(context))
-                return;
+                return false;
 
             var facebookInfo = await Service.Ajax(_account, "me");
 
@@ -77,6 +73,22 @@ namespace PowerOfLove.Helpers
             FirstName = (string)facebookInfo["first_name"];
             LastName = (string)facebookInfo["last_name"];
             AccessToken = _account.Properties["access_token"];
+            return true;
+        }
+
+        public async Task LogInAsync(Activity context)
+        {
+            if (!await IsLoggedInAsync(context))
+            {
+                var auth = new OAuth2Authenticator(
+                               clientId: Service.ClientId,
+                               scope: Service.Scope,
+                               authorizeUrl: new Uri("https://m.facebook.com/dialog/oauth/"),
+                               redirectUrl: new Uri("http://www.facebook.com/connect/login_success.html"));
+
+                var userAccount = await context.LoginAsync(auth);
+                Service.SaveAccount(context.BaseContext, userAccount);
+            }
         }
     }
 }
