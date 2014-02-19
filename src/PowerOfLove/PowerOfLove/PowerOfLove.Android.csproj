@@ -91,7 +91,9 @@
     <Compile Include="GuiComponents\EntityComponent.cs" />
     <Compile Include="GuiComponents\GUI.cs" />
     <Compile Include="GuiComponents\SpriteComponent.cs" />
+    <Compile Include="Helpers\Facebook.cs" />
     <Compile Include="Helpers\PHPSerializer.cs" />
+    <Compile Include="Helpers\PowerOfLoveServer.cs" />
     <Compile Include="MainGame.cs" />
     <Compile Include="Particles\Particle.cs" />
     <Compile Include="Particles\ParticleEmiter.cs" />

@@ -47,10 +47,17 @@ namespace PowerOfLove.Activities
 #if ANDROID
         readonly FacebookService Facebook = new FacebookService
         {
+#if !DEBUG
+            // Debug Keys
             ClientId = "405744166227759",
             ClientSecret = "d7a9c8d5cfdaf8e7916991e9754b90a9",
-            Scope = "email, publish_actions",
-            RedirectUrl = new System.Uri("http://apps.facebook.com/dev-poweroflove/")
+            RedirectUrl = new System.Uri("http://apps.facebook.com/dev-poweroflove/"),
+#else
+            ClientId = "242699782569520",
+            ClientSecret = "c599315593f42e88d32481af36337ae1",
+            RedirectUrl = new System.Uri("http://apps.facebook.com/ggjpoweroflove/"),
+#endif
+            Scope = "email, publish_actions"
         };
 #endif
         #endregion
@@ -244,13 +251,20 @@ namespace PowerOfLove.Activities
                 _facebookStatus.IsVisible = true;
 
                 var htClient = new HttpClient();
-                var serializedUserData = await htClient.GetStringAsync(new Uri("https://www.diogomuller.com.br/files/games/zombie-social/database/database_access.php?call=getUser&id=" + Uri.EscapeDataString(userId)));
+                /*var serializedUserData = await htClient.GetStringAsync(new Uri("https://www.diogomuller.com.br/files/games/zombie-social/database/database_access.php?call=getUser&id=" + Uri.EscapeDataString(userId)));
                 serializedUserData = Regex.Replace(serializedUserData, "<script.*?>.*?</script>", "", RegexOptions.IgnoreCase);
                 PHPSerializer serializer = new PHPSerializer();
                 var userData = (Hashtable)serializer.Deserialize(serializedUserData);
 
                 _lblTotalZombies.Text = string.Format("Your highest score is: {0} zombies.", userData["highscore"]);
-                _lblHighscore.Text = string.Format("On total, you saved {0} zombies.", userData["totalzombies"]);
+                _lblHighscore.Text = string.Format("On total, you saved {0} zombies.", userData["totalzombies"]);*/
+
+                var uri = "https://www.diogomuller.com.br/files/games/zombie-social/database/database_access.php?call=loadRankings&count=1&type=totalzombies&id=" + Uri.EscapeDataString(userId) + "&access_token=" + Uri.EscapeDataString(userAccount.Properties["access_token"]);
+                var res = await htClient.GetStringAsync(uri);
+                res = Regex.Replace(res, "<script.*?>.*?</script>", "", RegexOptions.IgnoreCase);
+                PHPSerializer serializer = new PHPSerializer();
+                var userData = serializer.Deserialize(res);
+
             }
             catch (Exception ex)
             {
@@ -268,8 +282,8 @@ namespace PowerOfLove.Activities
             if (userAccount == null)
             {
                 var auth = new OAuth2Authenticator(
-                               clientId: "405744166227759",
-                               scope: "email, publish_actions",
+                               clientId: Facebook.ClientId,
+                               scope: Facebook.Scope,
                                authorizeUrl: new Uri("https://m.facebook.com/dialog/oauth/"),
                                redirectUrl: new Uri("http://www.facebook.com/connect/login_success.html"));
 
