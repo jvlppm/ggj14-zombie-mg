@@ -255,7 +255,7 @@ namespace PowerOfLove.Activities
                 _lblTotalZombies.Text = string.Empty;
                 _facebookStatus.IsVisible = true;
 
-                var userStatus = await PowerOfLoveServer.Instance.GetUserInfoAsync(Facebook.Instance.UserId, true).On(UpdateContext);
+                var userStatus = await PowerOfLoveService.Instance.GetUserInfoAsync(Facebook.Instance.UserId, true).On(UpdateContext);
 
                 _lblHighscore.Text = string.Format("Your highest score is: {0} zombies.", userStatus.HighScore);
                 _lblTotalZombies.Text = string.Format("On total, you saved {0} zombies.", userStatus.TotalZombies);

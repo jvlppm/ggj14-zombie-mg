@@ -8,6 +8,7 @@ using MonoGameLib.Core.Sprites;
 using MonoGameLib.GUI.Base;
 using MonoGameLib.GUI.Components;
 using PowerOfLove.Components;
+using PowerOfLove.Helpers;
 using System;
 
 namespace PowerOfLove.Activities
@@ -33,7 +34,11 @@ namespace PowerOfLove.Activities
             CreateHeaders();
             CreateBackButton(game);
 
-            LoadPlayerScores();
+            var facebookId = Facebook.Instance.UserId;
+            var access_token = Facebook.Instance.AccessToken;
+
+            if(facebookId != null && access_token != null)
+                LoadPlayerScores(facebookId, access_token);
 
             _music = Game.Content.Load<Song>("Audio/Music/credits.wav");
         }
@@ -139,18 +144,16 @@ namespace PowerOfLove.Activities
         }
         #endregion
 
-        public async void LoadPlayerScores()
+        public async void LoadPlayerScores(string facebookId, string access_token)
         {
             var availableScreenSize = (Viewport.Height * 7 / 8 - 32 * _gui.Scale.Y * 2)  - textPosY;
             var count = availableScreenSize / (32 * _gui.Scale.Y);
 
 #if ANDROID
-            string facebookId = Facebook.Instance.UserId;
-            string facebookAccessToken;
-            string scoreType = _orderByHighscore? PowerOfLoveServer.RankType.HighScore
-                                                : PowerOfLoveServer.RankType.TotalZombies;
+            var scoreType = _orderByHighscore? PowerOfLoveService.RankType.HighScore
+                                                : PowerOfLoveService.RankType.TotalZombies;
 
-            var players = await PowerOfLoveServer.Instance.LoadRankingsAsync(facebookId, scoreType, count, facebookAccessToken);
+            var players = await PowerOfLoveService.Instance.LoadRankingsAsync(facebookId, scoreType, (int)count, access_token);
 
             foreach(var playerInfo in players)
                 AddPlayerScore(playerInfo.Name, playerInfo.MapName, playerInfo.HighScore, playerInfo.TotalZombies);

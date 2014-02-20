@@ -39,7 +39,7 @@ namespace PowerOfLove.Helpers
         public enum RankType
         {
             HighScore,
-            TotalZombied
+            TotalZombies
         }
 
         string _getUserInfoId;
@@ -47,7 +47,7 @@ namespace PowerOfLove.Helpers
         MutexAsync _requestMutex;
         readonly IDisposable EmptyDisposable = Disposable.Create(() => { });
 
-        PowerOfLoveServer()
+        PowerOfLoveService()
         {
             _requestMutex = new MutexAsync();
         }
@@ -134,12 +134,12 @@ namespace PowerOfLove.Helpers
                             Name = (string)userData["name"],
                             HighScore = (int)userData["highscore"],
                             TotalZombies = (int)userData["totalzombies"],
-                            MapName = (int)userData["mapname"]
+                            MapName = (string)userData["mapname"]
                         }).ToArray();
             }
         }
 
-        public async Task PostResultToServerAsync(string userId, int gameResult)
+        public async Task PostResultToServerAsync(string facebookId, int gameResult)
         {
             using (await _requestMutex.WaitAsync())
             {
@@ -153,7 +153,11 @@ namespace PowerOfLove.Helpers
                         TotalZombies = userInfo.TotalZombies + gameResult,
                         HighScore = Math.Max(userInfo.HighScore, gameResult)
                     };
+#if NET_4_0
                     _getUserInfoAsync = TaskEx.FromResult(newInfo);
+#else
+                    _getUserInfoAsync = Task.FromResult(newInfo);
+#endif
                 }
                 
                 const int AndroidMapId = 3;

@@ -36,7 +36,9 @@ namespace PowerOfLove.Activities
             _music = Game.Content.Load<Song>("Audio/Music/credits.wav");
 
 #if ANDROID
-            PowerOfLoveServer.Instance.PostResultToServerAsync(gamePlayResult);
+            string facebookId = Facebook.Instance.UserId;
+            if (facebookId != null)
+                PowerOfLoveService.Instance.PostResultToServerAsync(facebookId, gamePlayResult);
 #endif
         }
         #endregion
