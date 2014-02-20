@@ -6,11 +6,13 @@ using Microsoft.Xna.Framework.Media;
 using MonoGameLib.GUI.Base;
 using MonoGameLib.GUI.Components;
 using PowerOfLove.Components;
-using PowerOfLove.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+#if ANDROID
+using PowerOfLove.Helpers;
+#endif
 
 namespace PowerOfLove.Activities
 {
@@ -32,7 +34,9 @@ namespace PowerOfLove.Activities
             };
             _music = Game.Content.Load<Song>("Audio/Music/credits.wav");
 
+#if ANDROID
             PowerOfLoveServer.Instance.PostResultToServerAsync(gamePlayResult);
+#endif
         }
         #endregion
 

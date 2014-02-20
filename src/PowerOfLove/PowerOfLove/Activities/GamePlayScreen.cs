@@ -10,11 +10,13 @@ using MonoGameLib.GUI.Components;
 using MonoGameLib.Tiled;
 using PowerOfLove.Components;
 using PowerOfLove.Entities;
-using PowerOfLove.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+#if ANDROID
+using PowerOfLove.Helpers;
+#endif
 
 namespace PowerOfLove.Activities
 {
@@ -76,7 +78,9 @@ namespace PowerOfLove.Activities
         #region Activity Life Cycle
         protected async override Task<int> RunActivity()
         {
+#if ANDROID
             LoadFriendNamesAsync();
+#endif
             var countdown = CountDown();
             var exitManually = base.RunActivity();
             var firstToComplete = await TaskEx.WhenAny(countdown, exitManually);
@@ -104,6 +108,7 @@ namespace PowerOfLove.Activities
             base.Deactivating();
         }
 
+#if ANDROID
         async void LoadFriendNamesAsync()
         {
             try
@@ -114,6 +119,7 @@ namespace PowerOfLove.Activities
             }
             catch (Exception) { }
         }
+#endif
         #endregion
 
         #region Game Loop

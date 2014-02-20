@@ -4,8 +4,6 @@ using MonoGameLib.Core;
 using MonoGameLib.Core.Entities;
 using MonoGameLib.Core.Sprites;
 using MonoGameLib.Tiled;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using PowerOfLove.Entities;
 using System;
 using System.Collections.Generic;
@@ -13,8 +11,12 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+#if ANDROID
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Xamarin.Auth;
 using Xamarin.Social.Services;
+#endif
 
 namespace PowerOfLove
 {
