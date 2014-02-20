@@ -33,6 +33,13 @@ namespace PowerOfLove.Helpers
             public string Name { get; set; }
             public int HighScore { get; set; }
             public int TotalZombies { get; set; }
+            public string MapName { get; set; }
+        }
+
+        public enum RankType
+        {
+            HighScore,
+            TotalZombied
         }
 
         string _getUserInfoId;
@@ -106,14 +113,14 @@ namespace PowerOfLove.Helpers
             return await _requestMutex.WaitAsync();
         }
 
-        public async Task<UserInfo[]> LoadRankingsAsync(string userId, string rankType, int count, string accessToken, bool waitRequests = true)
+        public async Task<UserInfo[]> LoadRankingsAsync(string userId, RankType type, int count, string accessToken, bool waitRequests = true)
         {
             using (await WaitRequestAvailability(waitRequests))
             {
                 var rankData = (ArrayList)await Call("loadRankings", new
                 {
                     id = userId,
-                    type = rankType,
+                    type = type.ToString().ToLower(),
                     count = count,
                     access_token = accessToken
                 });
@@ -124,7 +131,8 @@ namespace PowerOfLove.Helpers
                             Id = (string)userData["id"],
                             Name = (string)userData["name"],
                             HighScore = (int)userData["highscore"],
-                            TotalZombies = (int)userData["totalzombies"]
+                            TotalZombies = (int)userData["totalzombies"],
+                            MapName = (int)userData["mapname"]
                         }).ToArray();
             }
         }

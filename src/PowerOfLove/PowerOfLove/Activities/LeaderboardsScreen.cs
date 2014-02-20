@@ -16,9 +16,10 @@ namespace PowerOfLove.Activities
     {
         #region Attributes
         GUI _gui;
-        float textBasePosY;
+        readonly float textBasePosY;
         float textPosY;
         Song _music;
+        bool _orderByHighscore;
         #endregion
 
         #region Constructors
@@ -30,10 +31,9 @@ namespace PowerOfLove.Activities
             textPosY = textBasePosY;
 
             CreateHeaders();
-            AddPlayerScore("Joao Vitor P. Moraes", "Android", 10, 90);
-            AddPlayerScore("Diogo Muller", "Facebook", 10, 90);
-
             CreateBackButton(game);
+
+            LoadPlayerScores();
 
             _music = Game.Content.Load<Song>("Audio/Music/credits.wav");
         }
@@ -52,15 +52,15 @@ namespace PowerOfLove.Activities
             _gui.Add(new Label("HIGH SCORE", "Fonts/DefaultFont")
             {
                 Color = Color.Red,
-                HorizontalOrigin = HorizontalAlign.Right,
-                Position = new Point((int)(Viewport.Width * 5 / 8.0f), (int)textPosY)
+                HorizontalOrigin = HorizontalAlign.Center,
+                Position = new Point((int)(Viewport.Width * 5 / 8.0f - 80 * _gui.Scale.X), (int)textPosY)
             });
 
             _gui.Add(new Label("TOTAL ZOMBIES", "Fonts/DefaultFont")
             {
                 Color = Color.Red,
                 HorizontalOrigin = HorizontalAlign.Right,
-                Position = new Point((int)(Viewport.Width * 6 / 8.0f + 80 * _gui.Scale.X), (int)textPosY)
+                Position = new Point((int)(Viewport.Width * 6 / 8.0f + 100 * _gui.Scale.X), (int)textPosY)
             });
 
             textPosY += playerNameLabel.MeasureSize().Y;
@@ -82,14 +82,21 @@ namespace PowerOfLove.Activities
                 Position = new Point((int)(Viewport.Width * 5 / 8.0f), (int)textPosY)
             });
 
-            _gui.Add(new Label(highScore.ToString(), "Fonts/DefaultFont")
+            _gui.Add(new Label(map, "Fonts/DefaultFont")
+            {
+                Color = Color.Yellow,
+                HorizontalOrigin = HorizontalAlign.Left,
+                Position = new Point((int)(Viewport.Width * 5 / 8.0f - 160 * _gui.Scale.X), (int)textPosY)
+            });
+
+            _gui.Add(new Label(totalZombies.ToString(), "Fonts/DefaultFont")
             {
                 Color = Color.White,
                 HorizontalOrigin = HorizontalAlign.Right,
-                Position = new Point((int)(Viewport.Width * 6 / 8.0f + 80 * _gui.Scale.X), (int)textPosY)
+                Position = new Point((int)(Viewport.Width * 6 / 8.0f + 100 * _gui.Scale.X), (int)textPosY)
             });
 
-            textPosY += playerNameLabel.MeasureSize().Y;
+            textPosY += 32 * _gui.Scale.Y;
         }
 
         void CreateBackButton(Game game)
@@ -131,5 +138,26 @@ namespace PowerOfLove.Activities
             _gui.Update(gameTime);
         }
         #endregion
+
+        public async void LoadPlayerScores()
+        {
+            var availableScreenSize = (Viewport.Height * 7 / 8 - 32 * _gui.Scale.Y * 2)  - textPosY;
+            var count = availableScreenSize / (32 * _gui.Scale.Y);
+
+#if ANDROID
+            string facebookId = Facebook.Instance.UserId;
+            string facebookAccessToken;
+            string scoreType = _orderByHighscore? PowerOfLoveServer.RankType.HighScore
+                                                : PowerOfLoveServer.RankType.TotalZombies;
+
+            var players = await PowerOfLoveServer.Instance.LoadRankingsAsync(facebookId, scoreType, count, facebookAccessToken);
+
+            foreach(var playerInfo in players)
+                AddPlayerScore(playerInfo.Name, playerInfo.MapName, playerInfo.HighScore, playerInfo.TotalZombies);
+#elif DEBUG
+            for(int i = 0; i < count; i++)
+                AddPlayerScore("Test name", "Android", 18, 200);
+#endif
+        }
     }
 }
