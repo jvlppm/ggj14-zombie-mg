@@ -95,7 +95,7 @@
     <Compile Include="Helpers\Facebook.cs" />
     <Compile Include="Helpers\MutexAsync.cs" />
     <Compile Include="Helpers\PHPSerializer.cs" />
-    <Compile Include="Helpers\PowerOfLoveServer.cs" />
+    <Compile Include="Helpers\PowerOfLoveService.cs" />
     <Compile Include="Helpers\SemaphoreAsync.cs" />
     <Compile Include="MainGame.cs" />
     <Compile Include="Particles\Particle.cs" />

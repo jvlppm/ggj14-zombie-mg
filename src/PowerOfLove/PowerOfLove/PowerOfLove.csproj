@@ -9,7 +9,6 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>PowerOfLove</RootNamespace>
     <AssemblyName>PowerOfLove</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -90,6 +89,9 @@
     <Compile Include="Particles\ParticleState.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Helpers\MutexAsync.cs" />
+    <Compile Include="Helpers\PowerOfLoveService.cs" />
+    <Compile Include="Helpers\SemaphoreAsync.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -210,4 +212,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup>
+    <Folder Include="Helpers\" />
+  </ItemGroup>
 </Project>

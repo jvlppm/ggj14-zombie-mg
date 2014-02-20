@@ -19,12 +19,12 @@ using Jv.Games.Xna;
 
 namespace PowerOfLove.Helpers
 {
-    class PowerOfLoveServer
+    class PowerOfLoveService
     {
-        static PowerOfLoveServer _instance;
-        public static PowerOfLoveServer Instance
+        static PowerOfLoveService _instance;
+        public static PowerOfLoveService Instance
         {
-            get { return _instance ?? (_instance = new PowerOfLoveServer()); }
+            get { return _instance ?? (_instance = new PowerOfLoveService()); }
         }
 
         public class UserInfo
@@ -52,6 +52,7 @@ namespace PowerOfLove.Helpers
             _requestMutex = new MutexAsync();
         }
 
+#if ANDROID
         async Task<object> Call(string method, object parameters)
         {
             string url = "https://www.diogomuller.com.br/files/games/zombie-social/database/database_access.php?call=" + Uri.EscapeDataString(method);
@@ -65,6 +66,7 @@ namespace PowerOfLove.Helpers
             PHPSerializer serializer = new PHPSerializer();
             return serializer.Deserialize(resp);
         }
+#endif
 
         public Task<UserInfo> GetUserInfoAsync(string userId, bool waitRequests)
         {
@@ -137,7 +139,7 @@ namespace PowerOfLove.Helpers
             }
         }
 
-        public async Task PostResultToServerAsync(int gameResult)
+        public async Task PostResultToServerAsync(string userId, int gameResult)
         {
             using (await _requestMutex.WaitAsync())
             {
@@ -151,15 +153,12 @@ namespace PowerOfLove.Helpers
                         TotalZombies = userInfo.TotalZombies + gameResult,
                         HighScore = Math.Max(userInfo.HighScore, gameResult)
                     };
-                    _getUserInfoAsync = Task.FromResult(newInfo);
+                    _getUserInfoAsync = TaskEx.FromResult(newInfo);
                 }
                 
                 const int AndroidMapId = 3;
                 try
                 {
-                    var facebookId = Facebook.Instance.UserId;
-                    if (facebookId == null)
-                        return;
                     var userInfo = await GetUserInfoAsync(facebookId, false);
                     var highScore = Math.Max(userInfo.HighScore, gameResult);
                     await SetUserInfoAsync(facebookId, highScore, userInfo.TotalZombies + gameResult, AndroidMapId, false);
