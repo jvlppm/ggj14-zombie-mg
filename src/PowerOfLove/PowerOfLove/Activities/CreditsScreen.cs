@@ -16,8 +16,8 @@ namespace PowerOfLove.Activities
     {
         #region Attributes
         GUI _gui;
-        const float textBasePosY = 50;
-        float textPosY = textBasePosY;
+        float textBasePosY;
+        float textPosY;
         Song _music;
         #endregion
 
@@ -26,6 +26,8 @@ namespace PowerOfLove.Activities
             : base(game)
         {
             _gui = new GUI(new Vector2(GraphicsDevice.Viewport.Height / 500f));
+            textBasePosY = 40 * _gui.Scale.Y;
+            textPosY = textBasePosY;
             CreateCategory("Game Design", "Diogo Muller de Miranda\r\nRicardo Takeda");
             CreateCategory("Developers ", "Diogo Muller de Miranda\r\nJoao Vitor Pietsiaki Moraes\r\nEric Onuki");
             CreateCategory("Game Art", "Diogo Muller de Miranda\r\nRicardo Takeda");
@@ -41,8 +43,8 @@ namespace PowerOfLove.Activities
         #region GUI
         void CreateCategory(string title, string text)
         {
-            var textPosX = Game.GraphicsDevice.Viewport.Width / 2 - 80;
 
+            var textPosX = Game.GraphicsDevice.Viewport.Width / 2 - 80 * _gui.Scale.X;
             var cat1Title = new Label(title, "Fonts/DefaultFont")
             {
                 //FontSize = 24,
@@ -64,7 +66,7 @@ namespace PowerOfLove.Activities
             };
 
             _gui.Add(cat1Text);
-            textPosY += cat1Text.MeasureSize().Y + 20;
+            textPosY += cat1Text.MeasureSize().Y;
         }
 
         void CreateZombies()
@@ -74,12 +76,12 @@ namespace PowerOfLove.Activities
 
             var classes = new[] { cZombie, cNormal };
 
-            int zombieX = 80;
+            var zombieX = Viewport.Width / 4 - 80 * _gui.Scale.X;
 
             foreach (var c in classes)
             {
-                int zombieY = (int)textBasePosY;
-                const int spaceY = 26;
+                float zombieY = (int)textBasePosY;
+                float spaceY = (textPosY - textBasePosY) / cZombie.Length - 64 * _gui.Scale.Y;
 
                 foreach (var sprite in c)
                 {
@@ -88,11 +90,11 @@ namespace PowerOfLove.Activities
                     s.AddAnimation("dance", new int[] { 0, 1, 2, 3, 4, 5 }, TimeSpan.FromMilliseconds(200));
                     var comp = new SpriteComponent(s)
                     {
-                        Position = new Point(zombieX, zombieY),
+                        Position = new Point((int)zombieX, (int)zombieY),
                         Scale = new Vector2(4)
                     };
                     _gui.Add(comp);
-                    zombieY += s.FrameSize.Y * (int)comp.Scale.Y + spaceY;
+                    zombieY += 64 * _gui.Scale.Y + spaceY;
                 }
                 zombieX += 80;
             }
@@ -102,8 +104,8 @@ namespace PowerOfLove.Activities
         {
             var btnBack = new Button(game, "Return") { HorizontalOrigin = HorizontalAlign.Center };
             btnBack.Position = new Point(
-                Game.GraphicsDevice.Viewport.Width / 2 - btnBack.Size.X / 2,
-                Game.GraphicsDevice.Viewport.Height * 7 / 8);
+                Viewport.Width / 2,
+                Viewport.Height * 7 / 8);
             btnBack.Clicked += (s, e) => Exit();
             _gui.Add(btnBack);
         }
