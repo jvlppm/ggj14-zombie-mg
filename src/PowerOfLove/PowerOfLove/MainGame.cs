@@ -59,6 +59,9 @@ namespace PowerOfLove
                     case TitleScreen.Result.Play:
                         await RunGamePlay(host);
                         break;
+                    case TitleScreen.Result.Leaderboards:
+                        await ShowLeaderboards(host);
+                        break;
                     case TitleScreen.Result.Exit:
                         return;
                 }
@@ -78,6 +81,11 @@ namespace PowerOfLove
         ContextTaskAwaitable ShowHowToPlay(ActivityHost host)
         {
             return host.Run<HowToPlayScreen>();
+        }
+
+        ContextTaskAwaitable ShowLeaderboards(ActivityHost host)
+        {
+            return host.Run<LeaderboardsScreen>();
         }
 
         async Task RunGamePlay(ActivityHost host)

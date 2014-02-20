@@ -33,7 +33,8 @@ namespace PowerOfLove.Activities
             Credits,
             HowToPlay,
             Play,
-            Exit
+            Exit,
+            Leaderboards
         }
         #endregion
 
@@ -110,6 +111,13 @@ namespace PowerOfLove.Activities
             vbox.AddChildren(btnNewGame);
             vbox.AddChildren(btnHowToPlay);
             vbox.AddChildren(btnCredits);
+
+//#if ANDROID
+            var btnLeaderboards = new Button(game, "Scores");
+            btnLeaderboards.Clicked += (s, e) => Exit(Result.Leaderboards);
+            vbox.AddChildren(btnLeaderboards);
+//#endif
+
             vbox.AddChildren(btnExit);
             return vbox;
         }

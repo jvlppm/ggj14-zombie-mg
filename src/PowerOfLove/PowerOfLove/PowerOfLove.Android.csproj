@@ -73,6 +73,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Activities\LeaderboardsScreen.cs" />
     <Compile Include="Activities\CreditsScreen.cs" />
     <Compile Include="Activities\GamePlayScreen.cs" />
     <Compile Include="Activities\HowToPlayScreen.cs" />

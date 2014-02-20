@@ -72,6 +72,7 @@
     <Compile Include="Activities\CreditsScreen.cs" />
     <Compile Include="Activities\GamePlayScreen.cs" />
     <Compile Include="Activities\HowToPlayScreen.cs" />
+    <Compile Include="Activities\LeaderboardsScreen.cs" />
     <Compile Include="Entities\Behaviors\ControllableBehavior.cs" />
     <Compile Include="Entities\Behaviors\GameEntityBehavior.cs" />
     <Compile Include="Entities\PhysicsEntity.cs" />
