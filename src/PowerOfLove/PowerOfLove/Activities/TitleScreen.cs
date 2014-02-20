@@ -238,12 +238,14 @@ namespace PowerOfLove.Activities
 
                 await Facebook.Instance.RefreshUserStatus(Game.Activity).On(UpdateContext);
 
+                Facebook.Instance.LoadFriendNamesAsync();
+
                 _lblWelcome.Text = string.Format("Welcome, {0}", Facebook.Instance.UserName);
                 _lblHighscore.Text = "Loading";
                 _lblTotalZombies.Text = string.Empty;
                 _facebookStatus.IsVisible = true;
 
-                var userStatus = await PowerOfLoveServer.GetUserInfoAsync(Facebook.Instance.UserId).On(UpdateContext);
+                var userStatus = await PowerOfLoveServer.Instance.GetUserInfoAsync(Facebook.Instance.UserId, true).On(UpdateContext);
 
                 _lblHighscore.Text = string.Format("Your highest score is: {0} zombies.", userStatus.HighScore);
                 _lblTotalZombies.Text = string.Format("On total, you saved {0} zombies.", userStatus.TotalZombies);

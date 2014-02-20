@@ -17,6 +17,7 @@ using System.Text.RegularExpressions;
 using Conversive.PHPSerializationLibrary;
 using System.Collections;
 using System.ComponentModel;
+using Newtonsoft.Json.Linq;
 
 namespace PowerOfLove.Helpers
 {
@@ -44,6 +45,7 @@ namespace PowerOfLove.Helpers
         };
 
         Account _account;
+        Task<string[]> _getFriendNames;
 
         public string UserName { get; private set; }
         public string FirstName { get; private set; }
@@ -66,7 +68,7 @@ namespace PowerOfLove.Helpers
             if (!await IsLoggedInAsync(context))
                 return false;
 
-            var facebookInfo = await Service.Ajax(_account, "me");
+            var facebookInfo = (JObject)await Service.Ajax(_account, "me");
 
             UserId = (string)facebookInfo["id"];
             UserName = (string)facebookInfo["name"];
@@ -89,6 +91,24 @@ namespace PowerOfLove.Helpers
                 var userAccount = await context.LoginAsync(auth);
                 Service.SaveAccount(context.BaseContext, userAccount);
             }
+        }
+
+        public Task<string[]> LoadFriendNamesAsync()
+        {
+            if (_getFriendNames == null)
+            {
+                _getFriendNames = DoLoadFriendNamesAsync();
+                _getFriendNames.ContinueWith(t => _getFriendNames = null, TaskContinuationOptions.NotOnRanToCompletion);
+            }
+            return _getFriendNames;
+        }
+
+        async Task<string[]> DoLoadFriendNamesAsync()
+        {
+            var result = await Service.Ajax(_account, "me/friends");
+
+            return (from JObject friendInfo in (JArray)((JObject)result)["data"]
+                                select friendInfo["name"].ToString()).ToArray();
         }
     }
 }

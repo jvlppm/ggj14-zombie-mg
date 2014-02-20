@@ -10,6 +10,7 @@ using MonoGameLib.GUI.Components;
 using MonoGameLib.Tiled;
 using PowerOfLove.Components;
 using PowerOfLove.Entities;
+using PowerOfLove.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -75,6 +76,7 @@ namespace PowerOfLove.Activities
         #region Activity Life Cycle
         protected async override Task<int> RunActivity()
         {
+            LoadFriendNamesAsync();
             var countdown = CountDown();
             var exitManually = base.RunActivity();
             var firstToComplete = await TaskEx.WhenAny(countdown, exitManually);
@@ -100,6 +102,17 @@ namespace PowerOfLove.Activities
         {
             MediaPlayer.Stop();
             base.Deactivating();
+        }
+
+        async void LoadFriendNamesAsync()
+        {
+            try
+            {
+                var friendNames = await Facebook.Instance.LoadFriendNamesAsync();
+                foreach(var ent in Entities.OfType<NPC>())
+                    ent.Name = friendNames.Random();
+            }
+            catch (Exception) { }
         }
         #endregion
 

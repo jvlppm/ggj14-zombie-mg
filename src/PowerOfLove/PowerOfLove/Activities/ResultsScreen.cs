@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Media;
 using MonoGameLib.GUI.Base;
 using MonoGameLib.GUI.Components;
 using PowerOfLove.Components;
+using PowerOfLove.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,6 +31,8 @@ namespace PowerOfLove.Activities
                 CreateBackButton(game)
             };
             _music = Game.Content.Load<Song>("Audio/Music/credits.wav");
+
+            PowerOfLoveServer.Instance.PostResultToServerAsync(gamePlayResult);
         }
         #endregion
 

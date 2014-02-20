@@ -32,7 +32,13 @@ namespace PowerOfLove.Entities
 
         public bool IsZombie
         {
-            get { return Screen.IsTrueVision == (Tag == "friend" || Tag == "player"); }
+            get { return Screen.IsTrueVision == (IsFriend || Tag == "player"); }
+        }
+
+        public bool IsFriend
+        {
+            get { return Tag == "friend"; }
+            set { Tag = "friend"; }
         }
 
         public virtual void BeginTransformation()
@@ -42,7 +48,7 @@ namespace PowerOfLove.Entities
 
         public virtual void TurnIntoFriend()
         {
-            Tag = "friend";
+            IsFriend = true;
         }
 
         public GamePlayEntity(GamePlayScreen screen)

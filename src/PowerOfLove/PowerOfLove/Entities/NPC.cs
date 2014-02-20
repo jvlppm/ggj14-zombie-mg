@@ -34,6 +34,8 @@ namespace PowerOfLove.Entities
         SpriteFont _screamFont;
         SoundEffect _zombieScreamSound, _humanScreamSound;
 
+        public string Name { get; set; }
+
         public NPC(Game game, GamePlayScreen screen, int npcSpriteId)
             : base(screen)
         {
@@ -65,6 +67,8 @@ namespace PowerOfLove.Entities
         public override void DrawOverMap(GameTime gameTime, SpriteBatch spriteBatch)
         {
             DrawCurrentMessage(spriteBatch);
+            if (!IsFriend)
+                DrawName(spriteBatch);
         }
 
         private void DrawCurrentMessage(SpriteBatch spriteBatch)
@@ -76,6 +80,18 @@ namespace PowerOfLove.Entities
                 var textSize = _screamFont.MeasureString(message);
                 var origin = AlignExtensions.ToVector(HorizontalAlign.Center, VerticalAlign.Bottom);
                 spriteBatch.DrawString(_screamFont, message, new Vector2(CenterPosition.X, Position.Y), color, 0, textSize * origin, 0.5f, SpriteEffects.None, 1f);
+            }
+        }
+
+        private void DrawName(SpriteBatch spriteBatch)
+        {
+            if (Name != null)
+            {
+                var message = Name;
+                var color = Color.White;
+                var textSize = _screamFont.MeasureString(message);
+                var origin = AlignExtensions.ToVector(HorizontalAlign.Center, VerticalAlign.Top);
+                spriteBatch.DrawString(_screamFont, message, new Vector2(CenterPosition.X, Position.Y + Size.Y * Scale.Y), color, 0, textSize * origin, 0.4f, SpriteEffects.None, 1f);
             }
         }
         #endregion

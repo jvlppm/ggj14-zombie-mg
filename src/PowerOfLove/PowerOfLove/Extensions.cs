@@ -4,6 +4,8 @@ using MonoGameLib.Core;
 using MonoGameLib.Core.Entities;
 using MonoGameLib.Core.Sprites;
 using MonoGameLib.Tiled;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using PowerOfLove.Entities;
 using System;
 using System.Collections.Generic;
@@ -106,12 +108,12 @@ namespace PowerOfLove
 			return tcs.Task;
 		}
 
-        public async static Task<Newtonsoft.Json.Linq.JObject> Ajax(this FacebookService facebook, Account account, string url, string method = "GET")
+        public async static Task<object> Ajax(this FacebookService facebook, Account account, string url, string method = "GET")
         {
             var request = facebook.CreateRequest(method, new Uri("https://graph.facebook.com/" + url), account);
             var resp = await request.GetResponseAsync();
             var respJson = resp.GetResponseText();
-            return Newtonsoft.Json.Linq.JObject.Parse(respJson);
+            return (JContainer)JsonConvert.DeserializeObject(respJson);
         }
 #endif
     }
