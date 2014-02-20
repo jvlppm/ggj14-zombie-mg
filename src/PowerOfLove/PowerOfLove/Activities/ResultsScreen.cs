@@ -29,6 +29,7 @@ namespace PowerOfLove.Activities
         {
             _gui = new GUI(new Vector2(GraphicsDevice.Viewport.Height / 500f))
             {
+                CreateMainTitle(game),
                 CreateMessage(gamePlayResult),
                 CreateBackButton(game)
             };
@@ -41,12 +42,20 @@ namespace PowerOfLove.Activities
         #endregion
 
         #region GUI
+        Component CreateMainTitle(Game game)
+        {
+            return new Label("THE END", "Fonts/BigFont")
+            {
+                HorizontalOrigin = HorizontalAlign.Center,
+                VerticalOrigin = VerticalAlign.Middle,
+                Color = Color.White,
+                Position = new Point(game.GraphicsDevice.Viewport.Width / 2, game.GraphicsDevice.Viewport.Height / 8)
+            };
+        }
+
         Component CreateMessage(int gameResult)
         {
-            return new Label("Sorry if we, from Curitiba, look antisocial some times.\n" +
-                             "We're just afraid to be turned into zombies.\n" +
-                             "\n" +
-                             "You zombified " + gameResult + " people.", "Fonts/DefaultFont")
+            return new Label("You zombified " + gameResult + " people.", "Fonts/DefaultFont")
             {
                 Color = Color.White,
                 HorizontalOrigin = HorizontalAlign.Center,
