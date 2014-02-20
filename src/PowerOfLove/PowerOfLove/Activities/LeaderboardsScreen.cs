@@ -28,6 +28,8 @@ namespace PowerOfLove.Activities
             _gui = new GUI(new Vector2(GraphicsDevice.Viewport.Height / 500f));
             textBasePosY = 40 * _gui.Scale.Y;
             textPosY = textBasePosY;
+
+            CreateHeaders();
             AddPlayerScore("Joao Vitor P. Moraes", "Android", 10, 90);
             AddPlayerScore("Diogo Muller", "Facebook", 10, 90);
 
@@ -38,32 +40,56 @@ namespace PowerOfLove.Activities
         #endregion
 
         #region GUI
+        void CreateHeaders()
+        {
+            var playerNameLabel = new Label("NAME", "Fonts/DefaultFont")
+            {
+                Color = Color.Red,
+                Position = new Point(Viewport.Width / 8, (int)textPosY)
+            };
+            _gui.Add(playerNameLabel);
+
+            _gui.Add(new Label("HIGH SCORE", "Fonts/DefaultFont")
+            {
+                Color = Color.Red,
+                HorizontalOrigin = HorizontalAlign.Right,
+                Position = new Point((int)(Viewport.Width * 5 / 8.0f), (int)textPosY)
+            });
+
+            _gui.Add(new Label("TOTAL ZOMBIES", "Fonts/DefaultFont")
+            {
+                Color = Color.Red,
+                HorizontalOrigin = HorizontalAlign.Right,
+                Position = new Point((int)(Viewport.Width * 6 / 8.0f + 80 * _gui.Scale.X), (int)textPosY)
+            });
+
+            textPosY += playerNameLabel.MeasureSize().Y;
+        }
+
         void AddPlayerScore(string name, string map, int highScore, int totalZombies)
         {
-
-            var textPosX = Game.GraphicsDevice.Viewport.Width / 2 - 80 * _gui.Scale.X;
-            var cat1Title = new Label(name, "Fonts/DefaultFont")
+            var playerNameLabel = new Label(name, "Fonts/DefaultFont")
             {
-                //FontSize = 24,
                 Color = Color.YellowGreen,
-                Position = new Point((int)textPosX, (int)textPosY)
+                Position = new Point(Viewport.Width / 8, (int)textPosY)
             };
+            _gui.Add(playerNameLabel);
 
-            _gui.Add(cat1Title);
-
-            textPosY += cat1Title.MeasureSize().Y;
-
-            if (textPosX == 0)
-                textPosX = cat1Title.Position.X;
-
-            var cat1Text = new Label(map, "Fonts/DefaultFont")
+            _gui.Add(new Label(highScore.ToString(), "Fonts/DefaultFont")
             {
                 Color = Color.White,
-                Position = new Point((int)textPosX, (int)textPosY)
-            };
+                HorizontalOrigin = HorizontalAlign.Right,
+                Position = new Point((int)(Viewport.Width * 5 / 8.0f), (int)textPosY)
+            });
 
-            _gui.Add(cat1Text);
-            textPosY += cat1Text.MeasureSize().Y;
+            _gui.Add(new Label(highScore.ToString(), "Fonts/DefaultFont")
+            {
+                Color = Color.White,
+                HorizontalOrigin = HorizontalAlign.Right,
+                Position = new Point((int)(Viewport.Width * 6 / 8.0f + 80 * _gui.Scale.X), (int)textPosY)
+            });
+
+            textPosY += playerNameLabel.MeasureSize().Y;
         }
 
         void CreateBackButton(Game game)

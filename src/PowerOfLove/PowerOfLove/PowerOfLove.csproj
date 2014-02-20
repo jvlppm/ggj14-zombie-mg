@@ -37,29 +37,20 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;NET_4_0</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release-Linux|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;NET_4_0</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Jv.Games.Xna, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\references\Jv.Games.Xna\Desktop\Jv.Games.Xna.dll</HintPath>
-    </Reference>
-    <Reference Include="Jv.Games.Xna.Async, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\references\Jv.Games.Xna\Desktop\Jv.Games.Xna.Async.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -67,6 +58,12 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="Jv.Games.Xna">
+      <HintPath>..\..\references\Jv.Games.Xna\Desktop\Jv.Games.Xna.dll</HintPath>
+    </Reference>
+    <Reference Include="Jv.Games.Xna.Async">
+      <HintPath>..\..\references\Jv.Games.Xna\Desktop\Jv.Games.Xna.Async.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Activities\CreditsScreen.cs" />
@@ -192,15 +189,15 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\references\monogame-aux-lib\src\MonoGameLib.Core\MonoGameLib.Core.csproj">
-      <Project>{f3b03cfa-5a42-4e94-a0d3-90ec15330b68}</Project>
+      <Project>{F3B03CFA-5A42-4E94-A0D3-90EC15330B68}</Project>
       <Name>MonoGameLib.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\references\monogame-aux-lib\src\MonoGameLib.GUI\MonoGameLib.GUI.csproj">
-      <Project>{f2a64d02-17c0-4e50-91cb-dead4dabdbe9}</Project>
+      <Project>{F2A64D02-17C0-4E50-91CB-DEAD4DABDBE9}</Project>
       <Name>MonoGameLib.GUI</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\references\monogame-aux-lib\src\MonoGameLib.Tiled\MonoGameLib.Tiled.csproj">
-      <Project>{f2c71160-3c00-40dd-ab52-151c9a914570}</Project>
+      <Project>{F2C71160-3C00-40DD-AB52-151C9A914570}</Project>
       <Name>MonoGameLib.Tiled</Name>
     </ProjectReference>
   </ItemGroup>

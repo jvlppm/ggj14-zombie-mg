@@ -41,11 +41,13 @@ namespace PowerOfLove.Activities
         #region Attributes
         GUI _gui;
         Song _music;
+#if ANDROID
         private Label _lblWelcome;
         private Label _lblHighscore;
         private Label _lblTotalZombies;
         private Container _facebookStatus;
         private Button _facebookLogin;
+#endif
         #endregion
 
         #region Constructors
