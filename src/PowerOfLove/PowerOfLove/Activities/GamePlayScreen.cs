@@ -207,6 +207,11 @@ namespace PowerOfLove.Activities
             }
             return false;
         }
+
+        public void IncreaseTimer(TimeSpan ammount)
+        {
+            Timer.Duration += ammount;
+        }
         #endregion
 
         #region Private Methods

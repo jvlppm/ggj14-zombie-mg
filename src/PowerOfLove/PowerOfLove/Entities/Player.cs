@@ -121,6 +121,7 @@ namespace PowerOfLove.Entities
             await TaskEx.Delay(TimeSpan.FromSeconds(0.3));
             entity.TurnIntoFriend();
             Screen.Score++;
+            Screen.IncreaseTimer(TimeSpan.FromSeconds(1));
             await hugs;
 
             entity.IsHugging = false;
