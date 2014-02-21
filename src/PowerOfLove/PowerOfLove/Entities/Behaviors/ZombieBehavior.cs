@@ -13,7 +13,8 @@ namespace PowerOfLove.Entities.Behaviors
     class ZombieBehavior : GameEntityBehavior
     {
         Entity _target;
-        private float _minDistance = RandomNumberGenerator.Next() * 90 + 10;
+        private float _minDistance = RandomNumberGenerator.Next() * 120 + 20;
+        private float _speed = 50 + RandomNumberGenerator.Next() * 30;
 
         public ZombieBehavior(GamePlayEntity entity)
             : base(entity)
@@ -42,7 +43,7 @@ namespace PowerOfLove.Entities.Behaviors
             var distanceSeek = desiredVelocitySeek.Length();
 
             desiredVelocitySeek.Normalize();
-            desiredVelocitySeek *= (float)gameTime.ElapsedGameTime.TotalSeconds * 45;
+            desiredVelocitySeek *= (float)gameTime.ElapsedGameTime.TotalSeconds * _speed;
 
             Entity.Look(desiredVelocitySeek);
 

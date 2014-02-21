@@ -35,7 +35,7 @@ namespace PowerOfLove.Entities.Behaviors
 
             if (pointerInfo.Pressed)
             {
-                if (Entity.Move(direction))
+                if (Entity.Move(direction * (75 * (float)gameTime.ElapsedGameTime.TotalSeconds)))
                     Entity.Sprite.CurrentAnimation = "run";
                 else
                     Entity.Sprite.CurrentAnimation = "stand";
