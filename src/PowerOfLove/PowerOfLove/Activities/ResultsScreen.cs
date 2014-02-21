@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 #if ANDROID
 using PowerOfLove.Helpers;
+using MonoGameLib.GUI.Containers;
 #endif
 
 namespace PowerOfLove.Activities
@@ -20,6 +21,7 @@ namespace PowerOfLove.Activities
     {
         #region Attributes
         GUI _gui;
+        VBox _messages;
         Song _music;
         #endregion
 
@@ -27,15 +29,15 @@ namespace PowerOfLove.Activities
         public ResultsScreen(Game game, int gamePlayResult)
             : base(game)
         {
-            _gui = new GUI(new Vector2(GraphicsDevice.Viewport.Height / 500f))
-            {
-                CreateMainTitle(game),
-                CreateMessage(gamePlayResult),
-                CreateBackButton(game)
-            };
+            _gui = new GUI(new Vector2(GraphicsDevice.Viewport.Height / 500f));
+            _gui.Add(CreateMainTitle(game));
+            _gui.Add(CreateMessage(gamePlayResult));
+            _gui.Add(CreateBackButton(game));
+            LoadServerData();
+
             _music = Game.Content.Load<Song>("Audio/Music/credits.wav");
 
-#if ANDROID
+#if ANDROID && !DEBUG
             string facebookId = Facebook.Instance.UserId;
             if (facebookId != null)
                 PowerOfLoveService.Instance.PostResultToServerAsync(facebookId, gamePlayResult);
@@ -57,23 +59,54 @@ namespace PowerOfLove.Activities
 
         Component CreateMessage(int gameResult)
         {
-            return new Label("You zombified " + gameResult + " people.", "Fonts/DefaultFont")
+            _messages = new VBox
+            {
+                ItemSpacing = (int)(56 * _gui.Scale.Y),
+                Position = new Point(Game.GraphicsDevice.Viewport.Width / 2, Game.GraphicsDevice.Viewport.Height / 3),
+                VerticalOrigin = VerticalAlign.Top,
+                HorizontalOrigin = HorizontalAlign.Center
+            };
+
+            _messages.AddChildren(new Label("You zombified " + gameResult + " people.", "Fonts/DefaultFont")
             {
                 Color = Color.White,
                 HorizontalOrigin = HorizontalAlign.Center,
-                VerticalOrigin = VerticalAlign.Middle,
-                Position = new Point(Game.GraphicsDevice.Viewport.Width / 2, Game.GraphicsDevice.Viewport.Height / 2 - 60)
-            };
+            });
+
+            return _messages;
         }
 
         Component CreateBackButton(Microsoft.Xna.Framework.Game game)
         {
             var btnBack = new Button(game, "Return") { HorizontalOrigin = HorizontalAlign.Center };
             btnBack.Position = new Point(
-                Game.GraphicsDevice.Viewport.Width / 2 - btnBack.Size.X / 2,
+                Game.GraphicsDevice.Viewport.Width / 2,
                 Game.GraphicsDevice.Viewport.Height * 7 / 8);
             btnBack.Clicked += (s, e) => Exit();
             return btnBack;
+        }
+
+        async void LoadServerData()
+        {
+            var facebookId = Facebook.Instance.UserId;
+            if(facebookId == null)
+                return;
+
+            var userInfo = await PowerOfLoveService.Instance.GetUserInfoAsync(facebookId, true);
+
+            _messages.AddChildren(new Label("Your highscore: " + userInfo.HighScore, "Fonts/DefaultFont")
+            {
+                Scale = _gui.Scale,
+                Color = Color.White,
+                HorizontalOrigin = HorizontalAlign.Center,
+            });
+
+            _messages.AddChildren(new Label("You have turned " + userInfo.TotalZombies + " people into zombies on total.", "Fonts/DefaultFont")
+            {
+                Scale = _gui.Scale,
+                Color = Color.White,
+                HorizontalOrigin = HorizontalAlign.Center,
+            });
         }
         #endregion
 
