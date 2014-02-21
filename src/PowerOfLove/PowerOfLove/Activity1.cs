@@ -6,7 +6,7 @@ using System.Net;
 
 namespace GameTest.Android
 {
-    [Activity(Label = "GameTest.Android"
+    [Activity(Label = "Power of Love"
         , MainLauncher = true
         , Icon = "@drawable/icon"
         , Theme = "@style/Theme.Splash"
