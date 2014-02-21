@@ -59,9 +59,11 @@ namespace PowerOfLove
                     case TitleScreen.Result.Play:
                         await RunGamePlay(host);
                         break;
+#if ANDROID
                     case TitleScreen.Result.Leaderboards:
                         await ShowLeaderboards(host);
                         break;
+#endif
                     case TitleScreen.Result.Exit:
                         return;
                 }
@@ -83,10 +85,12 @@ namespace PowerOfLove
             return host.Run<HowToPlayScreen>();
         }
 
+#if ANDROID
         ContextTaskAwaitable ShowLeaderboards(ActivityHost host)
         {
             return host.Run<LeaderboardsScreen>();
         }
+#endif
 
         async Task RunGamePlay(ActivityHost host)
         {

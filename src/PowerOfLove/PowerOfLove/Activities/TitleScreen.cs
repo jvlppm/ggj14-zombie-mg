@@ -21,6 +21,7 @@ using Conversive.PHPSerializationLibrary;
 using System.Collections;
 using System.Text.RegularExpressions;
 using PowerOfLove.Helpers;
+using Microsoft.Xna.Framework.Graphics;
 #endif
 
 namespace PowerOfLove.Activities
@@ -103,22 +104,17 @@ namespace PowerOfLove.Activities
             {
                 ItemSpacing = (int)(16 * _gui.Scale.Y),
 #if ANDROID
-                Position = new Point(Viewport.Width / 4, Viewport.Height / 2),
+                Position = new Point(Viewport.Width / 4, Viewport.Height / 3),
+                VerticalOrigin = VerticalAlign.Top,
 #else
                 Position = new Point(Viewport.Width / 2, Viewport.Height / 2),
-#endif
                 VerticalOrigin = VerticalAlign.Middle,
+#endif
                 HorizontalOrigin = HorizontalAlign.Center
             };
             vbox.AddChildren(btnNewGame);
             vbox.AddChildren(btnHowToPlay);
             vbox.AddChildren(btnCredits);
-
-//#if ANDROID
-            var btnLeaderboards = new Button(game, "Scores");
-            btnLeaderboards.Clicked += (s, e) => Exit(Result.Leaderboards);
-            vbox.AddChildren(btnLeaderboards);
-//#endif
 
             vbox.AddChildren(btnExit);
             return vbox;
@@ -127,12 +123,13 @@ namespace PowerOfLove.Activities
 #if ANDROID
         void CreateFacebookLogin(Game game)
         {
-            _facebookLogin = new Button(game, "Facebook")
+            _facebookLogin = new Button("", game.Content.Load<Texture2D>("Images/GUI/FacebookLogin"), null, null)
             {
                 Position = new Point(Viewport.Width * 3 / 4, Viewport.Height / 2),
                 VerticalOrigin = VerticalAlign.Middle,
                 HorizontalOrigin = HorizontalAlign.Center
             };
+
             _facebookLogin.Clicked += facebookLogin_Clicked;
             _gui.Add(_facebookLogin);
         }
@@ -141,7 +138,7 @@ namespace PowerOfLove.Activities
         {
             _facebookStatus = new Container();
 
-            var basePosition = new Point((int)(Viewport.Width * 1.5f / 4), Viewport.Height / 2);
+            var basePosition = new Point((int)(Viewport.Width * 1.5f / 4), Viewport.Height / 3);
 
             var textureData = new Microsoft.Xna.Framework.Graphics.Texture2D(GraphicsDevice, 20, 20);
 
@@ -150,24 +147,33 @@ namespace PowerOfLove.Activities
             _lblWelcome = new Label(string.Format("Welcome, {0}", "<username>"), "Fonts/DefaultFont")
             {
                 HorizontalOrigin = HorizontalAlign.Left,
-                VerticalOrigin = VerticalAlign.Middle,
+                VerticalOrigin = VerticalAlign.Top,
                 Color = Color.White,
-                Position = basePosition + new Point(48, -48) * guiScale
+                Position = basePosition + new Point(48, 0) * guiScale
             };
             _lblHighscore = new Label(string.Format("Your highest score is: {0} zombies.", 0), "Fonts/DefaultFont")
             {
                 HorizontalOrigin = HorizontalAlign.Left,
-                VerticalOrigin = VerticalAlign.Middle,
+                VerticalOrigin = VerticalAlign.Top,
                 Color = Color.White,
-                Position = basePosition + new Point(48, 0) * guiScale
+                Position = basePosition + new Point(48, 48) * guiScale
             };
             _lblTotalZombies = new Label(string.Format("On total, you saved {0} zombies.", 0), "Fonts/DefaultFont")
             {
                 HorizontalOrigin = HorizontalAlign.Left,
-                VerticalOrigin = VerticalAlign.Middle,
+                VerticalOrigin = VerticalAlign.Top,
                 Color = Color.White,
-                Position = basePosition + new Point(48, 48) * guiScale
+                Position = basePosition + new Point(48, 48 * 2) * guiScale
             };
+
+            var btnLeaderboards = new Button(game, "Scores")
+            {
+                HorizontalOrigin = HorizontalAlign.Left,
+                VerticalOrigin = VerticalAlign.Top,
+                Position = basePosition + new Point(48, 154) * guiScale
+            };
+            btnLeaderboards.Clicked += (s, e) => Exit(Result.Leaderboards);
+            _facebookStatus.AddChildren(btnLeaderboards);
 
             _facebookStatus.AddChildren(_lblWelcome);
             _facebookStatus.AddChildren(_lblHighscore);
