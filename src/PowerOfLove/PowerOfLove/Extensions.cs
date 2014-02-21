@@ -118,5 +118,16 @@ namespace PowerOfLove
             return (JContainer)JsonConvert.DeserializeObject(respJson);
         }
 #endif
+
+        public static string Ellipsize(this string message, int count)
+        {
+            if (count <= 3)
+                throw new ArgumentOutOfRangeException("count", "Count must be greater than 3");
+
+            if (message.Length <= count)
+                return message;
+
+            return message.Substring(0, count - 3) + "...";
+        }
     }
 }

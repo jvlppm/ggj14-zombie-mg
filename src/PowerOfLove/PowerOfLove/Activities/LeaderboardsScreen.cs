@@ -10,6 +10,8 @@ using MonoGameLib.GUI.Components;
 using PowerOfLove.Components;
 using PowerOfLove.Helpers;
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace PowerOfLove.Activities
 {
@@ -17,6 +19,11 @@ namespace PowerOfLove.Activities
     {
         #region Attributes
         GUI _gui;
+        Container _playersScorePanel;
+        Label _loading;
+        Button _modeButton;
+        CancellationTokenSource _loadPlayersCancellation;
+
         readonly float textBasePosY;
         float textPosY;
         Song _music;
@@ -28,17 +35,15 @@ namespace PowerOfLove.Activities
             : base(game)
         {
             _gui = new GUI(new Vector2(GraphicsDevice.Viewport.Height / 500f));
-            textBasePosY = 40 * _gui.Scale.Y;
-            textPosY = textBasePosY;
-
+            textBasePosY = textPosY = 40 * _gui.Scale.Y;
             CreateHeaders();
-            CreateBackButton(game);
+            textBasePosY = textPosY;
+            ClearPlayersScore();
+            CreateLoading();
+            CreateButtons(game);
 
-            var facebookId = Facebook.Instance.UserId;
-            var access_token = Facebook.Instance.AccessToken;
-
-            if(facebookId != null && access_token != null)
-                LoadPlayerScores(facebookId, access_token);
+            _loadPlayersCancellation = new CancellationTokenSource();
+            LoadRankType(_orderByHighscore);
 
             _music = Game.Content.Load<Song>("Audio/Music/credits.wav");
         }
@@ -58,7 +63,7 @@ namespace PowerOfLove.Activities
             {
                 Color = Color.Red,
                 HorizontalOrigin = HorizontalAlign.Center,
-                Position = new Point((int)(Viewport.Width * 5 / 8.0f - 80 * _gui.Scale.X), (int)textPosY)
+                Position = new Point((int)(Viewport.Width * 5 / 8.0f - 70 * _gui.Scale.X), (int)textPosY)
             });
 
             _gui.Add(new Label("TOTAL ZOMBIES", "Fonts/DefaultFont")
@@ -71,31 +76,57 @@ namespace PowerOfLove.Activities
             textPosY += playerNameLabel.MeasureSize().Y;
         }
 
-        void AddPlayerScore(string name, string map, int highScore, int totalZombies)
+        void CreateLoading()
         {
-            var playerNameLabel = new Label(name, "Fonts/DefaultFont")
+            _loading = new Label("Loading", "Fonts/DefaultFont")
             {
-                Color = Color.YellowGreen,
+                Color = Color.Yellow,
                 Position = new Point(Viewport.Width / 8, (int)textPosY)
             };
-            _gui.Add(playerNameLabel);
+            _gui.Add(_loading);
+        }
 
-            _gui.Add(new Label(highScore.ToString(), "Fonts/DefaultFont")
+        void ClearPlayersScore()
+        {
+            textPosY = textBasePosY;
+
+            if (_playersScorePanel == null)
             {
+                _playersScorePanel = new Container();
+                _gui.Add(_playersScorePanel);
+            }
+            else
+                _playersScorePanel.Clear();
+        }
+
+        void AddPlayerScore(string name, string map, int highScore, int totalZombies)
+        {
+            _playersScorePanel.AddChildren(new Label(name.Ellipsize(22), "Fonts/DefaultFont")
+            {
+                Scale = _playersScorePanel.Scale,
+                Color = Color.YellowGreen,
+                Position = new Point(Viewport.Width / 8, (int)textPosY)
+            });
+
+            _playersScorePanel.AddChildren(new Label(highScore.ToString(), "Fonts/DefaultFont")
+            {
+                Scale = _playersScorePanel.Scale,
                 Color = Color.White,
                 HorizontalOrigin = HorizontalAlign.Right,
                 Position = new Point((int)(Viewport.Width * 5 / 8.0f), (int)textPosY)
             });
 
-            _gui.Add(new Label(map, "Fonts/DefaultFont")
+            _playersScorePanel.AddChildren(new Label(map.Ellipsize(7), "Fonts/DefaultFont")
             {
+                Scale = _playersScorePanel.Scale,
                 Color = Color.Yellow,
                 HorizontalOrigin = HorizontalAlign.Left,
-                Position = new Point((int)(Viewport.Width * 5 / 8.0f - 160 * _gui.Scale.X), (int)textPosY)
+                Position = new Point((int)(Viewport.Width * 5 / 8.0f - 140 * _gui.Scale.X), (int)textPosY)
             });
 
-            _gui.Add(new Label(totalZombies.ToString(), "Fonts/DefaultFont")
+            _playersScorePanel.AddChildren(new Label(totalZombies.ToString(), "Fonts/DefaultFont")
             {
+                Scale = _playersScorePanel.Scale,
                 Color = Color.White,
                 HorizontalOrigin = HorizontalAlign.Right,
                 Position = new Point((int)(Viewport.Width * 6 / 8.0f + 100 * _gui.Scale.X), (int)textPosY)
@@ -104,14 +135,53 @@ namespace PowerOfLove.Activities
             textPosY += 32 * _gui.Scale.Y;
         }
 
-        void CreateBackButton(Game game)
+        void CreateButtons(Game game)
         {
             var btnBack = new Button(game, "Return") { HorizontalOrigin = HorizontalAlign.Center };
             btnBack.Position = new Point(
-                Viewport.Width / 2,
+                Viewport.Width * 3 / 4,
                 Viewport.Height * 7 / 8);
             btnBack.Clicked += (s, e) => Exit();
             _gui.Add(btnBack);
+
+            _modeButton = new Button(game, "Total") { HorizontalOrigin = HorizontalAlign.Center, IsVisible = false };
+            _modeButton.Position = new Point(
+                Viewport.Width / 4,
+                Viewport.Height * 7 / 8);
+            _modeButton.Clicked += (s, e) =>
+            {
+                LoadRankType(_orderByHighscore);
+            };
+            _gui.Add(_modeButton);
+        }
+
+        async void LoadRankType(bool orderByHighscore)
+        {
+            var oldButtonMode = orderByHighscore;
+            var scoreType = oldButtonMode ? PowerOfLoveService.RankType.HighScore
+                                            : PowerOfLoveService.RankType.TotalZombies;
+
+            _loadPlayersCancellation.Cancel();
+            _loadPlayersCancellation = new CancellationTokenSource();
+            var cancel = _loadPlayersCancellation.Token;
+            try
+            {
+                _modeButton.IsVisible = false;
+                await Task.WhenAll(LoadPlayerScores(scoreType, cancel), Task.Delay(1000));
+                if (cancel.IsCancellationRequested)
+                    return;
+                SetModeButtonAction(!oldButtonMode);
+            }
+            catch (Exception)
+            {
+            }
+            _modeButton.IsVisible = true;
+        }
+
+        private void SetModeButtonAction(bool orderByHighscore)
+        {
+            _orderByHighscore = orderByHighscore;
+            _modeButton.Text = _orderByHighscore ? "Best" : "Total";
         }
         #endregion
 
@@ -144,19 +214,48 @@ namespace PowerOfLove.Activities
         }
         #endregion
 
-        public async void LoadPlayerScores(string facebookId, string access_token)
+        public async Task LoadPlayerScores(PowerOfLoveService.RankType scoreType, CancellationToken cancellation)
         {
+            var facebookId = Facebook.Instance.UserId;
+            var access_token = Facebook.Instance.AccessToken;
+
+            if (facebookId == null || access_token == null)
+            {
+                _loading.Text = "Not logged in";
+                return;
+            }
+
+            _loading.IsVisible = true;
+            _loading.Text = "Loading";
+
+            ClearPlayersScore();
+
             var availableScreenSize = (Viewport.Height * 7 / 8 - 32 * _gui.Scale.Y * 2)  - textPosY;
             var count = availableScreenSize / (32 * _gui.Scale.Y);
 
 #if ANDROID
-            var scoreType = _orderByHighscore? PowerOfLoveService.RankType.HighScore
-                                                : PowerOfLoveService.RankType.TotalZombies;
+            try
+            {
+                Func<Task<PowerOfLoveService.UserInfo[]>> createRequest = () => PowerOfLoveService.Instance.LoadRankingsAsync(facebookId, scoreType, (int)count, access_token);
 
-            var players = await PowerOfLoveService.Instance.LoadRankingsAsync(facebookId, scoreType, (int)count, access_token);
+                var getPlayers = await Task.WhenAny(createRequest(), createRequest(), createRequest());
+                var players = await getPlayers.On(UpdateContext);
 
-            foreach(var playerInfo in players)
-                AddPlayerScore(playerInfo.Name, playerInfo.MapName, playerInfo.HighScore, playerInfo.TotalZombies);
+                if (cancellation.IsCancellationRequested)
+                    return;
+
+                _loading.IsVisible = false;
+
+                foreach (var playerInfo in players)
+                    AddPlayerScore(playerInfo.Name, playerInfo.MapName, playerInfo.HighScore, playerInfo.TotalZombies);
+
+            }
+            catch(Exception)
+            {
+                _loading.IsVisible = true;
+                _loading.Text = "Error";
+                throw;
+            }
 #elif DEBUG
             for(int i = 0; i < count; i++)
                 AddPlayerScore("Test name", "Android", 18, 200);

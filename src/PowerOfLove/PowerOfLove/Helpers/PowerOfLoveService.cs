@@ -1,15 +1,15 @@
+#if ANDROID
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
 using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
-using System.Threading.Tasks;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using Conversive.PHPSerializationLibrary;
@@ -47,9 +47,12 @@ namespace PowerOfLove.Helpers
         MutexAsync _requestMutex;
         readonly IDisposable EmptyDisposable = Disposable.Create(() => { });
 
+        HttpClient _htClient;
+
         PowerOfLoveService()
         {
             _requestMutex = new MutexAsync();
+            _htClient = new HttpClient { Timeout = TimeSpan.FromSeconds(10) };
         }
 
 #if ANDROID
@@ -60,8 +63,7 @@ namespace PowerOfLove.Helpers
             foreach (var param in parameters.GetType().GetProperties())
                 url += string.Format("&{0}={1}", Uri.EscapeDataString(param.Name), Uri.EscapeDataString(param.GetValue(parameters).ToString()));
 
-            var htClient = new HttpClient();
-            var resp = await htClient.GetStringAsync(url);
+            var resp = await _htClient.GetStringAsync(url);
             resp = Regex.Replace(resp, "<script.*?>.*?</script>", "", RegexOptions.IgnoreCase);
             PHPSerializer serializer = new PHPSerializer();
             return serializer.Deserialize(resp);
@@ -132,8 +134,8 @@ namespace PowerOfLove.Helpers
                         {
                             Id = (string)userData["id"],
                             Name = (string)userData["name"],
-                            HighScore = (int)userData["highscore"],
-                            TotalZombies = (int)userData["totalzombies"],
+                            HighScore = int.Parse(userData["highscore"].ToString()),
+                            TotalZombies = int.Parse(userData["totalzombies"].ToString()),
                             MapName = (string)userData["mapname"]
                         }).ToArray();
             }
@@ -174,3 +176,4 @@ namespace PowerOfLove.Helpers
         }
     }
 }
+#endif
