@@ -118,8 +118,8 @@ namespace PowerOfLove.Entities
             if (_currentZombieMessage != null && _currentHumanMessage != null)
                 return;
 
-            _currentZombieMessage = new[] { "GAHH!", "BLHRRHHRH!", "BRAINS", "BR41NNSS", "#GGJCWB" }.Random();
-            _currentHumanMessage = new[] { "HEEEELLLLPPP A ZOMBIEEEE", "OH NO A PROGRAMER BROKE FREE!", "APOCALYPSE IS COMING!", "Don't get any closer!", "NOOOOOOOOOOOO!!!!!!" }.Random();
+            _currentZombieMessage = new[] { "GAHH!", "BLHRRHHRH!", "BRAINS", "BR41NNSS", "GROAAAAAAN", "[/o-o]/", "Have you heard the word of our lord savior Michael Jackson?", "GRAAAAAINS", "BRAAAAAINS", "oOOooOOoo", "COFFEEEE", "GROOOOO", "*BURP*" }.Random();
+            _currentHumanMessage = new[] { "HEEEELLLLPPP A ZOMBIEEEE", "OH NO A PROGRAMMER BROKE FREE!", "APOCALYPSE IS COMING!", "Don't get any closer!", "NOOOOOOOOOOOO!!!!!!", "I WILL SURVIVE!!!", "PLEASE SOMEONE HELP MEEE", "I DON'T WANNA BE A ZOMBIE", "RUN!", "SOMEONE THINK ABOUT THE CHILDREN", "HEAAAAAAAAAAAALP" }.Random();
 
             var message = _currentZombieMessage;
             await TaskEx.Delay(TimeSpan.FromSeconds(2));
@@ -132,8 +132,8 @@ namespace PowerOfLove.Entities
             if (_currentZombieMessage != null && _currentHumanMessage != null)
                 return;
 
-            _currentZombieMessage = new[] { "AGHHH", "HE GOT ME!", "BURRRRR", "BRAAAAINNNNNNSSS", "..............." }.Random();
-            _currentHumanMessage = new[] { "Thank you!", "I love you Mr!", "I almost died due to fatigue! Can't program so much!", "Help the others please!", "I'll follow you!" }.Random();
+            _currentZombieMessage = new[] { "AGHHH", "HE GOT ME!", "BURRRRR", "BRAAAAINNNNNNSSS", "...............", "AAAAAAAAAAAA", "AAAAAAaaaarrrrrrrght", "That's only a flesh wound!", "MOMMY!", "I see the light", "Tell mommy I love her", "HAH, I'M FULL OF CHOLESTEROL" }.Random();
+            _currentHumanMessage = new[] { "Thank you!", "I love you!", "I almost died due to fatigue!", "Help the others please!", "I'll follow you!", "Thanks!", "WHOA, I thought I was a goner!", "Yay!", "Nice!", "What happened?!", "You're my hero!" }.Random();
 
             var message = _currentZombieMessage;
             await TaskEx.Delay(TimeSpan.FromSeconds(2));
