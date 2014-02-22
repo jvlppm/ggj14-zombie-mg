@@ -64,7 +64,7 @@ namespace PowerOfLove.Activities
 #if ANDROID
             CreateFacebookLogin(game);
             CreateFacebookStatus(game);
-            RefreshFacebookStatus(game);
+            RefreshStatusAsync(game);
 #endif
 
             if (RandomNumberGenerator.Next(0, 9) != 9)
@@ -229,12 +229,20 @@ namespace PowerOfLove.Activities
 #if ANDROID
         async void facebookLogin_Clicked(object sender, System.EventArgs e)
         {
-            _facebookLogin.IsVisible = false;
-            await Facebook.Instance.LogInAsync(Game.Activity).On(UpdateContext);
-            RefreshFacebookStatus(Game);
+            try
+            {
+                _facebookLogin.IsVisible = false;
+                await Facebook.Instance.LogInAsync(Game.Activity).On(UpdateContext);
+                RefreshStatusAsync(Game);
+            }
+            catch (Exception)
+            {
+                _facebookLogin.IsVisible = true;
+                _facebookStatus.IsVisible = false;
+            }
         }
 
-        async void RefreshFacebookStatus(Game game)
+        async void RefreshStatusAsync(Game game)
         {
             try
             {
