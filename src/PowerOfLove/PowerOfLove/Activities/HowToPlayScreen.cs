@@ -55,7 +55,7 @@ namespace PowerOfLove.Activities
         {
             var btnBack = new Button(game, "Return") { HorizontalOrigin = HorizontalAlign.Center };
             btnBack.Position = new Point(
-                Game.GraphicsDevice.Viewport.Width / 2 - btnBack.Size.X / 2,
+                Game.GraphicsDevice.Viewport.Width / 2,
                 Game.GraphicsDevice.Viewport.Height * 7 / 8);
             btnBack.Clicked += (s, e) => Exit();
             return btnBack;
