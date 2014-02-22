@@ -32,6 +32,7 @@ namespace PowerOfLove.Activities
 
         #region Properties
         public ContextTimer Timer { get; private set; }
+        public ContextTimer TrueVisionTimer { get; private set; }
         public int Score { get; set; }
 
         public List<GamePlayEntity> Entities { get; private set; }
@@ -67,7 +68,9 @@ namespace PowerOfLove.Activities
             Entities = _map.Objects.Select(CreateEntity).ToList();
             _newEntities = new List<GamePlayEntity>();
             _oldEntities = new List<GamePlayEntity>();
+
             Timer = new ContextTimer(TimeSpan.FromMinutes(1));
+            TrueVisionTimer = new ContextTimer(Timer.Duration.Divide(2));
 
             _music = Game.Content.Load<Song>("Audio/Music/gameplay.wav");
 
@@ -90,7 +93,7 @@ namespace PowerOfLove.Activities
         async Task<int> CountDown()
         {
             var finishTimer = UpdateContext.Run(Timer);
-            await UpdateContext.Delay(Timer.RemainingTime.Divide(2));
+            await UpdateContext.Run(TrueVisionTimer);
             ShowTrueVision();
             await finishTimer;
             return Score;
@@ -211,6 +214,7 @@ namespace PowerOfLove.Activities
         public void IncreaseTimer(TimeSpan ammount)
         {
             Timer.Duration += ammount;
+            TrueVisionTimer.Duration += ammount;
         }
         #endregion
 
