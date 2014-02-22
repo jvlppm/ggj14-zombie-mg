@@ -4,12 +4,12 @@ using System.Runtime.InteropServices;
 
 #if ANDROID
 using Android.App;
-#endif
 
 #if DEBUG
 [assembly: Application(Debuggable=true)]
 #else
 [assembly: Application(Debuggable=false)]
+#endif
 #endif
 
 // General Information about an assembly is controlled through the following 

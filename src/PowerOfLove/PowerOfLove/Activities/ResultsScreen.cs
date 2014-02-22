@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using MonoGameLib.GUI.Base;
 using MonoGameLib.GUI.Components;
+using MonoGameLib.GUI.Containers;
 using PowerOfLove.Components;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,6 @@ using System.Linq;
 using System.Text;
 #if ANDROID
 using PowerOfLove.Helpers;
-using MonoGameLib.GUI.Containers;
 #endif
 
 namespace PowerOfLove.Activities
@@ -41,8 +41,9 @@ namespace PowerOfLove.Activities
             if (facebookId != null)
                 PowerOfLoveService.Instance.PostResultToServerAsync(facebookId, gamePlayResult);
 #endif
-
+#if ANDROID
             LoadServerData();
+#endif
         }
         #endregion
 
@@ -87,6 +88,7 @@ namespace PowerOfLove.Activities
             return btnBack;
         }
 
+#if ANDROID
         async void LoadServerData()
         {
             try
@@ -113,6 +115,7 @@ namespace PowerOfLove.Activities
             }
             catch (Exception) { }
         }
+#endif
         #endregion
 
         #region Activity Life-Cycle
