@@ -33,7 +33,6 @@ namespace PowerOfLove.Activities
             _gui.Add(CreateMainTitle(game));
             _gui.Add(CreateMessage(gamePlayResult));
             _gui.Add(CreateBackButton(game));
-            LoadServerData();
 
             _music = Game.Content.Load<Song>("Audio/Music/credits.wav");
 
@@ -42,6 +41,8 @@ namespace PowerOfLove.Activities
             if (facebookId != null)
                 PowerOfLoveService.Instance.PostResultToServerAsync(facebookId, gamePlayResult);
 #endif
+
+            LoadServerData();
         }
         #endregion
 
