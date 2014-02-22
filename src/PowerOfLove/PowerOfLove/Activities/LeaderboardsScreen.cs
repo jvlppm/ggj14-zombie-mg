@@ -236,9 +236,7 @@ namespace PowerOfLove.Activities
 #if ANDROID
             try
             {
-                Func<Task<PowerOfLoveService.UserInfo[]>> createRequest = () => PowerOfLoveService.Instance.LoadRankingsAsync(facebookId, scoreType, (int)count, access_token);
-
-                var getPlayers = await Task.WhenAny(createRequest(), createRequest(), createRequest());
+                var getPlayers = PowerOfLoveService.Instance.LoadRankingsAsync(facebookId, scoreType, (int)count, access_token);
                 var players = await getPlayers.On(UpdateContext);
 
                 if (cancellation.IsCancellationRequested)
