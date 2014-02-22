@@ -89,25 +89,29 @@ namespace PowerOfLove.Activities
 
         async void LoadServerData()
         {
-            var facebookId = Facebook.Instance.UserId;
-            if(facebookId == null)
-                return;
-
-            var userInfo = await PowerOfLoveService.Instance.GetUserInfoAsync(facebookId, true);
-
-            _messages.AddChildren(new Label("Your highscore: " + userInfo.HighScore, "Fonts/DefaultFont")
+            try
             {
-                Scale = _gui.Scale,
-                Color = Color.White,
-                HorizontalOrigin = HorizontalAlign.Center,
-            });
+                var facebookId = Facebook.Instance.UserId;
+                if (facebookId == null)
+                    return;
 
-            _messages.AddChildren(new Label("You have turned " + userInfo.TotalZombies + " people into zombies on total.", "Fonts/DefaultFont")
-            {
-                Scale = _gui.Scale,
-                Color = Color.White,
-                HorizontalOrigin = HorizontalAlign.Center,
-            });
+                var userInfo = await PowerOfLoveService.Instance.GetUserInfoAsync(facebookId, true);
+
+                _messages.AddChildren(new Label("Your highscore: " + userInfo.HighScore, "Fonts/DefaultFont")
+                {
+                    Scale = _gui.Scale,
+                    Color = Color.White,
+                    HorizontalOrigin = HorizontalAlign.Center,
+                });
+
+                _messages.AddChildren(new Label("You have turned " + userInfo.TotalZombies + " people into zombies on total.", "Fonts/DefaultFont")
+                {
+                    Scale = _gui.Scale,
+                    Color = Color.White,
+                    HorizontalOrigin = HorizontalAlign.Center,
+                });
+            }
+            catch (Exception) { }
         }
         #endregion
 
