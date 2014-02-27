@@ -13,6 +13,8 @@ using System.Linq;
 using System.Text;
 #if ANDROID
 using PowerOfLove.Helpers;
+using System.Threading.Tasks;
+using Android.Util;
 #endif
 
 namespace PowerOfLove.Activities
@@ -37,14 +39,30 @@ namespace PowerOfLove.Activities
             _music = Game.Content.Load<Song>("Audio/Music/credits.wav");
 
 #if ANDROID && !DEBUG
-            string facebookId = Facebook.Instance.UserId;
-            if (facebookId != null)
-                PowerOfLoveService.Instance.PostResultToServerAsync(facebookId, gamePlayResult);
-#endif
-#if ANDROID
-            LoadServerData();
+            UpdateHighScore(gamePlayResult);
 #endif
         }
+
+#if ANDROID && !DEBUG
+        async void UpdateHighScore(int gamePlayResult)
+        {
+            try
+            {
+                Task updateData = null;
+                string facebookId = Facebook.Instance.UserId;
+                if (facebookId != null)
+                    updateData = PowerOfLoveService.Instance.PostResultToServerAsync(facebookId, gamePlayResult);
+
+                LoadServerData();
+
+                await updateData;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(GetType().Name, ex.ToString());
+            }
+        }
+#endif
         #endregion
 
         #region GUI

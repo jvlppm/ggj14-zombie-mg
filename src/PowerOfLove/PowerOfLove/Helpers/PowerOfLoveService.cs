@@ -145,15 +145,15 @@ namespace PowerOfLove.Helpers
         {
             using (await _requestMutex.WaitAsync())
             {
-                if (_getUserInfoAsync != null && _getUserInfoAsync.IsCompleted)
+                if (_getUserInfoAsync != null && _getUserInfoAsync.IsCompleted && !_getUserInfoAsync.IsFaulted)
                 {
-                    var userInfo = _getUserInfoAsync.Result;
+                    var lastUserInfo = _getUserInfoAsync.Result;
                     var newInfo = new UserInfo
                     {
-                        Id = userInfo.Id,
-                        Name = userInfo.Name,
-                        TotalZombies = userInfo.TotalZombies + gameResult,
-                        HighScore = Math.Max(userInfo.HighScore, gameResult)
+                        Id = lastUserInfo.Id,
+                        Name = lastUserInfo.Name,
+                        TotalZombies = lastUserInfo.TotalZombies + gameResult,
+                        HighScore = Math.Max(lastUserInfo.HighScore, gameResult)
                     };
 #if NET_4_0
                     _getUserInfoAsync = TaskEx.FromResult(newInfo);
@@ -161,17 +161,12 @@ namespace PowerOfLove.Helpers
                     _getUserInfoAsync = Task.FromResult(newInfo);
 #endif
                 }
-                
+
                 const int AndroidMapId = 3;
-                try
-                {
-                    var userInfo = await GetUserInfoAsync(facebookId, false);
-                    var highScore = Math.Max(userInfo.HighScore, gameResult);
-                    await SetUserInfoAsync(facebookId, highScore, userInfo.TotalZombies + gameResult, AndroidMapId, false);
-                }
-                catch (Exception ex)
-                {
-                }
+
+                var userInfo = await GetUserInfoAsync(facebookId, false);
+                var highScore = Math.Max(userInfo.HighScore, gameResult);
+                await SetUserInfoAsync(facebookId, highScore, userInfo.TotalZombies + gameResult, AndroidMapId, false);
             }
         }
     }
