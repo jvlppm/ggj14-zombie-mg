@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGameLib.Core;
 using MonoGameLib.Core.Extensions;
 using MonoGameLib.Core.Particles;
 using MonoGameLib.Core.Sprites;
@@ -44,14 +45,14 @@ namespace PowerOfLove.Entities
 
             _loveParticleEmiter = new ParticleEmiter(game, screen, "Images/Sprites/heart",
                 new[] {
-                    new ParticleState { Color = Color.Red, Duration = 500, Scale = 1 },
-                    new ParticleState { Color = new Color(Color.White, 0f), Scale = 2f },
+                    new ParticleState { Color = new Color(1, 0.3f, 0.3f), Duration = 750, Scale = 1 },
+                    new ParticleState { Color = new Color(Color.White, 0f), Scale = 1.5f },
                 })
             {
-                MillisecondsToEmit = 150,
+                MillisecondsToEmit = 130,
                 Direction= new Vector2(0, -1),
-                OpeningAngle = 90,
-                ParticleSpeed = 40
+                OpeningAngle = 120,
+                ParticleSpeed = 55,
             };
 
             _biteParticleEmiter = new ParticleEmiter(game, screen, "Images/Sprites/blood",
